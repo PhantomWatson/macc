@@ -1,0 +1,47 @@
+# CakePHP
+/vendor/*
+/config/app.php
+/tmp/*
+/logs/*
+/webroot/bootstrap/*
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+org.eclipse.*
+.jsdtscope
+.editorconfig
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# Composer
+composer.phar
+composer.lock
+
+# Misc
+/webroot/coverage/*
+/node_modules/*
+phpunit.xml.dist
+empty
