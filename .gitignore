@@ -45,4 +45,5 @@ composer.lock
 /webroot/coverage/*
 /node_modules/*
 phpunit.xml.dist
+/webroot/js/jquery*
 empty
