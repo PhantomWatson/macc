@@ -50,6 +50,12 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 
+        $this->loadComponent('Cookie', [
+            'encryption' => 'aes',
+            'key' => Configure::read('cookie_key')
+        ]);
+        $this->Cookie->httpOnly = true;
+
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix' => false,
