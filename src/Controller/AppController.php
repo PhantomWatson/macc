@@ -97,4 +97,20 @@ class AppController extends Controller
             $this->set('_serialize', true);
         }
     }
+
+    public function isAuthorized($user)
+    {
+        if (! isset($user['role'])) {
+            return false;
+        }
+
+        // Admin can access every action
+        if ($user['role'] === 'admin') {
+            return true;
+        }
+
+        // Non-admin users can access any action not admin-prefixed
+        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+        return $prefix != 'admin';
+    }
 }
