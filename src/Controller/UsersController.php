@@ -11,6 +11,48 @@ use App\Controller\AppController;
 class UsersController extends AppController
 {
 
+    public function initialize() {
+        parent::initialize();
+        if ($this->request->action === 'register') {
+            $this->loadComponent('Recaptcha.Recaptcha');
+        }
+    }
+
+    public function register()
+    {
+        $user = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+            if ($this->Recaptcha->verify()) {
+                $email = $this->request->data('email');
+                $email = trim($email);
+                $email = strtolower($email);
+                $this->request->data['email'] = $email;
+                $this->request->data['password'] = $this->request->data('new_password');
+                $this->request->data['role'] = 'user';
+                $user = $this->Users->patchEntity($user, $this->request->data());
+
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Your account has been registered. You may now log in.');
+                    return $this->redirect(['action' => 'login']);
+                } else {
+                    $this->Flash->error('There was an error registering your account. Please try again.');
+                }
+            } else {
+                $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
+            }
+        }
+
+        /* So the password fields aren't filled out automatically when the user
+         * is bounced back to the page by a validation error */
+        $this->request->data['new_password'] = null;
+        $this->request->data['confirm_password'] = null;
+
+        $this->set([
+            'pageTitle' => 'Register an Account',
+            'user' => $user
+        ]);
+    }
+
     /**
      * Index method
      *
