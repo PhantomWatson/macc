@@ -43,7 +43,8 @@ Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function ($routes) {
     $routes->connect('/',           ['controller' => 'Pages', 'action' => 'home']);
-    
+
+    $routes->connect('/login',      ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/register',   ['controller' => 'Users', 'action' => 'register']);
 
     $routes->fallbacks('DashedRoute');

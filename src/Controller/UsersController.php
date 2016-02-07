@@ -16,6 +16,10 @@ class UsersController extends AppController
         if ($this->request->action === 'register') {
             $this->loadComponent('Recaptcha.Recaptcha');
         }
+        $this->Auth->allow([
+            'login',
+            'register'
+        ]);
     }
 
     public function register()
@@ -50,6 +54,39 @@ class UsersController extends AppController
         $this->set([
             'pageTitle' => 'Register an Account',
             'user' => $user
+        ]);
+    }
+
+    public function login()
+    {
+        if ($this->request->is('post')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Flash->success('You have been successfully logged in');
+                $this->Auth->setUser($user);
+
+                // Remember login information
+                if ($this->request->data('auto_login')) {
+                    $this->Cookie->configKey('CookieAuth', [
+                        'expires' => '+1 year',
+                        'httpOnly' => true
+                    ]);
+                    $this->Cookie->write('CookieAuth', [
+                        'email' => $this->request->data('email'),
+                        'password' => $this->request->data('password')
+                    ]);
+                }
+
+                return $this->redirect($this->Auth->redirectUrl());
+            } else {
+                $this->Flash->error('Email or password is incorrect');
+            }
+        } else {
+            $this->request->data['auto_login'] = true;
+        }
+        $this->set([
+            'pageTitle' => 'Log in',
+            'user' => $this->Users->newEntity()
         ]);
     }
 
