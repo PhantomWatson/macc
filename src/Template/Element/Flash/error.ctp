@@ -1,4 +1,4 @@
 <?= $this->element('Flash'.DS.'default', [
-    'class' => 'error',
+    'class' => 'danger',
     'message' => $message
 ]); ?>

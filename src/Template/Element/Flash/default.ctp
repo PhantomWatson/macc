@@ -1,5 +1,7 @@
 <?php
-    $class = empty($params['class']) ? 'info' : $params['class'];
+    if (! isset($class)) {
+        $class = empty($params['class']) ? 'info' : $params['class'];
+    }
 ?>
 
 <div class="alert alert-<?= h($class) ?> alert-dismissible" role="alert">
