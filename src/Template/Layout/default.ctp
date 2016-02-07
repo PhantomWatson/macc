@@ -14,6 +14,14 @@
     <?= $this->fetch('script') ?>
 </head>
 <body>
+    <?php if (isset($pageTitle)): ?>
+        <div class="page-header">
+            <h1>
+                <?= $pageTitle ?>
+            </h1>
+        </div>
+    <?php endif; ?>
+
     <?= $this->Flash->render() ?>
     <?= $this->fetch('content') ?>
 

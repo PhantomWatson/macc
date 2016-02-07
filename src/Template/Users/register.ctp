@@ -1,9 +1,3 @@
-<div id="content_title">
-    <h1>
-        <?= $pageTitle ?>
-    </h1>
-</div>
-
 <?php
     echo $this->Form->create($user);
     echo $this->Form->input(
