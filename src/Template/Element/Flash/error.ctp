@@ -1,1 +1,4 @@
-<div class="message error" onclick="this.classList.add('hidden');"><?= h($message) ?></div>
+<?= $this->element('Flash'.DS.'default', [
+    'class' => 'error',
+    'message' => $message
+]); ?>

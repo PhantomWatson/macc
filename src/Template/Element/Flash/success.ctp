@@ -1,1 +1,4 @@
-<div class="message success" onclick="this.classList.add('hidden')"><?= h($message) ?></div>
+<?= $this->element('Flash'.DS.'default', [
+    'class' => 'success',
+    'message' => $message
+]); ?>
