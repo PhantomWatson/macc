@@ -49,6 +49,31 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+
+        $this->loadComponent('Auth', [
+            'loginAction' => [
+                'prefix' => false,
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            'logoutRedirect' => [
+                'prefix' => false,
+                'controller' => 'Pages',
+                'action' => 'home'
+            ],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => ['username' => 'email']
+                ],
+                'Xety/Cake3CookieAuth.Cookie'
+            ],
+            'authorize' => ['Controller']
+        ]);
+        $this->Auth->deny();
+        $errorMessage = $this->Auth->user() ?
+            'Sorry, you are not authorized to access that page.'
+            : 'Please log in before accessing that page.';
+        $this->Auth->config('authError', $errorMessage);
     }
 
     /**
