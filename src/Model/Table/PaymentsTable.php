@@ -44,15 +44,14 @@ class PaymentsTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('AdminAdders', [
+            'className' => 'Users',
             'foreignKey' => 'admin_adder_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('Refunders', [
+            'className' => 'Users',
             'foreignKey' => 'refunder_id',
             'joinType' => 'INNER'
-        ]);
-        $this->hasMany('MembershipLevelsUsers', [
-            'foreignKey' => 'payment_id'
         ]);
     }
 
