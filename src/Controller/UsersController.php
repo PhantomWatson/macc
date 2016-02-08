@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use Cake\Core\Configure;
+use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Users Controller
@@ -13,7 +15,8 @@ use Cake\Core\Configure;
 class UsersController extends AppController
 {
 
-    public function initialize() {
+    public function initialize()
+    {
         parent::initialize();
         if ($this->request->action === 'register') {
             $this->loadComponent('Recaptcha.Recaptcha');
@@ -22,7 +25,8 @@ class UsersController extends AppController
             'forgotPassword',
             'login',
             'logout',
-            'register'
+            'register',
+            'resetPassword'
         ]);
     }
 
@@ -132,6 +136,41 @@ class UsersController extends AppController
         $this->set([
             'pageTitle' => 'Forgot Password',
             'user' => $user
+        ]);
+    }
+
+    public function resetPassword($userId = null, $timestamp = null, $hash = null)
+    {
+        if (! $userId || ! $timestamp && ! $hash) {
+            throw new NotFoundException('Incomplete URL for password-resetting. Did you leave out part of the URL when you copied and pasted it?');
+        }
+
+        if (time() - $timestamp > 60 * 60 * 24) {
+            throw new ForbiddenException('Sorry, that link has expired.');
+        }
+
+        $expectedHash = Mailer::getPasswordResetHash($userId, $timestamp);
+        if ($hash != $expectedHash) {
+            throw new ForbiddenException('Invalid security key');
+        }
+
+        $user = $this->Users->get($userId);
+        $email = $user->email;
+
+        if ($this->request->is(['post', 'put'])) {
+            $this->request->data['password'] = $this->request->data('new_password');
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your password has been updated.');
+                return $this->redirect(['action' => 'login']);
+            }
+        }
+        $this->request->data = [];
+
+        $this->set([
+            'email' => $email,
+            'pageTitle' => 'Reset Password',
+            'user' => $this->Users->newEntity()
         ]);
     }
 

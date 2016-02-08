@@ -44,10 +44,11 @@ Router::defaultRouteClass('DashedRoute');
 Router::scope('/', function ($routes) {
     $routes->connect('/',           ['controller' => 'Pages', 'action' => 'home']);
 
-    $routes->connect('/forgot-password', ['controller' => 'Users', 'action' => 'forgotPassword']);
-    $routes->connect('/login',           ['controller' => 'Users', 'action' => 'login']);
-    $routes->connect('/logout',          ['controller' => 'Users', 'action' => 'logout']);
-    $routes->connect('/register',        ['controller' => 'Users', 'action' => 'register']);
+    $routes->connect('/forgot-password',  ['controller' => 'Users', 'action' => 'forgotPassword']);
+    $routes->connect('/login',            ['controller' => 'Users', 'action' => 'login']);
+    $routes->connect('/logout',           ['controller' => 'Users', 'action' => 'logout']);
+    $routes->connect('/register',         ['controller' => 'Users', 'action' => 'register']);
+    $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
 
     $routes->fallbacks('DashedRoute');
 });
