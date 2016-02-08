@@ -18,6 +18,7 @@ class UsersController extends AppController
         }
         $this->Auth->allow([
             'login',
+            'logout',
             'register'
         ]);
     }
