@@ -68,17 +68,27 @@ class PaymentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->add('user_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('user_id', 'create');
+
+        $validator
+            ->add('admin_adder_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('admin_adder_id', 'create');
+
+        $validator
+            ->add('refunder_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('refunder_id', 'create');
+
+        $validator
+            ->add('membership_level_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('membership_level_id', 'create');
+
+        $validator
             ->requirePresence('postback', 'create')
             ->notEmpty('postback');
 
         $validator
-            ->requirePresence('notes', 'create')
-            ->notEmpty('notes');
-
-        $validator
-            ->add('refunded_date', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('refunded_date', 'create')
-            ->notEmpty('refunded_date');
+            ->add('refunded_date', 'valid', ['rule' => 'datetime']);
 
         return $validator;
     }

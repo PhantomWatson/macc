@@ -63,10 +63,6 @@ class MembershipLevelsTable extends Table
             ->requirePresence('cost', 'create')
             ->notEmpty('cost');
 
-        $validator
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
         return $validator;
     }
 }

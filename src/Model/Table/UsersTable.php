@@ -56,20 +56,54 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->add('name', 'notBlank', [
+                'rule' => 'notBlank',
+                'message' => 'A non-blank name is required.'
+            ]);
 
         $validator
-            ->add('email', 'valid', ['rule' => 'email'])
+            ->add('email', 'valid', [
+                'rule' => 'email',
+                'message' => 'That doesn\'t appear to be a valid email address.'
+            ])
+            ->add('email', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'Sorry, another account has already been created with that email address.'
+            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
 
         $validator
             ->requirePresence('password', 'create')
-            ->notEmpty('password');
+            ->add('password', 'notBlank', [
+                'rule' => 'notBlank',
+                'message' => 'A non-blank password is required.'
+            ]);
 
         $validator
             ->requirePresence('role', 'create')
-            ->notEmpty('role');
+            ->notEmpty('role')
+            ->add('role', 'valid', [
+                'rule' => function ($data, $provider) {
+                    if (in_array($data, ['admin', 'user'])) {
+                        return true;
+                    }
+                    return 'Role must be admin or user.';
+                }
+            ]);
+
+        $validator
+            ->notEmpty('new_password', 'A password is required', 'create')
+            ->allowEmpty('new_password', 'update')
+            ->add('new_password', 'validNewPassword1', [
+                'rule' => ['compareWith', 'confirm_password'],
+                'message' => 'Sorry, those passwords did not match.'
+            ]);
+
+        $validator
+            ->notEmpty('confirm_password', 'A password is required', 'create')
+            ->allowEmpty('confirm_password', 'update');
 
         return $validator;
     }
