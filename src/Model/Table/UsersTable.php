@@ -86,4 +86,20 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']));
         return $rules;
     }
+
+    /**
+     * @param string $email
+     * @return int|null
+     */
+    public function getIdWithEmail($email)
+    {
+        $user = $this->find('all')
+            ->select(['id'])
+            ->where(['email' => $email])
+            ->limit(1);
+        if ($user->isEmpty()) {
+            return null;
+        }
+        return $user->first()->id;
+    }
 }
