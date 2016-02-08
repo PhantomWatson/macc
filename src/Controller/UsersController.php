@@ -65,6 +65,33 @@ class UsersController extends AppController
         ]);
     }
 
+    public function editProfile()
+    {
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'fieldList' => ['profile', 'tags'],
+                'associated' => ['Tags']
+            ]);
+            $errors = $user->errors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Profile updated');
+                } else {
+                    $this->Flash->error('There was an error saving your profile');
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s) before proceeding');
+            }
+
+        }
+        $this->set([
+            'pageTitle' => 'Update Profile',
+            'user' => $user
+        ]);
+    }
+
     public function login()
     {
         if ($this->request->is('post')) {
