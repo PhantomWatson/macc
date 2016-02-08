@@ -38,3 +38,15 @@
         ['class' => 'btn btn-primary']
     );
     echo $this->Form->end();
+?>
+
+<p>
+    <?= $this->Html->link(
+        'I forgot my password',
+        [
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'forgotPassword'
+        ]
+    ) ?>
+</p>

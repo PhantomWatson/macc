@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Mailer\Mailer;
+use Cake\Core\Configure;
 
 /**
  * Users Controller
@@ -17,6 +19,7 @@ class UsersController extends AppController
             $this->loadComponent('Recaptcha.Recaptcha');
         }
         $this->Auth->allow([
+            'forgotPassword',
             'login',
             'logout',
             'register'
@@ -94,6 +97,42 @@ class UsersController extends AppController
     public function logout()
     {
         return $this->redirect($this->Auth->logout());
+    }
+
+    public function forgotPassword()
+    {
+        $user = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+            $email = $this->request->data('email');
+            $email = strtolower(trim($email));
+            $adminEmail = Configure::read('admin_email');
+            if (empty($email)) {
+                $msg = 'Please enter the email address you registered with to have your password reset. ';
+                $msg .= 'Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                $this->Flash->error($msg);
+            } else {
+                $userId = $this->Users->getIdWithEmail($email);
+                if ($userId) {
+                    if (Mailer::sendPasswordResetEmail($userId)) {
+                        $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
+                        $this->request->data = [];
+                    } else {
+                        $msg = 'There was an error sending your password-resetting email. ';
+                        $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                        $this->Flash->error($msg);
+                    }
+                } else {
+                    $msg = 'We couldn\'t find an account registered with the email address <strong>'.$email.'</strong>. ';
+                    $msg .= 'Please make sure you spelled it correctly, and email ';
+                    $msg .= '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> if you need assistance.';
+                    $this->Flash->error($msg);
+                }
+            }
+        }
+        $this->set([
+            'pageTitle' => 'Forgot Password',
+            'user' => $user
+        ]);
     }
 
     /**
