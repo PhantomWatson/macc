@@ -40,6 +40,11 @@ class UsersTable extends Table
             'targetForeignKey' => 'membership_level_id',
             'joinTable' => 'membership_levels_users'
         ]);
+        $this->belongsToMany('Tags', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'tag_id',
+            'joinTable' => 'tags_users'
+        ]);
     }
 
     /**
