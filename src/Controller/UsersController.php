@@ -270,4 +270,22 @@ class UsersController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function changePassword()
+    {
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId);
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->request->data['password'] = $this->request->data('new_password');
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your password has been updated');
+            }
+        }
+        $this->request->data = [];
+        $this->set([
+            'pageTitle' => 'Change Password',
+            'user' => $user
+        ]);
+    }
 }
