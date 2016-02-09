@@ -26,7 +26,8 @@ class UsersController extends AppController
             'login',
             'logout',
             'register',
-            'resetPassword'
+            'resetPassword',
+            'view'
         ]);
     }
 
@@ -224,11 +225,13 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['MembershipLevels', 'Payments']
+            'contain' => ['Tags']
         ]);
 
-        $this->set('user', $user);
-        $this->set('_serialize', ['user']);
+        $this->set([
+            'pageTitle' => $user->name,
+            'user' => $user
+        ]);
     }
 
     /**

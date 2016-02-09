@@ -49,6 +49,10 @@ Router::scope('/', function ($routes) {
     $routes->connect('/logout',           ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('/register',         ['controller' => 'Users', 'action' => 'register']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
+    $routes->connect('/user/:id/:slug',   ['controller' => 'Users', 'action' => 'view'], [
+        'pass' => ['id', 'slug'],
+        'id' => '[0-9]+'
+    ]);
 
     $routes->fallbacks('DashedRoute');
 });
