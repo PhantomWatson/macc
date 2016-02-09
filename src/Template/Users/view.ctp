@@ -1,3 +1,8 @@
+<?php
+    use League\CommonMark\CommonMarkConverter;
+    $converter = new CommonMarkConverter();
+?>
+
 <section>
     <h2>
         About
@@ -8,7 +13,7 @@
         </p>
     <?php else: ?>
         <p>
-            <?= $user->profile ?>
+            <?= $converter->convertToHtml($user->profile) ?>
         </p>
     <?php endif; ?>
 </section>
