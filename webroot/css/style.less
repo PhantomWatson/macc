@@ -63,14 +63,42 @@ footer {
 
 
 /* Other styles */
+.h1, .h2, .h3, h1, h2, h3 {
+	&:first-child {
+		margin-top: 0;
+	}
+}
 a:hover {
 	.glyphicon {
 		text-decoration: none;
 	}
 }
-
 .alert {
 	a {
 		text-decoration: underline;
+	}
+}
+.markdown-example {
+	margin-bottom: 50px;
+	margin-top: -50px;
+	padding-top: 50px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+	div > div,
+	pre {
+		background-color: #f5f5f5;
+		border-radius: 5px;
+		border: 1px solid #555;
+		box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.24);
+		color: black;
+		margin: 10px 0;
+		padding: 15px;
+	}
+	p, blockquote, ul, ol {
+		&:last-child {
+			margin-bottom: 0;
+		}
 	}
 }

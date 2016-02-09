@@ -7,4 +7,9 @@ class PagesController extends AppController
     {
         $this->set('pageTitle', '');
     }
+
+    public function styling()
+    {
+        $this->set('pageTitle', 'Profile Styling Guide');
+    }
 }
