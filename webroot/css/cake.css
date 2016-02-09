@@ -18,29 +18,6 @@ a {
   color: #15848F;
 }
 
-header {
-  background-color: #15848F;
-  color: #ffffff;
-  font-size: 30px;
-  height: 84px;
-  line-height: 64px;
-  padding: 16px 0px;
-  box-shadow: 0px 1px rgba(0, 0, 0, 0.24);
-}
-
-header .header-title {
-  padding-left:80px
-}
-
-
-legend {
-  color:#15848F;
-}
-
-.row {
-  max-width: 80rem;
-}
-
 .actions.columns {
   margin-top:1rem;
   border-left: 5px solid #15848F;

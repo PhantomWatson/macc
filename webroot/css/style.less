@@ -1,26 +1,71 @@
 @import "./cake.css";
 @import "../../vendor/twbs/bootstrap/less/bootstrap.less";
 
-a:hover {
-	.glyphicon {
+/* Copying styles from Wordpress site */
+body {
+    background: #f3f3f3 url("//theme.co/x/demo/integrity/1/wp-content/uploads/sites/2/2013/06/bg-integrity-1.png") repeat scroll center top;
+    color: #848484;
+    font-size: 15px;
+}
+body, input, button, select, textarea {
+	font-family: Lato, "Helvetica Neue", Helvetica, sans-serif;
+}
+#content {
+	background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0.15em 0.35em 0 rgba(0, 0, 0, 0.133);
+    padding: 60px;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	color: #272727;
+	font-style: normal;
+	text-rendering: optimizelegibility;
+    font-family: Lato, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+}
+a {
+	color: #fdba31;
+	text-decoration: none;
+    transition: color 0.3s ease 0s;
+
+	&:hover {
+		color: #ee2e24;
 		text-decoration: none;
 	}
 }
+footer {
+	font-size: 70%;
+	padding-top: 15px;
 
-nav {
-	margin-top: 30px;
-
-	&:first-of-type {
-		margin-top: 0;
+	ul {
+		margin: 0;
+		padding: 0;
 	}
-
-	h2.logged_in {
-		font-size: 12px;
-		font-weight: normal;
+	li {
+		display: inline-block;
+		font-weight: 400;
+		letter-spacing: 2px;
+		list-style-type: none;
+		margin: 0 1em;
+		padding: 0;
+		text-transform: uppercase;
 	}
+}
 
-	.client_home {
-		font-weight: bold;
+
+
+/* Undoing some Bootstrap styles */
+.page-header{
+	margin-top: 0;
+}
+
+
+
+/* Other styles */
+a:hover {
+	.glyphicon {
+		text-decoration: none;
 	}
 }
 
