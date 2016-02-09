@@ -98,6 +98,18 @@ class AppController extends Controller
         }
     }
 
+    public function beforeFilter(Event $event)
+    {
+        if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+            } else {
+                $this->Cookie->delete('CookieAuth');
+            }
+        }
+    }
+
     public function isAuthorized($user)
     {
         if (! isset($user['role'])) {
