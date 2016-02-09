@@ -96,6 +96,8 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+
+        $this->set('authUser', $this->Auth->user());
     }
 
     public function beforeFilter(Event $event)
