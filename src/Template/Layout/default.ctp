@@ -104,7 +104,7 @@
 
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2" id="content">
-            <?php if (isset($pageTitle)): ?>
+            <?php if (isset($pageTitle) && ! empty($pageTitle)): ?>
                 <div class="page-header">
                     <h1>
                         <?= $pageTitle ?>
