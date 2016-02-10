@@ -85,10 +85,11 @@ class UsersController extends AppController
             } else {
                 $this->Flash->error('Please correct the indicated error(s) before proceeding');
             }
-
         }
+        $this->loadModel('Tags');
         $this->set([
             'pageTitle' => 'Update Profile',
+            'tags' => $this->Tags->getThreaded(),
             'user' => $user
         ]);
     }
@@ -210,9 +211,10 @@ class UsersController extends AppController
     public function index()
     {
         $users = $this->paginate($this->Users);
-
-        $this->set(compact('users'));
-        $this->set('_serialize', ['users']);
+        $this->set([
+            'pageTitle' => 'Members',
+            'users' => $users
+        ]);
     }
 
     /**

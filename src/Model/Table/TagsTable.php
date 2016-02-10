@@ -97,4 +97,36 @@ class TagsTable extends Table
         $rules->add($rules->existsIn(['parent_id'], 'ParentTags'));
         return $rules;
     }
+
+    public function getThreaded()
+    {
+        $results = $this->find('threaded')
+            ->select(['id', 'name', 'parent_id', 'selectable'])
+            ->where(['listed' => 1])
+            ->order(['name' => 'ASC'])
+            ->toArray();
+        return $this->sortThreaded($results);
+    }
+
+    /**
+     * Takes the result of find('threaded') and sorts so that branches (with children)
+     * come before leaves; Assumes that everything is already alphabetized
+     *
+     * @param array $threaded
+     * @return array
+     */
+    public function sortThreaded($threaded)
+    {
+        $branches = [];
+        $leaves = [];
+        foreach ($threaded as $item) {
+            if (empty($item['children'])) {
+                $leaves[] = $item;
+            } else {
+                $item['children'] = $this->sortThreaded($item['children']);
+                $branches[] = $item;
+            }
+        }
+        return array_merge($branches, $leaves);
+    }
 }
