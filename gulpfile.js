@@ -81,7 +81,7 @@ gulp.task('js_lint', function () {
  ****************/
 gulp.task('copy_vendor_files', function () {
     gulp.src('vendor/twbs/bootstrap/dist/fonts/*')
-        .pipe(gulp.dest('webroot/bootstrap/fonts'));
+        .pipe(gulp.dest('webroot/fonts'));
     gulp.src('vendor/twbs/bootstrap/dist/js/*')
     .pipe(gulp.dest('webroot/bootstrap/js'));
 });
