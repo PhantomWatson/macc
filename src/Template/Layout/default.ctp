@@ -11,7 +11,6 @@
     <?= $this->fetch('meta') ?>
     <?= $this->Html->css('style') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
     <link media="all" type="text/css" href="//fonts.googleapis.com/css?family=Lato%3A400%2C400italic%2C700%2C700italic%7CLato%3A300%7CLato%3A300%7CLato%3A100&amp;subset=latin%2Clatin-ext&amp;ver=3.2.1" rel="stylesheet">
 </head>
 <body>
@@ -143,6 +142,8 @@
     <script>window.jQuery || document.write('<script src="/js/jquery-1.12.0.min.js"><\/script>')</script>
 
     <?= $this->Html->script('/bootstrap/js/bootstrap.min') ?>
+
+    <?= $this->fetch('script') ?>
 
     <script>
         $(document).ready(function () {
