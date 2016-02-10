@@ -72,7 +72,9 @@ class AppController extends Controller
                 'Form' => [
                     'fields' => ['username' => 'email']
                 ],
-                'Xety/Cake3CookieAuth.Cookie'
+                'Xety/Cake3CookieAuth.Cookie' => [
+                    'fields' => ['username' => 'email']
+                ]
             ],
             'authorize' => ['Controller']
         ]);
