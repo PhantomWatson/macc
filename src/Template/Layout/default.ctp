@@ -102,18 +102,20 @@
         </nav>
     </header>
 
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2" id="content">
-            <?php if (isset($pageTitle) && ! empty($pageTitle)): ?>
-                <div class="page-header">
-                    <h1>
-                        <?= $pageTitle ?>
-                    </h1>
-                </div>
-            <?php endif; ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2" id="content">
+                <?php if (isset($pageTitle) && ! empty($pageTitle)): ?>
+                    <div class="page-header">
+                        <h1>
+                            <?= $pageTitle ?>
+                        </h1>
+                    </div>
+                <?php endif; ?>
 
-            <?= $this->Flash->render() ?>
-            <?= $this->fetch('content') ?>
+                <?= $this->Flash->render() ?>
+                <?= $this->fetch('content') ?>
+            </div>
         </div>
     </div>
 
