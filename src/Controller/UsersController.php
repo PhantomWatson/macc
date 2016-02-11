@@ -69,11 +69,14 @@ class UsersController extends AppController
     public function editProfile()
     {
         $userId = $this->Auth->user('id');
-        $user = $this->Users->get($userId);
+        $user = $this->Users->get($userId, [
+            'contain' => ['Tags']
+        ]);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data(), [
                 'fieldList' => ['profile', 'tags'],
-                'associated' => ['Tags']
+                'associated' => ['Tags'],
+                'onlyIds' => true
             ]);
             $errors = $user->errors();
             if (empty($errors)) {
