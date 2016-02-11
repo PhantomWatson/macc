@@ -33,6 +33,9 @@ class TagsTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
+        $this->addBehavior('Xety/Cake3Sluggable.Sluggable', [
+            'field' => 'name'
+        ]);
 
         $this->belongsTo('ParentTags', [
             'className' => 'Tags',

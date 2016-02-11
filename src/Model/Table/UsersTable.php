@@ -31,6 +31,9 @@ class UsersTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Xety/Cake3Sluggable.Sluggable', [
+            'field' => 'name'
+        ]);
 
         $this->hasMany('Payments', [
             'foreignKey' => 'user_id'

@@ -14,7 +14,7 @@
         "gourmet/common-mark": "~1.0",
 		"xety/cake3-cookieauth": "1.*",
         "cakephp-fr/recaptcha": "~0.4",
-        "gourmet/common-mark": "~1.0"
+        "xety/cake3-sluggable": "1.*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
