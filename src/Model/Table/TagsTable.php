@@ -132,4 +132,16 @@ class TagsTable extends Table
         }
         return array_merge($branches, $leaves);
     }
+
+    /**
+     * Finds all tags without slugs and gives them slugs
+     */
+    public function addSlugs()
+    {
+        $tags = $this->find('all')->select(['id', 'name'])->where(['slug' => '']);
+        foreach ($tags as $tag) {
+            $tag->dirty('name', true);
+            $this->Tags->save($tag);
+        }
+    }
 }
