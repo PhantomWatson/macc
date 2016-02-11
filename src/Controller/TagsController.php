@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Tags Controller
@@ -30,18 +31,31 @@ class TagsController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Tag id.
-     * @return \Cake\Network\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @param string $slug
+     * @return \Cake\Network\Response
+     * @throws \Cake\Network\Exception\NotFoundException
      */
-    public function view($id = null)
+    public function view($slug = null)
     {
-        $tag = $this->Tags->get($id, [
-            'contain' => ['ParentTags', 'Users', 'ChildTags']
+        $tag = $this->Tags->find('slug', [
+            'slug' => $slug,
+            'slugField' => 'Tags.slug'
+        ])->contain([
+            'Users' => function ($q) {
+                return $q->select(['id', 'name', 'slug']);
+            }
         ]);
 
-        $this->set('tag', $tag);
-        $this->set('_serialize', ['tag']);
+        if ($tag->isEmpty()) {
+            throw new NotFoundException('Sorry, we couldn\'t find a "'.str_replace('-', ' ', $slug).'" tag');
+        }
+
+        $tag = $tag->first();
+
+        $this->set([
+            'pageTitle' => ucwords($tag->name),
+            'tag' => $tag
+        ]);
     }
 
     /**
