@@ -39,6 +39,10 @@ class PaymentsTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Memberships', [
+            'foreignKey' => 'membership_id',
+            'joinType' => 'INNER'
+        ]);
         $this->belongsTo('MembershipLevels', [
             'foreignKey' => 'membership_level_id',
             'joinType' => 'INNER'
