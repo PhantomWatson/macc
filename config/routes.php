@@ -55,6 +55,10 @@ Router::scope('/', function ($routes) {
         'id' => '[0-9]+'
     ]);
 
+    $routes->connect('/tag/:slug', ['controller' => 'Tags', 'action' => 'view'], [
+        'pass' => ['slug']
+    ]);
+
     $routes->fallbacks('DashedRoute');
 });
 
