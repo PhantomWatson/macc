@@ -38,7 +38,7 @@ class MembershipLevelsTable extends Table
         $this->belongsToMany('Users', [
             'foreignKey' => 'membership_level_id',
             'targetForeignKey' => 'user_id',
-            'joinTable' => 'membership_levels_users'
+            'joinTable' => 'memberships'
         ]);
     }
 
