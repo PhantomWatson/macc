@@ -38,10 +38,8 @@ class UsersTable extends Table
         $this->hasMany('Payments', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsToMany('MembershipLevels', [
-            'foreignKey' => 'user_id',
-            'targetForeignKey' => 'membership_level_id',
-            'joinTable' => 'membership_levels_users'
+        $this->hasMany('Memberships', [
+            'foreignKey' => 'user_id'
         ]);
         $this->belongsToMany('Tags', [
             'foreignKey' => 'user_id',
@@ -143,5 +141,16 @@ class UsersTable extends Table
             return null;
         }
         return $user->first()->id;
+    }
+
+    public function findMembers(Query $query, array $options)
+    {
+        return $query->matching('Memberships', function ($q) {
+            return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
+                function ($exp, $q) {
+                    return $exp->isNull('canceled');
+                }
+            ]);
+        });
     }
 }
