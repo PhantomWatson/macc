@@ -12,16 +12,14 @@
 		Click
 		<a href="#" title="Selectable tags will appear in blue" id="example_selectable_tag">selectable tags</a>
 		to select them.
+		Click on a selected tag to unselect it.
 	</div>
 
 	<div id="selected_tags_container" style="display: none;">
-		<span class="label">
+		<strong>
 			Selected tags:
-		</span>
+		</strong>
 		<span id="selected_tags"></span>
-		<div class="footnote">
-			Click on a tag to unselect it.
-		</div>
 	</div>
 </div>
 
