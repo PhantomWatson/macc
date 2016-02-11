@@ -42,7 +42,7 @@ class TagsController extends AppController
             'slugField' => 'Tags.slug'
         ])->contain([
             'Users' => function ($q) {
-                return $q->select(['id', 'name', 'slug']);
+                return $q->find('members')->select(['id', 'name', 'slug']);
             }
         ]);
 
