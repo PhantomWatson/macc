@@ -37,6 +37,15 @@
                                 Back to Main Site
                             </a>
                         </li>
+                        <li>
+                            <?= $this->Html->link(
+                                'Become a Member',
+                                [
+                                    'controller' => 'MembershipLevels',
+                                    'action' => 'index'
+                                ]
+                            ) ?>
+                        </li>
                         <?php if ($authUser): ?>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

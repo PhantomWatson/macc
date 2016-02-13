@@ -11,6 +11,12 @@ use App\Controller\AppController;
 class MembershipLevelsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['index']);
+    }
+
     /**
      * Index method
      *
@@ -18,10 +24,12 @@ class MembershipLevelsController extends AppController
      */
     public function index()
     {
-        $membershipLevels = $this->paginate($this->MembershipLevels);
+        $membershipLevels = $this->MembershipLevels->find('all');
 
-        $this->set(compact('membershipLevels'));
-        $this->set('_serialize', ['membershipLevels']);
+        $this->set([
+            'membershipLevels' => $membershipLevels,
+            'pageTitle' => 'Become a Member'
+        ]);
     }
 
     /**
