@@ -151,6 +151,7 @@
     <script>window.jQuery || document.write('<script src="/js/jquery-1.12.0.min.js"><\/script>')</script>
 
     <?= $this->Html->script('/bootstrap/js/bootstrap.min') ?>
+    <?= $this->Html->script('/js/script.js') ?>
 
     <?= $this->fetch('script') ?>
 
