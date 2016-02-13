@@ -6,14 +6,15 @@
     "license": "proprietary",
     "require": {
         "php": ">=5.4.16",
+        "cakephp-fr/recaptcha": "~0.4",
         "cakephp/cakephp": "~3.1",
-        "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
         "cakephp/plugin-installer": "*",
-        "twbs/bootstrap": "~3.0",
         "gourmet/common-mark": "~1.0",
-		"xety/cake3-cookieauth": "1.*",
-        "cakephp-fr/recaptcha": "~0.4",
+        "mobiledetect/mobiledetectlib": "2.*",
+        "stripe/stripe-php": "3.*",
+        "twbs/bootstrap": "~3.0",
+        "xety/cake3-cookieauth": "1.*",
         "xety/cake3-sluggable": "1.*"
     },
     "require-dev": {
