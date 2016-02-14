@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\I18n\Time;
 
 /**
  * Payments Controller
@@ -10,6 +12,78 @@ use App\Controller\AppController;
  */
 class PaymentsController extends AppController
 {
+
+    public function completePurchase()
+    {
+        $this->viewBuilder()->layout('json');
+        $this->set('_serialize', true);
+
+        // Verify user
+        $userId = 1; //$this->request->data('user_id');
+        $this->loadModel('Users');
+        try {
+            $user = $this->Users->get($userId);
+        } catch (RecordNotFoundException $e) {
+            $this->set('retval', [
+                'success' => false,
+                'message' => "Sorry, but that user account ('$userId') was not found."
+            ]);
+            $this->response->statusCode('404');
+            return $this->render();
+        }
+
+        // Verify membership level
+        $membershipLevelId = 1; //$this->request->data('membership_level_id');
+        $this->loadModel('MembershipLevels');
+        try {
+            $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
+        } catch (RecordNotFoundException $e) {
+            $this->set('retval', [
+                'success' => false,
+                'message' => "Sorry, but that membership level ('$membershipLevelId') was not found."
+            ]);
+            $this->response->statusCode('404');
+            return $this->render();
+        }
+
+        // Save membership
+        $this->loadModel('Memberships');
+        $membership = $this->Memberships->newEntity([
+            'user_id' => $userId,
+            'membership_level_id' => $membershipLevelId,
+            'recurring_billing' => false,
+            'expires' => new Time(strtotime('+1 year')),
+        ]);
+        $errors = $membership->errors();
+        if (empty($errors)) {
+            $membership = $this->Memberships->save($membership);
+
+            // Save payment
+            $payment = $this->Payments->newEntity([
+                'user_id' => $userId,
+                'membership_level_id' => $membershipLevelId,
+                'membership_id' => $membership->id,
+                'postback' => ''
+            ]);
+            $errors = $payment->errors();
+            if (empty($errors)) {
+                $this->set('retval', [
+                    'success' => true,
+                    'message' => 'Purchase completed!'
+                ]);
+                return $this->render();
+            }
+        }
+
+        $adminEmail = Configure::read('admin_email');
+        $msg = 'There was an error processing your payment. ';
+        $msg .= 'For assistance, please contact <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a>.';
+        $this->set('retval', [
+            'success' => false,
+            'message' => $msg
+        ]);
+        $this->response->statusCode('500');
+    }
 
     /**
      * Index method
