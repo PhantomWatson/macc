@@ -13,6 +13,14 @@ use Cake\I18n\Time;
 class PaymentsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow([
+            'completePurchase'
+        ]);
+    }
+
     public function completePurchase()
     {
         $this->viewBuilder()->layout('json');
