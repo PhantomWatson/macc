@@ -88,10 +88,6 @@ class PaymentsTable extends Table
             ->requirePresence('membership_level_id', 'create');
 
         $validator
-            ->requirePresence('postback', 'create')
-            ->notEmpty('postback');
-
-        $validator
             ->add('refunded_date', 'valid', ['rule' => 'datetime']);
 
         return $validator;
