@@ -17,7 +17,8 @@ class PaymentsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow([
-            'completePurchase'
+            'completePurchase',
+            'donate'
         ]);
     }
 
@@ -91,6 +92,13 @@ class PaymentsController extends AppController
             'message' => $msg
         ]);
         $this->response->statusCode('500');
+    }
+
+    public function donate()
+    {
+        $this->set([
+            'pageTitle' => 'Donate to the Muncie Arts and Culture Council'
+        ]);
     }
 
     /**

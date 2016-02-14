@@ -59,6 +59,8 @@ Router::scope('/', function ($routes) {
         'pass' => ['slug']
     ]);
 
+    $routes->connect('/donate', ['controller' => 'Payments', 'action' => 'donate']);
+
     $routes->fallbacks('DashedRoute');
 });
 

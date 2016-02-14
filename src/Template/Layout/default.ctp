@@ -46,6 +46,15 @@
                                 ]
                             ) ?>
                         </li>
+                        <li>
+                            <?= $this->Html->link(
+                                'Donate',
+                                [
+                                    'controller' => 'Payments',
+                                    'action' => 'donate'
+                                ]
+                            ) ?>
+                        </li>
                         <?php if ($authUser): ?>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
