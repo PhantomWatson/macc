@@ -30,6 +30,7 @@ var membershipPurchase = {
                             status.slideDown();
                         },
                         success: function (data, textStatus, jqXHR) {
+                            data = data.retval;
                             if (data.success) {
                                 $('#confirmation-modal-label').html('Done!');
                                 modal.find('.modal-body p:first-child').slideUp();
@@ -74,13 +75,13 @@ var membershipPurchase = {
     setupPurchaseButton: function (params) {
         var handler = this.getStripeHandler(params);
         
-        $(params.button_selector).on('click', function(e) {
+        $(params.button_selector).on('click', function(event) {
+            event.preventDefault();
             handler.open({
                 name: 'Muncie Arts and Culture Council',
                 description: params.description,
                 amount: params.cost_dollars * 100
             });
-            e.preventDefault();
         });
 
         $(window).on('popstate', function() {
