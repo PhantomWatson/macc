@@ -46,27 +46,27 @@ class PaymentsController extends AppController
             return $this->render();
         }
 
-        // Save membership
-        $this->loadModel('Memberships');
-        $membership = $this->Memberships->newEntity([
+        // Save payment
+        $payment = $this->Payments->newEntity([
             'user_id' => $userId,
-            'membership_level_id' => $membershipLevelId,
-            'recurring_billing' => false,
-            'expires' => new Time(strtotime('+1 year')),
+            'membership_level_id' => $membershipLevelId
         ]);
-        $errors = $membership->errors();
+        $errors = $payment->errors();
         if (empty($errors)) {
-            $membership = $this->Memberships->save($membership);
+            $payment = $this->Payments->save($payment);
 
-            // Save payment
-            $payment = $this->Payments->newEntity([
+            // Save membership
+            $this->loadModel('Memberships');
+            $membership = $this->Memberships->newEntity([
                 'user_id' => $userId,
                 'membership_level_id' => $membershipLevelId,
-                'membership_id' => $membership->id,
-                'postback' => ''
+                'payment_id' => $payment->id,
+                'recurring_billing' => false,
+                'expires' => new Time(strtotime('+1 year')),
             ]);
-            $errors = $payment->errors();
+            $errors = $membership->errors();
             if (empty($errors)) {
+                $membership = $this->Memberships->save($membership);
                 $this->set('retval', [
                     'success' => true,
                     'message' => 'Purchase completed!'
