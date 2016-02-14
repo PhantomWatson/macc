@@ -1,4 +1,4 @@
-var membershipPurchase = {    
+var paymentProcessor = {    
     // params must contain key, post_data, and post_url
     getStripeHandler: function (params) {
         var configuration = {
@@ -6,7 +6,7 @@ var membershipPurchase = {
             //image: '', (logo)
             panelLabel: 'Continue (Total: {{amount}})',
             token: function(token) {
-                var modal = membershipPurchase.getConfirmationModal(params.confirmation_message);
+                var modal = paymentProcessor.getConfirmationModal(params.confirmation_message);
                 $('body').append(modal);
                 modal.on('shown.bs.modal', function() {
                     var dialog = modal.find('.modal-dialog');

@@ -34,7 +34,7 @@
             ) ?>
 
             <?php $this->append('buffered'); ?>
-                membershipPurchase.setupPurchaseButton({
+                paymentProcessor.setupPurchaseButton({
                     button_selector: <?= json_encode('#purchaseLevel'.$membershipLevel->id) ?>,
                     confirmation_message: <?= json_encode('Confirm payment of $'.$membershipLevel->cost.' to purchase one year of membership?') ?>,
                     cost_dollars: <?= $membershipLevel->cost ?>,
