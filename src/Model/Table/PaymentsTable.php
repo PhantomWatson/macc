@@ -14,7 +14,6 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $MembershipLevels
  * @property \Cake\ORM\Association\BelongsTo $AdminAdders
  * @property \Cake\ORM\Association\BelongsTo $Refunders
- * @property \Cake\ORM\Association\HasMany $MembershipLevelsUsers
  */
 class PaymentsTable extends Table
 {
@@ -37,10 +36,6 @@ class PaymentsTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('Memberships', [
-            'foreignKey' => 'membership_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('MembershipLevels', [
