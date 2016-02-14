@@ -26,11 +26,7 @@
             </p>
             <?= $this->Html->link(
                 'Purchase',
-                [
-                    'controller' => 'Memberships',
-                    'action' => 'purchase',
-                    $membershipLevel->id
-                ],
+                '#',
                 [
                     'class' => 'btn btn-primary',
                     'id' => 'purchaseLevel'.$membershipLevel->id
