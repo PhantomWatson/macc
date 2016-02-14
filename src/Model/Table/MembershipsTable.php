@@ -60,6 +60,18 @@ class MembershipsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->add('user_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('user_id', 'create');
+
+        $validator
+            ->add('membership_level_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('user_id', 'create');
+
+        $validator
+            ->add('payment_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('user_id', 'create');
+
+        $validator
             ->add('recurring_billing', 'valid', ['rule' => 'boolean'])
             ->requirePresence('recurring_billing', 'create')
             ->notEmpty('recurring_billing');
