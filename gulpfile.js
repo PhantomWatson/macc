@@ -117,6 +117,9 @@ gulp.task('watch', function() {
 	gulp.watch('src/**/*.php', ['php_cs', 'php_unit']);
 	gulp.watch('src/**/*.ctp', ['php_unit']);
 	
+	// JavaScript
+    gulp.watch(srcJsFiles, ['js']);
+	
     // Vendor files
     var vendorFiles = [
         'vendor/twbs/bootstrap/dist/fonts/*',
