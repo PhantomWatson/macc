@@ -17,8 +17,10 @@ class PaymentsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow([
+            'completeDonation',
             'completePurchase',
-            'donate'
+            'donate',
+            'donationComplete'
         ]);
     }
 
@@ -99,6 +101,23 @@ class PaymentsController extends AppController
         $this->set([
             'pageTitle' => 'Donate to the Muncie Arts and Culture Council'
         ]);
+    }
+
+    public function completeDonation()
+    {
+        // No validation or recording currently takes place for donations
+        $this->viewBuilder()->layout('json');
+        $this->set([
+            '_serialize' => true,
+            'retval' => [
+                'success' => true
+            ]
+        ]);
+    }
+
+    public function donationComplete()
+    {
+        $this->set('pageTitle', 'Thank you!');
     }
 
     /**

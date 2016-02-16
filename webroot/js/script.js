@@ -154,7 +154,25 @@ var membershipPurchase = {
             if (renewal == 'automatic') {
                 paymentProcessor.confirmationMessage += ' You will be automatically charged to renew your membership every year and can cancel automatic renewal at any time.';
             }
-        }
+        };
+        paymentProcessor.setupPurchaseButton();
+    }
+};
+
+var donation = {
+    init: function (params) {
+        paymentProcessor.buttonSelector = '#donation-button';
+        paymentProcessor.key = params.key;
+        paymentProcessor.postData = {userId: params.userId};
+        paymentProcessor.postUrl = params.postUrl;
+        paymentProcessor.redirectUrl = params.redirectUrl;
+        paymentProcessor.beforePurchase = function () {
+            var amount = $('#donation-amount').val();
+            paymentProcessor.costDollars = amount;
+            // validate amount
+            paymentProcessor.confirmationMessage = 'Confirm donation of $'+amount+'?';
+            paymentProcessor.description = 'Donation of $'+amount+' to MACC';
+        };
         paymentProcessor.setupPurchaseButton();
     }
 };

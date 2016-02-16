@@ -60,6 +60,7 @@ Router::scope('/', function ($routes) {
     ]);
 
     $routes->connect('/donate', ['controller' => 'Payments', 'action' => 'donate']);
+    $routes->connect('/donation-complete', ['controller' => 'Payments', 'action' => 'donationComplete']);
 
     $routes->fallbacks('DashedRoute');
 });
