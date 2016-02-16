@@ -1,9 +1,6 @@
 <?php
-    use Cake\Core\Configure;
-    use Cake\Routing\Router;
     use League\CommonMark\CommonMarkConverter;
     $converter = new CommonMarkConverter();
-    $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
 ?>
 
 <div id="membership-levels-index">
@@ -26,35 +23,16 @@
             </p>
             <?= $this->Html->link(
                 'Purchase',
-                '#',
+                [
+                    'controller' => 'MembershipLevels',
+                    'action' => 'view',
+                    $membershipLevel->id
+                ],
                 [
                     'class' => 'btn btn-primary',
                     'id' => 'purchaseLevel'.$membershipLevel->id
                 ]
             ) ?>
-
-            <?php $this->append('buffered'); ?>
-                paymentProcessor.setupPurchaseButton({
-                    button_selector: <?= json_encode('#purchaseLevel'.$membershipLevel->id) ?>,
-                    confirmation_message: <?= json_encode('Confirm payment of $'.$membershipLevel->cost.' to purchase one year of membership?') ?>,
-                    cost_dollars: <?= $membershipLevel->cost ?>,
-                    description: <?= json_encode($membershipLevel->name.' ($'.$membershipLevel->cost.')') ?>,
-                    key: '<?= Configure::read('Stripe.Public') ?>',
-                    post_data: {
-                        user_id: '<?= $authUser['id'] ?>',
-                        membership_level_id: '<?= $membershipLevel->id ?>'
-                    },
-                    post_url: '<?= Router::url([
-                        'controller' => 'Payments',
-                        'action' => 'completePurchase'
-                    ], true) ?>',
-                    redirect_url: '<?= Router::url([
-                        'controller' => 'MembershipLevels',
-                        'action' => 'index'
-                    ], true) ?>',
-                    email: '<?= $authUser['email'] ?>'
-                });
-            <?php $this->end(); ?>
         </section>
     <?php endforeach; ?>
 </div>

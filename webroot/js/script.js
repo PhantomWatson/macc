@@ -1,86 +1,103 @@
-var paymentProcessor = {    
-    // params must contain key, post_data, and post_url
-    getStripeHandler: function (params) {
-        var configuration = {
-            key: params.key,
-            //image: '', (logo)
-            panelLabel: 'Continue (Total: {{amount}})',
-            token: function(token) {
-                var modal = paymentProcessor.getConfirmationModal(params.confirmation_message);
-                $('body').append(modal);
-                modal.on('shown.bs.modal', function() {
-                    var dialog = modal.find('.modal-dialog');
-                    var initModalHeight = dialog.outerHeight();
-                    dialog.css('margin-top', (window.screenY / 2) + initModalHeight);
-                });
-                modal.modal();
-                var status = modal.find('.status');
-                modal.find('.btn-primary').click(function (event) {
-                    event.preventDefault();
-                    var data = params.post_data;
-                    data.token = token.id;
-                    $.ajax({
-                        type: 'POST',
-                        url: params.post_url,
-                        data: data,
-                        dataType: 'json',
-                        beforeSend: function (jqXHR, settings) {
-                            modal.find('.btn').addClass('disabled');
-                            status.html('Please wait... <img src="/img/loading_small.gif" />');
-                            status.slideDown();
-                        },
-                        success: function (data, textStatus, jqXHR) {
-                            data = data.retval;
-                            if (data.success) {
-                                $('#confirmation-modal-label').html('Done!');
-                                modal.find('.modal-body p:first-child').slideUp();
-                                
-                                // Redirect if redirect_url is provided, refresh otherwise
-                                if (params.hasOwnProperty('redirect_url')) {
-                                    window.location.href = params.redirect_url;
-                                } else {
-                                    location.reload(true);
-                                }
-                            } else {
-                                modal.find('.btn-primary').remove();
-                                modal.find('.btn').removeClass('disabled');
-                                modal.find('.modal-title').html('Error');
-                                modal.find('.modal-body').html(data.message);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            modal.find('.btn').removeClass('disabled');
-                            status.slideUp(500, function() {
-                                var msg = '<span class="text-danger">There was an error submitting your payment';
-                                if (errorThrown) {
-                                    msg += ' ('+errorThrown+')';
-                                }
-                                msg += '. Please try again.</span>';
-                                status.html(msg);
-                                status.slideDown();
-                            });
-                        }
-                    });
-                });
-            }
-        };
-        
-        if (params.hasOwnProperty('email') && params.email != '') {
-            configuration.email = params.email;
-        }
-        
+var paymentProcessor = {
+    buttonSelector: null,
+    confirmationMessage: null,
+    costDollars: 0,
+    description: null,
+    email: null,
+    key: null,
+    postData: {},
+    postUrl: null,
+    redirectUrl: null,
+    beforePurchase: null,
+    
+    getStripeHandler: function () {
+        var configuration = this.getStripeConfig();
         return StripeCheckout.configure(configuration);
     },
     
-    setupPurchaseButton: function (params) {
-        var handler = this.getStripeHandler(params);
-        
-        $(params.button_selector).on('click', function(event) {
+    getStripeConfig: function () {
+        return {
+            email: this.email,
+            key: this.key,
+            //image: '', (logo)
+            panelLabel: 'Continue (Total: {{amount}})',
+            token: function (token) {
+                paymentProcessor.getToken(token);
+            }
+        };
+    },
+    
+    getToken: function (token) {
+        var modal = this.getConfirmationModal();
+        $('body').append(modal);
+        modal.on('shown.bs.modal', function() {
+            var dialog = modal.find('.modal-dialog');
+            var initModalHeight = dialog.outerHeight();
+            dialog.css('margin-top', (window.screenY / 2) + initModalHeight);
+        });
+        modal.modal();
+        var status = modal.find('.status');
+        modal.find('.btn-primary').click(function (event) {
             event.preventDefault();
+            var data = paymentProcessor.postData;
+            data.token = token.id;
+            $.ajax({
+                type: 'POST',
+                url: paymentProcessor.postUrl,
+                data: data,
+                dataType: 'json',
+                beforeSend: function (jqXHR, settings) {
+                    modal.find('.btn').addClass('disabled');
+                    status.html('Please wait... <img src="/img/loading_small.gif" />');
+                    status.slideDown();
+                },
+                success: function (data, textStatus, jqXHR) {
+                    data = data.retval;
+                    if (data.success) {
+                        $('#confirmation-modal-label').html('Done!');
+                        modal.find('.modal-body p:first-child').slideUp();
+                        
+                        // Redirect if redirect_url is provided, refresh otherwise
+                        if (paymentProcessor.redirectUrl !== null) {
+                            window.location.href = paymentProcessor.redirectUrl;
+                        } else {
+                            location.reload(true);
+                        }
+                    } else {
+                        modal.find('.btn-primary').remove();
+                        modal.find('.btn').removeClass('disabled');
+                        modal.find('.modal-title').html('Error');
+                        modal.find('.modal-body').html(data.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    modal.find('.btn').removeClass('disabled');
+                    status.slideUp(500, function() {
+                        var msg = '<span class="text-danger">There was an error submitting your payment';
+                        if (errorThrown) {
+                            msg += ' ('+errorThrown+')';
+                        }
+                        msg += '. Please try again.</span>';
+                        status.html(msg);
+                        status.slideDown();
+                    });
+                }
+            });
+        });
+    },
+    
+    setupPurchaseButton: function () {
+        var handler = this.getStripeHandler();
+        
+        $(this.buttonSelector).on('click', function(event) {
+            event.preventDefault();
+            if (paymentProcessor.beforePurchase !== null) {
+                paymentProcessor.beforePurchase();
+            }
             handler.open({
                 name: 'Muncie Arts and Culture Council',
-                description: params.description,
-                amount: params.cost_dollars * 100
+                description: paymentProcessor.description,
+                amount: paymentProcessor.costDollars * 100
             });
         });
 
@@ -89,7 +106,7 @@ var paymentProcessor = {
         });
     },
     
-    getConfirmationModal: function (confirmation_message) {
+    getConfirmationModal: function () {
         return $(
             '<div class="modal fade" id="confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="confirmation-modal-label" aria-hidden="true">'+
                 '<div class="modal-dialog">'+
@@ -100,7 +117,7 @@ var paymentProcessor = {
                         '</div>'+
                         '<div class="modal-body">'+
                             '<p>'+
-                                confirmation_message+
+                                this.confirmationMessage+
                                 ' A receipt will be emailed to you once your payment is complete.'+
                             '</p>'+
                             '<p class="status" style="display: none;"></p>'+
@@ -113,5 +130,31 @@ var paymentProcessor = {
                 '</div>'+
             '</div>'
         );
+    }
+};
+
+var membershipPurchase = {
+    init: function (params) {
+        paymentProcessor.postUrl = params.postUrl;
+        paymentProcessor.redirectUrl = params.redirectUrl;
+        paymentProcessor.email = params.email;
+        paymentProcessor.key = params.key;
+        paymentProcessor.buttonSelector = '#payment-button';
+        paymentProcessor.costDollars = params.costDollars;
+        paymentProcessor.description = params.membershipLevelName+' ($'+params.costDollars+')';
+        paymentProcessor.postData = {
+            membershipLevelId: params.membershipLevelId,
+            userId: params.userId
+        };
+        paymentProcessor.beforePurchase = function () {
+            var renewal = $('input[name=renewal]:checked').val();
+            paymentProcessor.postData.recurringBilling = (renewal == 'automatic') ? 1 : 0;
+            
+            paymentProcessor.confirmationMessage = 'Confirm payment of $'+params.costDollars+' to purchase one year of membership?';
+            if (renewal == 'automatic') {
+                paymentProcessor.confirmationMessage += ' You will be automatically charged to renew your membership every year and can cancel automatic renewal at any time.';
+            }
+        }
+        paymentProcessor.setupPurchaseButton();
     }
 };

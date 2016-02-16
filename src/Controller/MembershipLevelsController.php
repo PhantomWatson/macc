@@ -41,12 +41,11 @@ class MembershipLevelsController extends AppController
      */
     public function view($id = null)
     {
-        $membershipLevel = $this->MembershipLevels->get($id, [
-            'contain' => ['Users', 'Payments']
+        $membershipLevel = $this->MembershipLevels->get($id);
+        $this->set([
+            'membershipLevel' => $membershipLevel,
+            'pageTitle' => 'Purchase "'.$membershipLevel->name.'" Membership'
         ]);
-
-        $this->set('membershipLevel', $membershipLevel);
-        $this->set('_serialize', ['membershipLevel']);
     }
 
     /**

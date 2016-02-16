@@ -28,7 +28,7 @@ class PaymentsController extends AppController
         $this->set('_serialize', true);
 
         // Verify user
-        $userId = 1; //$this->request->data('user_id');
+        $userId = $this->request->data('userId');
         $this->loadModel('Users');
         try {
             $user = $this->Users->get($userId);
@@ -42,7 +42,7 @@ class PaymentsController extends AppController
         }
 
         // Verify membership level
-        $membershipLevelId = 1; //$this->request->data('membership_level_id');
+        $membershipLevelId = $this->request->data('membershipLevelId');
         $this->loadModel('MembershipLevels');
         try {
             $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
@@ -70,8 +70,8 @@ class PaymentsController extends AppController
                 'user_id' => $userId,
                 'membership_level_id' => $membershipLevelId,
                 'payment_id' => $payment->id,
-                'recurring_billing' => false,
-                'expires' => new Time(strtotime('+1 year')),
+                'recurring_billing' => $this->request->data('recurringBilling'),
+                'expires' => new Time(strtotime('+1 year'))
             ]);
             $errors = $membership->errors();
             if (empty($errors)) {
@@ -86,7 +86,7 @@ class PaymentsController extends AppController
 
         $adminEmail = Configure::read('admin_email');
         $msg = 'There was an error processing your payment. ';
-        $msg .= 'For assistance, please contact <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a>.';
+        $msg .= 'For assistance, please contact <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a>. ';
         $this->set('retval', [
             'success' => false,
             'message' => $msg
