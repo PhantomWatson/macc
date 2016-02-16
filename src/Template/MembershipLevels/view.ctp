@@ -58,8 +58,8 @@
             'action' => 'completePurchase'
         ], true),
         'redirectUrl' => Router::url([
-            'controller' => 'MembershipLevels',
-            'action' => 'index'
+            'controller' => 'Memberships',
+            'action' => 'purchaseComplete'
         ], true),
         'userId' => $authUser['id']
     ]) ?>);

@@ -21,4 +21,9 @@ class MembershipsController extends AppController
         // If user is not logged in, give them a friendly "create an account or log in" page
         // Make sure registration / login page redirects back to this page
     }
+
+    public function purchaseComplete()
+    {
+        $this->set('pageTitle', 'Membership Purchased!');
+    }
 }
