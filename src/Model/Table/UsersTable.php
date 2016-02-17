@@ -151,6 +151,6 @@ class UsersTable extends Table
                     return $exp->isNull('canceled');
                 }
             ]);
-        });
+        })->distinct(['Users.id']);
     }
 }
