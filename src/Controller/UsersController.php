@@ -25,6 +25,7 @@ class UsersController extends AppController
             'forgotPassword',
             'login',
             'logout',
+            'members',
             'register',
             'resetPassword',
             'view'
