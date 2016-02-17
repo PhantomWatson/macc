@@ -19,13 +19,15 @@ class TagsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['ParentTags']
-        ];
-        $tags = $this->paginate($this->Tags);
+        $tags = $this->Tags->find('all')
+            ->find('forMembers')
+            ->select(['id', 'name', 'slug'])
+            ->order(['Tags.name' => 'ASC']);
 
-        $this->set(compact('tags'));
-        $this->set('_serialize', ['tags']);
+        $this->set([
+            'pageTitle' => 'Art Tags',
+            'tags' => $tags
+        ]);
     }
 
     /**

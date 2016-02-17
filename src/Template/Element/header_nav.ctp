@@ -24,6 +24,15 @@
     </li>
     <li>
         <?= $this->Html->link(
+            'Art Tags',
+            [
+                'controller' => 'Tags',
+                'action' => 'index'
+            ]
+        ) ?>
+    </li>
+    <li>
+        <?= $this->Html->link(
             'Donate',
             [
                 'controller' => 'Payments',

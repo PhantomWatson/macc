@@ -144,4 +144,15 @@ class TagsTable extends Table
             $this->Tags->save($tag);
         }
     }
+
+    public function findForMembers(Query $query, array $options)
+    {
+        return $query->matching('Users.Memberships', function ($q) {
+            return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
+                function ($exp, $q) {
+                    return $exp->isNull('canceled');
+                }
+            ]);
+        })->distinct(['Tags.id']);
+    }
 }
