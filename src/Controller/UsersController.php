@@ -323,4 +323,22 @@ class UsersController extends AppController
             'user' => $user
         ]);
     }
+
+    public function members()
+    {
+        $members = $this->Users->find('members')
+            ->select(['id', 'name', 'slug'])
+            ->contain([
+                'Tags' => function ($q) {
+                    return $q->select(['id', 'name', 'slug']);
+                }
+            ])
+            ->order(['Users.name' => 'ASC'])
+            ->all();
+
+        $this->set([
+            'members' => $members,
+            'pageTitle' => 'Members'
+        ]);
+    }
 }

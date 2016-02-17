@@ -15,6 +15,15 @@
     </li>
     <li>
         <?= $this->Html->link(
+            'Members',
+            [
+                'controller' => 'Users',
+                'action' => 'members'
+            ]
+        ) ?>
+    </li>
+    <li>
+        <?= $this->Html->link(
             'Donate',
             [
                 'controller' => 'Payments',

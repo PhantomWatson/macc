@@ -48,6 +48,7 @@ Router::scope('/', function ($routes) {
     $routes->connect('/forgot-password',  ['controller' => 'Users', 'action' => 'forgotPassword']);
     $routes->connect('/login',            ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/logout',           ['controller' => 'Users', 'action' => 'logout']);
+    $routes->connect('/members',          ['controller' => 'Users', 'action' => 'members']);
     $routes->connect('/register',         ['controller' => 'Users', 'action' => 'register']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
     $routes->connect('/user/:id/:slug',   ['controller' => 'Users', 'action' => 'view'], [
