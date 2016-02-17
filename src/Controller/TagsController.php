@@ -12,6 +12,15 @@ use Cake\Network\Exception\NotFoundException;
 class TagsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow([
+            'index',
+            'view'
+        ]);
+    }
+
     /**
      * Index method
      *
