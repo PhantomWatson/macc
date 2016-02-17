@@ -15,7 +15,6 @@
                     [
                         'controller' => 'Tags',
                         'action' => 'view',
-                        $tag->id,
                         $tag->slug
                     ]
                 ) ?>
