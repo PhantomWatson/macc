@@ -69,6 +69,26 @@
                 </li>
             </ul>
         </li>
+        <?php if ($authUser['role'] == 'admin'): ?>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Admin
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <?= $this->Html->link(
+                            'Manage Users',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Users',
+                                'action' => 'index'
+                            ]
+                        ) ?>
+                    </li>
+                </ul>
+            </li>
+        <?php endif; ?>
         <li>
             <?= $this->Html->link(
                 'Logout',
