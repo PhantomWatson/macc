@@ -88,6 +88,16 @@
                     </li>
                     <li>
                         <?= $this->Html->link(
+                            'Membership Levels',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'MembershipLevels',
+                                'action' => 'index'
+                            ]
+                        ) ?>
+                    </li>
+                    <li>
+                        <?= $this->Html->link(
                             'Payment Records',
                             [
                                 'prefix' => 'admin',
