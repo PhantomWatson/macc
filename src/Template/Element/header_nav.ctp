@@ -86,6 +86,16 @@
                             ]
                         ) ?>
                     </li>
+                    <li>
+                        <?= $this->Html->link(
+                            'Payment Records',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Payments',
+                                'action' => 'index'
+                            ]
+                        ) ?>
+                    </li>
                 </ul>
             </li>
         <?php endif; ?>
