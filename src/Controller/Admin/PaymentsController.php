@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
 class PaymentsController extends AppController
@@ -44,8 +45,31 @@ class PaymentsController extends AppController
             $this->request->data['postback'] = '';
             $payment = $this->Payments->patchEntity($payment, $this->request->data());
             $errors = $payment->errors();
-            if (empty($errors) && $this->Payments->save($payment)) {
+            if (empty($errors)) {
+                $payment = $this->Payments->save($payment);
                 $this->Flash->success('Payment record added');
+
+                // Add membership
+                $membershipLevelId = $this->request->data('membership_level_id');
+                $userId = $this->request->data('user_id');
+                if ($membershipLevelId && $userId) {
+                    $this->loadModel('Memberships');
+                    $membership = $this->Memberships->newEntity([
+                        'expires' => new Time(strtotime('+1 year')),
+                        'membership_level_id' => $membershipLevelId,
+                        'payment_id' => $payment->id,
+                        'recurring_billing' => 0,
+                        'user_id' => $userId
+                    ]);
+                    $errors = $membership->errors();
+                    if (empty($errors)) {
+                        $membership = $this->Memberships->save($membership);
+                        $this->Flash->success('One year of membership added to that user\'s account');
+                    } else {
+                        $this->Flash->error('There was an error adding one year of membership to that user\'s account.');
+                    }
+                }
+
                 return $this->redirect([
                     'action' => 'index'
                 ]);

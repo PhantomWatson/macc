@@ -19,6 +19,10 @@
     information about how this payment was received in the <strong>notes</strong> section.
 </p>
 
+<p>
+    Adding a record will also automatically grant the selected user one year of membership.
+</p>
+
 <?= $this->Form->create($payment) ?>
 
 <?= $this->Form->input('user_id') ?>
