@@ -39,10 +39,24 @@ class PaymentsController extends AppController
 
     public function add()
     {
+        $membershipLevelsTable = TableRegistry::get('MembershipLevels');
+        $results = $membershipLevelsTable->find('all')
+            ->select(['id', 'name', 'cost'])
+            ->order(['cost' => 'ASC']);
+        $membershipLevels = [];
+        $costs = [];
+        foreach ($results as $membershipLevel) {
+            $membershipLevels[$membershipLevel->id] = $membershipLevel->name.' ($'.number_format($membershipLevel->cost).')';
+            $costs[$membershipLevel->id] = $membershipLevel->cost;
+        }
+
         $payment = $this->Payments->newEntity();
         if ($this->request->is('post')) {
             $this->request->data['admin_adder_id'] = $this->Auth->user('id');
             $this->request->data['postback'] = '';
+            $membershipLevelId = $this->request->data('membership_level_id');
+            $amount = isset($costs[$membershipLevel->id]) ? $costs[$membershipLevel->id] : 0;
+            $this->request->data['amount'] = $amount;
             $payment = $this->Payments->patchEntity($payment, $this->request->data());
             $errors = $payment->errors();
             if (empty($errors)) {
@@ -50,7 +64,6 @@ class PaymentsController extends AppController
                 $this->Flash->success('Payment record added');
 
                 // Add membership
-                $membershipLevelId = $this->request->data('membership_level_id');
                 $userId = $this->request->data('user_id');
                 if ($membershipLevelId && $userId) {
                     $this->loadModel('Memberships');
@@ -79,15 +92,6 @@ class PaymentsController extends AppController
 
         $usersTable = TableRegistry::get('Users');
         $users = $usersTable->find('list')->order(['name' => 'ASC']);
-
-        $membershipLevelsTable = TableRegistry::get('MembershipLevels');
-        $results = $membershipLevelsTable->find('all')
-            ->select(['id', 'name', 'cost'])
-            ->order(['cost' => 'ASC']);
-        $membershipLevels = [];
-        foreach ($results as $membershipLevel) {
-            $membershipLevels[$membershipLevel->id] = $membershipLevel->name.' ($'.number_format($membershipLevel->cost).')';
-        }
 
         $this->set([
             'membershipLevels' => $membershipLevels,
