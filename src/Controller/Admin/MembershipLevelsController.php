@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 
@@ -10,6 +10,18 @@ use App\Controller\AppController;
  */
 class MembershipLevelsController extends AppController
 {
+    public function index()
+    {
+        $membershipLevels = $this->MembershipLevels
+            ->find('all')
+            ->order(['cost' => 'ASC']);
+
+        $this->set([
+            'membershipLevels' => $membershipLevels,
+            'pageTitle' => 'Membership Levels'
+        ]);
+    }
+
     public function add()
     {
         $membershipLevel = $this->MembershipLevels->newEntity();
@@ -22,9 +34,10 @@ class MembershipLevelsController extends AppController
                 $this->Flash->error(__('The membership level could not be saved. Please, try again.'));
             }
         }
-        $users = $this->MembershipLevels->Users->find('list', ['limit' => 200]);
-        $this->set(compact('membershipLevel', 'users'));
-        $this->set('_serialize', ['membershipLevel']);
+        $this->set([
+            'membershipLevel' => $membershipLevel,
+            'pageTitle' => 'Add New Membership Level'
+        ]);
     }
 
     public function edit($id = null)
