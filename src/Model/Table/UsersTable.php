@@ -153,4 +153,28 @@ class UsersTable extends Table
             ]);
         })->distinct(['Users.id']);
     }
+
+    /**
+     * Creates a Stripe customer and returns the customer object
+     *
+     * @param int $userId
+     * @param array $token
+     * @return \Stripe\Customer
+     */
+    public function createStripeCustomer($userId, $token)
+    {
+        $apiKey = Configure::read('Stripe.Secret');
+        \Stripe\Stripe::setApiKey($apiKey);
+
+        $user = $this->get($userId);
+
+        return \Stripe\Customer::create([
+            'source' => $token,
+            'description' => $user->name,
+            'email' => $user->email,
+            'metadata' => [
+                'macc_user_id' => $user->id
+            ]
+        ]);
+    }
 }
