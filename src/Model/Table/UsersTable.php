@@ -111,10 +111,6 @@ class UsersTable extends Table
             ->notEmpty('confirm_password', 'A password is required', 'create')
             ->allowEmpty('confirm_password', 'update');
 
-        $validator
-            ->add('stripe_customer_id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('stripe_customer_id', 'create');
-
         return $validator;
     }
 
