@@ -3,7 +3,7 @@
         'Add Payment Record',
         [
             'prefix' => 'admin',
-            'controller' => 'Payment',
+            'controller' => 'Payments',
             'action' => 'add'
         ],
         ['class' => 'btn btn-success']
