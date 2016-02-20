@@ -35,22 +35,18 @@ class PaymentsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'foreignKey' => 'user_id'
         ]);
         $this->belongsTo('MembershipLevels', [
-            'foreignKey' => 'membership_level_id',
-            'joinType' => 'INNER'
+            'foreignKey' => 'membership_level_id'
         ]);
         $this->belongsTo('AdminAdders', [
             'className' => 'Users',
-            'foreignKey' => 'admin_adder_id',
-            'joinType' => 'INNER'
+            'foreignKey' => 'admin_adder_id'
         ]);
         $this->belongsTo('Refunders', [
             'className' => 'Users',
-            'foreignKey' => 'refunder_id',
-            'joinType' => 'INNER'
+            'foreignKey' => 'refunder_id'
         ]);
     }
 
