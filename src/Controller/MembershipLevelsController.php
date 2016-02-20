@@ -24,7 +24,9 @@ class MembershipLevelsController extends AppController
      */
     public function index()
     {
-        $membershipLevels = $this->MembershipLevels->find('all');
+        $membershipLevels = $this->MembershipLevels
+            ->find('all')
+            ->order(['cost' => 'ASC']);
 
         $this->set([
             'membershipLevels' => $membershipLevels,
