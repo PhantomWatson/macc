@@ -60,7 +60,8 @@ class PaymentsController extends AppController
         // Save payment
         $payment = $this->Payments->newEntity([
             'user_id' => $userId,
-            'membership_level_id' => $membershipLevelId
+            'membership_level_id' => $membershipLevelId,
+            'amount' => $membershipLevel->cost
         ]);
         $errors = $payment->errors();
         if (empty($errors)) {
