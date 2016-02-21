@@ -8,6 +8,7 @@
         <?= $this->Html->link(
             'Become a Member',
             [
+                'prefix' => false,
                 'controller' => 'MembershipLevels',
                 'action' => 'index'
             ]
@@ -17,6 +18,7 @@
         <?= $this->Html->link(
             'Members',
             [
+                'prefix' => false,
                 'controller' => 'Users',
                 'action' => 'members'
             ]
@@ -26,6 +28,7 @@
         <?= $this->Html->link(
             'Art Tags',
             [
+                'prefix' => false,
                 'controller' => 'Tags',
                 'action' => 'index'
             ]
@@ -35,6 +38,7 @@
         <?= $this->Html->link(
             'Donate',
             [
+                'prefix' => false,
                 'controller' => 'Payments',
                 'action' => 'donate'
             ]
@@ -51,6 +55,7 @@
                     <?= $this->Html->link(
                         'View my profile',
                         [
+                            'prefix' => false,
                             'controller' => 'Users',
                             'action' => 'view',
                             $authUser['id'],
@@ -62,6 +67,7 @@
                     <?= $this->Html->link(
                         'Edit my profile',
                         [
+                            'prefix' => false,
                             'controller' => 'Users',
                             'action' => 'editProfile'
                         ]
@@ -113,6 +119,7 @@
             <?= $this->Html->link(
                 'Logout',
                 [
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'logout'
                 ]
@@ -123,6 +130,7 @@
             <?= $this->Html->link(
                 'Register',
                 [
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'register'
                 ]
@@ -132,6 +140,7 @@
             <?= $this->Html->link(
                 'Login',
                 [
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'login'
                 ]
