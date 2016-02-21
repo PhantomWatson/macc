@@ -2,10 +2,13 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\User;
+use Cake\Core\Configure;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Stripe\Customer;
+use Stripe\Stripe;
 
 /**
  * Users Model
