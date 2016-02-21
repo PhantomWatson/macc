@@ -79,6 +79,14 @@ class PaymentsController extends AppController
             $errors = $membership->errors();
             if (empty($errors)) {
                 $membership = $this->Memberships->save($membership);
+
+                // Save stripe_customer_id
+                $token = $this->request->data('stripeToken');
+                $customer = $this->Users->createStripeCustomer($userId, $token);
+                $user = $this->Users->patchEntity([
+                    'stripe_customer_id' => $customer->id
+                ]);
+
                 $this->set('retval', [
                     'success' => true,
                     'message' => 'Purchase completed!'
