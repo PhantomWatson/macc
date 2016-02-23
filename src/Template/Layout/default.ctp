@@ -82,6 +82,7 @@
     <script>window.jQuery || document.write('<script src="/js/jquery-1.12.0.min.js"><\/script>')</script>
 
     <?= $this->Html->script('/bootstrap/js/bootstrap.min') ?>
+    <?= $this->Html->script('/js/jquery-scrolltofixed-min') ?>
     <?= $this->Html->script('/js/script.js') ?>
 
     <?= $this->fetch('script') ?>
@@ -89,6 +90,8 @@
     <script>
         $(document).ready(function () {
             <?= $this->fetch('buffered') ?>
+
+            $('nav.navbar').scrollToFixed();
         });
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
