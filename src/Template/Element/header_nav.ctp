@@ -1,3 +1,17 @@
+<?php
+use Cake\Routing\Router;
+
+function navLink($label, $url, $view) {
+    $url = Router::url($url);
+    $class = $view->request->here == $url ? 'current' : '';
+    return $view->Html->link(
+        $label,
+        $url,
+        ['class' => $class]
+    );
+}
+?>
+
 <ul class="nav navbar-nav">
     <li>
         <a href="http://munciearts.org">
@@ -5,43 +19,47 @@
         </a>
     </li>
     <li>
-        <?= $this->Html->link(
+        <?= navLink(
             'Become a Member',
             [
                 'prefix' => false,
                 'controller' => 'MembershipLevels',
                 'action' => 'index'
-            ]
+            ],
+            $this
         ) ?>
     </li>
     <li>
-        <?= $this->Html->link(
+        <?= navLink(
             'Members',
             [
                 'prefix' => false,
                 'controller' => 'Users',
                 'action' => 'members'
-            ]
+            ],
+            $this
         ) ?>
     </li>
     <li>
-        <?= $this->Html->link(
+        <?= navLink(
             'Art Tags',
             [
                 'prefix' => false,
                 'controller' => 'Tags',
                 'action' => 'index'
-            ]
+            ],
+            $this
         ) ?>
     </li>
     <li>
-        <?= $this->Html->link(
+        <?= navLink(
             'Donate',
             [
                 'prefix' => false,
                 'controller' => 'Payments',
                 'action' => 'donate'
-            ]
+            ],
+            $this
         ) ?>
     </li>
     <?php if ($authUser): ?>
@@ -52,7 +70,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <?= $this->Html->link(
+                    <?= navLink(
                         'View my profile',
                         [
                             'prefix' => false,
@@ -60,17 +78,19 @@
                             'action' => 'view',
                             $authUser['id'],
                             $authUser['slug']
-                        ]
+                        ],
+                        $this
                     ) ?>
                 </li>
                 <li>
-                    <?= $this->Html->link(
+                    <?= navLink(
                         'Edit my profile',
                         [
                             'prefix' => false,
                             'controller' => 'Users',
                             'action' => 'editProfile'
-                        ]
+                        ],
+                        $this
                     ) ?>
                 </li>
             </ul>
@@ -83,67 +103,73 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <?= $this->Html->link(
+                        <?= navLink(
                             'Manage Users',
                             [
                                 'prefix' => 'admin',
                                 'controller' => 'Users',
                                 'action' => 'index'
-                            ]
+                            ],
+                            $this
                         ) ?>
                     </li>
                     <li>
-                        <?= $this->Html->link(
+                        <?= navLink(
                             'Membership Levels',
                             [
                                 'prefix' => 'admin',
                                 'controller' => 'MembershipLevels',
                                 'action' => 'index'
-                            ]
+                            ],
+                            $this
                         ) ?>
                     </li>
                     <li>
-                        <?= $this->Html->link(
+                        <?= navLink(
                             'Payment Records',
                             [
                                 'prefix' => 'admin',
                                 'controller' => 'Payments',
                                 'action' => 'index'
-                            ]
+                            ],
+                            $this
                         ) ?>
                     </li>
                 </ul>
             </li>
         <?php endif; ?>
         <li>
-            <?= $this->Html->link(
+            <?= navLink(
                 'Logout',
                 [
                     'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'logout'
-                ]
+                ],
+                $this
             ) ?>
         </li>
     <?php else: ?>
         <li>
-            <?= $this->Html->link(
+            <?= navLink(
                 'Register',
                 [
                     'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'register'
-                ]
+                ],
+                $this
             ) ?>
         </li>
         <li>
-            <?= $this->Html->link(
+            <?= navLink(
                 'Login',
                 [
                     'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'login'
-                ]
+                ],
+                $this
             ) ?>
         </li>
     <?php endif; ?>

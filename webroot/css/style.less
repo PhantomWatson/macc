@@ -144,3 +144,33 @@ a:hover {
     	border: 0;
 	}
 }
+#navbar-collapse {
+	> ul {
+		> li {
+			> a {
+				border-top: 4px solid transparent;
+				color: #708e48;
+				font-weight: 300;
+				height: 90px;
+				letter-spacing: 2px;
+				text-transform: uppercase;
+    			padding-top: 37px;
+
+				&.current,
+				&:hover,
+				&:active {
+        			border-top-color: rgb(253, 186, 49);
+        			color: #000;
+				}
+			}
+		}
+	}
+}
+@media (min-width: 768px) {
+	.navbar-nav {
+        float:none;
+        margin: 0 auto;
+        display: table;
+        table-layout: fixed;
+    }
+}
