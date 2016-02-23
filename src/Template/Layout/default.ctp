@@ -19,6 +19,10 @@
             Muncie Arts &amp; Culture
         </h1>
 
+        <div id="logo">
+            <img src="/img/macc-logo-200px.jpg" alt="Muncie Arts & Culture" />
+        </div>
+
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
