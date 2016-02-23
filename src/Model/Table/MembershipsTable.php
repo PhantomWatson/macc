@@ -85,6 +85,10 @@ class MembershipsTable extends Table
             ->add('canceled', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('canceled');
 
+        $validator
+            ->add('renewed', 'valid', ['rule' => 'datetime'])
+            ->allowEmpty('renewed');
+
         return $validator;
     }
 
