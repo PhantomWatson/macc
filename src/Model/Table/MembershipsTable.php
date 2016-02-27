@@ -106,4 +106,36 @@ class MembershipsTable extends Table
         $rules->add($rules->existsIn(['payment_id'], 'Payments'));
         return $rules;
     }
+
+    /**
+     * Finds all memberships that will expire in the next 24 hours, are marked
+     * for automatic renewal, and have not been renewed or canceled.
+     *
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findToAutoRenew(Query $query, array $options)
+    {
+        return $query
+            ->contain([
+                'Users' => function ($q) {
+                    return $q->select(['id', 'name', 'email', 'stripe_customer_id']);
+                },
+                'MembershipLevels' => function ($q) {
+                    return $q->select(['id', 'name', 'cost']);
+                }
+            ])
+            ->where(function ($exp, $q) {
+                return $exp->isNull('renewed');
+            })
+            ->where(function ($exp, $q) {
+                return $exp->isNull('canceled');
+            })
+            ->where([
+                'recurring_billing' => 1,
+                'expires' => date('Y-m-d H:i:s', strtotime('+1 day'))
+            ])
+            ->order(['expires' => 'ASC']);
+    }
 }
