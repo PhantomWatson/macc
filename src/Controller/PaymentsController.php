@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\I18n\Time;
+use Cake\Network\Exception\InternalErrorException;
 
 /**
  * Payments Controller
@@ -127,5 +128,157 @@ class PaymentsController extends AppController
     public function donationComplete()
     {
         $this->set('pageTitle', 'Thank you!');
+    }
+
+    /**
+     * Checks for and processes any recurring payments associated with
+     * memberships that will expire in the next 24 hours.
+     *
+     * Intended for a cron job, but can be run manually.
+     */
+    public function processRecurring()
+    {
+        $apiKey = Configure::read('Stripe.Secret');
+        \Stripe\Stripe::setApiKey($apiKey);
+
+        $this->loadModel('Memberships');
+        $memberships = $this->Memberships->find('toAutoRenew');
+
+        if ($memberships->isEmpty()) {
+            $this->Flash->set('No memberships need to be renewed at this time.');
+        }
+
+        foreach ($memberships as $membership) {
+            $this->validateMembership($membership);
+            $amount = $membership->membership_level['cost'].'00'; // Cost is stored as dollars
+            $userName = $membership->user['name'];
+            $membershipLevelName = $membership->membership_level['name'];
+
+            $charge = $this->createStripeCharge([
+                'amount'   => $amount,
+                'currency' => 'usd',
+                'customer' => $membership->user['stripe_customer_id'],
+                'description' => "Automatically renewing $userName's \"$membershipLevelName\" membership",
+                'metadata' => [
+                    'macc_user_id' => $membership->user_id,
+                    'membership_level_id' => $membership->membership_level_id
+                ],
+                'receipt_email' => $membership->user['email'],
+                'statement_descriptor' => 'MACC member renewal' // 22 characters max
+            ]);
+
+            if (! $charge->paid) {
+                throw new InternalErrorException('Charge did not complete successfully');
+            }
+
+            // Save payment
+            $payment = $this->Payments->newEntity([
+                'user_id' => $membership->user_id,
+                'membership_level_id' => $membership->membership_level_id,
+                'amount' => $membership->membership_level['cost']
+            ]);
+            $errors = $payment->errors();
+            if (! empty($errors)) {
+                throw new InternalErrorException('Errors saving payment record: '.json_encode($errors));
+            }
+            $payment = $this->Payments->save($payment);
+
+            // Mark previous membership as having been renewed
+            $membership = $this->Memberships->patchEntity([
+                'renewed' => new Time()
+            ]);
+            $errors = $membership->errors();
+            if (! empty($errors)) {
+                throw new InternalErrorException('Errors updating membership record: '.json_encode($errors));
+            }
+            $membership = $this->Memberships->save($membership);
+
+            // Save new membership
+            $newMembership = $this->Memberships->newEntity([
+                'user_id' => $membership->user_id,
+                'membership_level_id' => $membership->membership_level_id,
+                'payment_id' => $payment->id,
+                'recurring_billing' => true,
+                'expires' => new Time(strtotime('+1 year'))
+            ]);
+            $errors = $newMembership->errors();
+            if (! empty($errors)) {
+                throw new InternalErrorException('Errors saving new membership record: '.json_encode($errors));
+            }
+            $newMembership = $this->Memberships->save($newMembership);
+
+            $this->Flash->success('Membership renewed for '.$membership->user['name']);
+        }
+
+        $this->set([
+            'pageTitle' => 'Process Recurring Payments'
+        ]);
+    }
+
+    /**
+     * Creates a Stripe charge object (charges the user) and handles various exceptions.
+     *
+     * @param array $params Passed to \Stripe\Charge::create()
+     * @return \Stripe\Charge
+     */
+    private function createStripeCharge($params)
+    {
+        try {
+            $charge = \Stripe\Charge::create($params);
+        } catch (\Stripe\Error\Card $e) {
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        } catch (\Stripe\Error\RateLimit $e) {
+            // Too many requests made to the API too quickly
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        } catch (\Stripe\Error\InvalidRequest $e) {
+            // Invalid parameters were supplied to Stripe's API
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        } catch (\Stripe\Error\Authentication $e) {
+            // Authentication with Stripe's API failed
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        } catch (\Stripe\Error\ApiConnection $e) {
+            // Network communication with Stripe failed
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        } catch (\Stripe\Error\Base $e) {
+            // Display a very generic error to the user
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            throw new InternalErrorException($err['message'], $error['code']);
+        }
+
+        return $charge;
+    }
+
+    /**
+     * Checks membership and throws exceptions if any of its associations are broken.
+     *
+     * @param Membership $membership
+     * @throws NotFoundException
+     */
+    private function validateMembership($membership)
+    {
+        if (empty($membership->membership_level)) {
+            throw new NotFoundException('Membership level #'.$membership->membership_level_id.' not found.');
+        }
+        if (empty($membership->membership_level['cost'])) {
+            throw new NotFoundException('Membership level #'.$membership->membership_level_id.' has no cost.');
+        }
+        if (empty($membership->user)) {
+            throw new NotFoundException('User #'.$membership->user_id.' not found.');
+        }
+        if (empty($membership->user['stripe_customer_id'])) {
+            throw new NotFoundException('User #'.$membership->user_id.' has no Stripe customer id.');
+        }
     }
 }
