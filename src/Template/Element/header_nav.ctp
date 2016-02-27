@@ -93,6 +93,17 @@ function navLink($label, $url, $view) {
                         $this
                     ) ?>
                 </li>
+                <li>
+                    <?= navLink(
+                        'My membership',
+                        [
+                            'prefix' => false,
+                            'controller' => 'Memberships',
+                            'action' => 'myMembership'
+                        ],
+                        $this
+                    ) ?>
+                </li>
             </ul>
         </li>
         <?php if ($authUser['role'] == 'admin'): ?>

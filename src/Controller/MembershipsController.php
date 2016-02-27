@@ -26,4 +26,27 @@ class MembershipsController extends AppController
     {
         $this->set('pageTitle', 'Membership Purchased!');
     }
+
+    public function myMembership()
+    {
+        $userId = $this->Auth->user('id');
+        $this->loadModel('Users');
+        $user = $this->Users->find('all')
+            ->where(['id' => $userId])
+            ->contain([
+                // Just the most recently-purchased membership
+                'Memberships' => function ($q) {
+                    return $q
+                        ->contain(['MembershipLevels'])
+                        ->limit(1)
+                        ->order(['Memberships.created' => 'DESC']);
+                }
+            ])
+            ->first();
+
+        $this->set([
+            'pageTitle' => 'My Membership Info',
+            'user' => $user
+        ]);
+    }
 }
