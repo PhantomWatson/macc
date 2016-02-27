@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\BadRequestException;
 
 /**
  * Memberships Controller
@@ -30,23 +31,33 @@ class MembershipsController extends AppController
     public function myMembership()
     {
         $userId = $this->Auth->user('id');
-        $this->loadModel('Users');
-        $user = $this->Users->find('all')
-            ->where(['id' => $userId])
-            ->contain([
-                // Just the most recently-purchased membership
-                'Memberships' => function ($q) {
-                    return $q
-                        ->contain(['MembershipLevels'])
-                        ->limit(1)
-                        ->order(['Memberships.created' => 'DESC']);
-                }
-            ])
-            ->first();
+        $membership = $this->Memberships->getCurrentMembership($userId);
 
         $this->set([
-            'pageTitle' => 'My Membership Info',
-            'user' => $user
+            'membership' => $membership,
+            'pageTitle' => 'My Membership Info'
         ]);
+    }
+
+    public function toggleAutoRenewal($value = null)
+    {
+        if (! in_array($value, ['1', '0'])) {
+            throw new BadRequestException('Invalid value supplied');
+        }
+
+        $userId = $this->Auth->user('id');
+        $membership = $this->Memberships->getCurrentMembership($userId);
+        $membershipEntity = $this->Memberships->get($membership['id']);
+        $membershipEntity = $this->Memberships->patchEntity($membershipEntity, [
+            'recurring_billing' => $value
+        ]);
+        $this->Memberships->save($membershipEntity);
+        $msg = 'Membership auto-renewal turned '.($value ? 'on' : 'off').'.';
+        if ($value) {
+            $timestamp = $membership->expires->format('U') - (60 * 60 * 24);
+            $msg .= ' Your membership will be automatically renewed on '.date('F j, Y', $timestamp).'.';
+        }
+        $this->Flash->success($msg);
+        $this->redirect($this->referer());
     }
 }
