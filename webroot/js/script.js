@@ -40,7 +40,7 @@ var paymentProcessor = {
         modal.find('.btn-primary').click(function (event) {
             event.preventDefault();
             var data = paymentProcessor.postData;
-            data.token = token.id;
+            data.stripeToken = token.id;
             $.ajax({
                 type: 'POST',
                 url: paymentProcessor.postUrl,
