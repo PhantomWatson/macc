@@ -132,9 +132,11 @@ class MembershipsTable extends Table
             ->where(function ($exp, $q) {
                 return $exp->isNull('canceled');
             })
+            ->where(function ($exp, $q) {
+                return $exp->lte('expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+            })
             ->where([
                 'recurring_billing' => 1,
-                'expires' => date('Y-m-d H:i:s', strtotime('+1 day'))
             ])
             ->order(['expires' => 'ASC']);
     }
