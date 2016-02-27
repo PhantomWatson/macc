@@ -228,37 +228,42 @@ class PaymentsController extends AppController
             $charge = \Stripe\Charge::create($params);
         } catch (\Stripe\Error\Card $e) {
             // Since it's a decline, \Stripe\Error\Card will be caught
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         } catch (\Stripe\Error\RateLimit $e) {
             // Too many requests made to the API too quickly
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         } catch (\Stripe\Error\InvalidRequest $e) {
             // Invalid parameters were supplied to Stripe's API
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         } catch (\Stripe\Error\Authentication $e) {
             // Authentication with Stripe's API failed
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         } catch (\Stripe\Error\ApiConnection $e) {
             // Network communication with Stripe failed
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         } catch (\Stripe\Error\Base $e) {
             // Display a very generic error to the user
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            throw new InternalErrorException($err['message'], $error['code']);
+            $this->throwStripeException($e);
         }
 
         return $charge;
+    }
+
+    /**
+     * Turns a Stripe exception into a CakePHP exception.
+     *
+     * This doesn't currently provide any advantage, but it helps
+     * simplify createStripeCharge(), which might be modified in
+     * the future to handle different Stripe exceptions differently.
+     *
+     * @param Exception $3
+     * @throws InternalErrorException
+     */
+    private function throwStripeException($e)
+    {
+        $body = $e->getJsonBody();
+        $err  = $body['error'];
+        throw new InternalErrorException($err['message']);
     }
 
     /**
