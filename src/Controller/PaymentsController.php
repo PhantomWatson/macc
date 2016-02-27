@@ -58,7 +58,34 @@ class PaymentsController extends AppController
             return $this->render();
         }
 
-        // Save payment
+        // Create Stripe customer
+        $apiKey = Configure::read('Stripe.Secret');
+        \Stripe\Stripe::setApiKey($apiKey);
+        $token = $this->request->data('stripeToken');
+        $customer = $this->Users->createStripeCustomer($userId, $token);
+        $user = $this->Users->patchEntity($user, [
+            'stripe_customer_id' => $customer->id
+        ]);
+        $user = $this->Users->save($user);
+
+        // Charge customer
+        try {
+            $charge = \Stripe\Charge::create([
+                'amount' => $membershipLevel->cost.'00', // in cents
+                'currency' => 'usd',
+                'customer' => $customer->id,
+                'description' => "$user->name purchasing '$membershipLevel->name' membership"
+            ]);
+        } catch(\Stripe\Error\Card $e) {
+            $this->set('retval', [
+                'success' => false,
+                'message' => 'Credit card was declined.'
+            ]);
+            $this->response->statusCode('402');
+            return $this->render();
+        }
+
+        // Save payment record in MACC's database
         $payment = $this->Payments->newEntity([
             'user_id' => $userId,
             'membership_level_id' => $membershipLevelId,
@@ -80,14 +107,6 @@ class PaymentsController extends AppController
             $errors = $membership->errors();
             if (empty($errors)) {
                 $membership = $this->Memberships->save($membership);
-
-                // Save stripe_customer_id
-                $token = $this->request->data('stripeToken');
-                $customer = $this->Users->createStripeCustomer($userId, $token);
-                $user = $this->Users->patchEntity($user, [
-                    'stripe_customer_id' => $customer->id
-                ]);
-                $user = $this->Users->save($user);
 
                 $this->set('retval', [
                     'success' => true,
