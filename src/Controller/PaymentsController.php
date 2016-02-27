@@ -76,7 +76,7 @@ class PaymentsController extends AppController
                 'customer' => $customer->id,
                 'description' => "$user->name purchasing '$membershipLevel->name' membership"
             ]);
-        } catch(\Stripe\Error\Card $e) {
+        } catch (\Stripe\Error\Card $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => 'Credit card was declined.'
