@@ -87,6 +87,7 @@ class PaymentsController extends AppController
                 $user = $this->Users->patchEntity($user, [
                     'stripe_customer_id' => $customer->id
                 ]);
+                $user = $this->Users->save($user);
 
                 $this->set('retval', [
                     'success' => true,
