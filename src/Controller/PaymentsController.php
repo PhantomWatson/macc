@@ -204,7 +204,7 @@ class PaymentsController extends AppController
             $payment = $this->Payments->save($payment);
 
             // Mark previous membership as having been renewed
-            $membership = $this->Memberships->patchEntity([
+            $membership = $this->Memberships->patchEntity($membership, [
                 'renewed' => new Time()
             ]);
             $errors = $membership->errors();
