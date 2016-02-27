@@ -140,4 +140,20 @@ class MembershipsTable extends Table
             ])
             ->order(['expires' => 'ASC']);
     }
+
+    /**
+     * Returns the most recently-purchased membership for the selected user
+     *
+     * @param int $userId
+     * @return array
+     */
+    public function getCurrentMembership($userId)
+    {
+        return $this->find('all')
+            ->where(['user_id' => $userId])
+            ->contain(['MembershipLevels'])
+            ->limit(1)
+            ->order(['Memberships.created' => 'DESC'])
+            ->first();
+    }
 }
