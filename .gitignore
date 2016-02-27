@@ -5,6 +5,7 @@
 /tmp/*
 /logs/*
 /webroot/bootstrap/*
+/webroot/ckeditor/*
 
 # Eclipse
 *.pydevproject
