@@ -84,7 +84,7 @@ class PaymentsController extends AppController
                 // Save stripe_customer_id
                 $token = $this->request->data('stripeToken');
                 $customer = $this->Users->createStripeCustomer($userId, $token);
-                $user = $this->Users->patchEntity([
+                $user = $this->Users->patchEntity($user, [
                     'stripe_customer_id' => $customer->id
                 ]);
 
