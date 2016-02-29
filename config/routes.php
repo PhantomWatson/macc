@@ -45,6 +45,7 @@ Router::scope('/', function ($routes) {
     $routes->connect('/',        ['controller' => 'Pages', 'action' => 'home']);
     $routes->connect('/styling', ['controller' => 'Pages', 'action' => 'styling']);
 
+    $routes->connect('/account',          ['controller' => 'Users', 'action' => 'account']);
     $routes->connect('/change-password',  ['controller' => 'Users', 'action' => 'changePassword']);
     $routes->connect('/forgot-password',  ['controller' => 'Users', 'action' => 'forgotPassword']);
     $routes->connect('/login',            ['controller' => 'Users', 'action' => 'login']);

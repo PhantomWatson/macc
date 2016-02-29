@@ -342,4 +342,22 @@ class UsersController extends AppController
             'pageTitle' => 'Members'
         ]);
     }
+
+    public function account()
+    {
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId);
+        if ($this->request->is('put')) {
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            $errors = $user->errors();
+            if (empty($errors)) {
+                $this->Users->save($user);
+                $this->Flash->success('Account info updated');
+            }
+        }
+        $this->set([
+            'user' => $user,
+            'pageTitle' => 'Edit Account Info'
+        ]);
+    }
 }

@@ -106,6 +106,17 @@ function navLink($label, $url, $view) {
                 </li>
                 <li>
                     <?= navLink(
+                        'Edit account info',
+                        [
+                            'prefix' => false,
+                            'controller' => 'Users',
+                            'action' => 'account'
+                        ],
+                        $this
+                    ) ?>
+                </li>
+                <li>
+                    <?= navLink(
                         'Change password',
                         [
                             'prefix' => false,
