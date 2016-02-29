@@ -104,6 +104,17 @@ function navLink($label, $url, $view) {
                         $this
                     ) ?>
                 </li>
+                <li>
+                    <?= navLink(
+                        'Change password',
+                        [
+                            'prefix' => false,
+                            'controller' => 'Users',
+                            'action' => 'changePassword'
+                        ],
+                        $this
+                    ) ?>
+                </li>
             </ul>
         </li>
         <?php if ($authUser['role'] == 'admin'): ?>
