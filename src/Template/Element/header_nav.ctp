@@ -71,7 +71,7 @@ function navLink($label, $url, $view) {
             <ul class="dropdown-menu">
                 <li>
                     <?= navLink(
-                        'View my profile',
+                        'View my public profile',
                         [
                             'prefix' => false,
                             'controller' => 'Users',
@@ -84,7 +84,7 @@ function navLink($label, $url, $view) {
                 </li>
                 <li>
                     <?= navLink(
-                        'Edit my profile',
+                        'Edit my public profile',
                         [
                             'prefix' => false,
                             'controller' => 'Users',
