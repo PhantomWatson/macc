@@ -71,7 +71,18 @@ function navLink($label, $url, $view) {
             <ul class="dropdown-menu">
                 <li>
                     <?= navLink(
-                        'View my public profile',
+                        'My membership',
+                        [
+                            'prefix' => false,
+                            'controller' => 'Memberships',
+                            'action' => 'myMembership'
+                        ],
+                        $this
+                    ) ?>
+                </li>
+                <li>
+                    <?= navLink(
+                        'View member profile',
                         [
                             'prefix' => false,
                             'controller' => 'Users',
@@ -84,22 +95,11 @@ function navLink($label, $url, $view) {
                 </li>
                 <li>
                     <?= navLink(
-                        'Edit my public profile',
+                        'Edit member profile',
                         [
                             'prefix' => false,
                             'controller' => 'Users',
                             'action' => 'editProfile'
-                        ],
-                        $this
-                    ) ?>
-                </li>
-                <li>
-                    <?= navLink(
-                        'My membership',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Memberships',
-                            'action' => 'myMembership'
                         ],
                         $this
                     ) ?>
