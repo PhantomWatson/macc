@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use App\MailingList\MailingList;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -46,7 +47,10 @@ class UsersController extends AppController
                 $user = $this->Users->patchEntity($user, $this->request->data());
                 $errors = $user->errors();
                 if (empty($errors)) {
-                    $this->Users->save($user);
+                    $user = $this->Users->save($user);
+                    if ($this->request->data('mailing_list')) {
+                        MailingList::addToList($user);
+                    }
                     $this->Flash->success('Your account has been registered. You may now log in.');
                     return $this->redirect(['action' => 'login']);
                 } else {
@@ -55,6 +59,8 @@ class UsersController extends AppController
             } else {
                 $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
             }
+        } else {
+            $this->request->data['mailing_list'] = true;
         }
 
         /* So the password fields aren't filled out automatically when the user

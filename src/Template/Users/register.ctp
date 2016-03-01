@@ -43,6 +43,13 @@
             ]
         ]
     );
+    echo $this->Form->input(
+        'mailing_list',
+        [
+            'type' => 'checkbox',
+            'label' => 'Sign up for the MACC mailing list'
+        ]
+    );
 ?>
 
 <div class="input form-group">
