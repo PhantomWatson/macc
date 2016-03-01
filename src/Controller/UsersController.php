@@ -44,8 +44,9 @@ class UsersController extends AppController
                 $this->request->data['password'] = $this->request->data('new_password');
                 $this->request->data['role'] = 'user';
                 $user = $this->Users->patchEntity($user, $this->request->data());
-
-                if ($this->Users->save($user)) {
+                $errors = $user->errors();
+                if (empty($errors)) {
+                    $this->Users->save($user);
                     $this->Flash->success('Your account has been registered. You may now log in.');
                     return $this->redirect(['action' => 'login']);
                 } else {
