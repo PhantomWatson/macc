@@ -37,6 +37,15 @@
                 Expires:
             </strong>
             <?= $membership->expires->format('F j, Y') ?>
+            <?= $this->Html->link(
+                'Renew now',
+                [
+                    'controller' => 'MembershipLevels',
+                    'action' => 'view',
+                    $membership->membership_level['id']
+                ],
+                ['class' => 'btn btn-default']
+            ) ?>
         </p>
         <p>
             <strong>
