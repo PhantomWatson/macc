@@ -1,5 +1,5 @@
 <p>
-    Have you forgotten the password that you use to log in to your CRI account?
+    Have you forgotten the password that you use to log in to your account?
     In the field below, enter the email address that is associated with your account,
     and we'll email you a link that you can use for the next 24 hours to reset your password.
 </p>
