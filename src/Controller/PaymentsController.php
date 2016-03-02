@@ -204,9 +204,9 @@ class PaymentsController extends AppController
             }
             $payment = $this->Payments->save($payment);
 
-            // Mark previous membership as having been renewed
+            // Turn off previous membership's auto_renew flag
             $membership = $this->Memberships->patchEntity($membership, [
-                'renewed' => new Time()
+                'auto_renew' => 0
             ]);
             $errors = $membership->errors();
             if (! empty($errors)) {
