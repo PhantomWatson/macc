@@ -107,6 +107,8 @@ class PaymentsController extends AppController
             $errors = $membership->errors();
             if (empty($errors)) {
                 $membership = $this->Memberships->save($membership);
+
+                // Turn off any previous membership's auto_renew flag
                 $this->Memberships->disablePreviousAutoRenewal($userId, $membership->id);
 
                 $this->set('retval', [
@@ -169,7 +171,12 @@ class PaymentsController extends AppController
             $this->Flash->set('No memberships need to be renewed at this time.');
         }
 
+        $chargedUsers = [];
         foreach ($memberships as $membership) {
+            if (in_array($membership->user_id, $chargedUsers)) {
+                continue;
+            }
+
             $this->validateMembership($membership);
             $amount = $membership->membership_level['cost'].'00'; // Cost is stored as dollars
             $userName = $membership->user['name'];
@@ -227,7 +234,12 @@ class PaymentsController extends AppController
                 throw new InternalErrorException('Errors saving new membership record: '.json_encode($errors));
             }
             $newMembership = $this->Memberships->save($newMembership);
+
+            // Turn off any previous membership's auto_renew flag
             $this->Memberships->disablePreviousAutoRenewal($membership->user_id, $newMembership->id);
+
+            // Prevent this user from being charged again in this loop
+            $chargedUsers[] = $membership->user_id;
 
             $this->Flash->success('Membership renewed for '.$membership->user['name']);
         }
