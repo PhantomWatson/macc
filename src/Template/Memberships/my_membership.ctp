@@ -26,46 +26,69 @@
             ) ?>?
         </p>
     <?php else: ?>
-        <p>
-            <strong>
-                Membership Level:
-            </strong>
-            <?= $membership->membership_level['name'] ?>
-        </p>
-        <p>
-            <strong>
-                Expires:
-            </strong>
-            <?= $membership->expires->format('F j, Y') ?>
-            <?= $this->Html->link(
-                'Renew now',
-                [
-                    'controller' => 'MembershipLevels',
-                    'action' => 'view',
-                    $membership->membership_level['id']
-                ],
-                ['class' => 'btn btn-default']
-            ) ?>
-        </p>
-        <p>
-            <strong>
-                Automatic renewal:
-            </strong>
-            <?php $autoRenewed = $membership->recurring_billing; ?>
-            <?= $autoRenewed ? 'On' : 'Off' ?>
-            <?= $this->Form->postLink(
-                'Turn automatic renewal '.($autoRenewed ? 'off' : 'on'),
-                [
-                    'prefix' => false,
-                    'controller' => 'Memberships',
-                    'action' => 'toggleAutoRenewal',
-                    ($autoRenewed ? 0 : 1)
-                ],
-                [
-                    'class' => 'btn btn-default',
-                    'confirm' => 'Are you sure you want to turn automatic membership renewal '.($autoRenewed ? 'off' : 'on').'?'
-                ]
-            ) ?>
-        </p>
+        <table class="table" id="membership-details">
+            <tbody>
+                <tr>
+                    <th>
+                        Membership Level:
+                    </th>
+                    <td>
+                        <?= $membership->membership_level['name'] ?>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Expires:
+                    </th>
+                    <td>
+                        <?= $membership->expires->format('F j, Y') ?>
+                    </td>
+                    <td>
+                        <?= $this->Html->link(
+                            'Renew now',
+                            [
+                                'controller' => 'MembershipLevels',
+                                'action' => 'view',
+                                $membership->membership_level['id']
+                            ],
+                            ['class' => 'btn btn-default']
+                        ) ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Automatic renewal:
+                    </th>
+                    <td>
+                        <?php if ($membership->recurring_billing): ?>
+                            <span class="text-success">
+                                On
+                            </span>
+                        <?php else: ?>
+                            <span class="text-danger">
+                                Off
+                            </span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?= $this->Form->postLink(
+                            'Turn automatic renewal '.($membership->recurring_billing ? 'off' : 'on'),
+                            [
+                                'prefix' => false,
+                                'controller' => 'Memberships',
+                                'action' => 'toggleAutoRenewal',
+                                ($membership->recurring_billing ? 0 : 1)
+                            ],
+                            [
+                                'class' => 'btn btn-default',
+                                'confirm' => 'Are you sure you want to turn automatic membership renewal '.($membership->recurring_billing ? 'off' : 'on').'?'
+                            ]
+                        ) ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     <?php endif; ?>
 <?php endif; ?>
