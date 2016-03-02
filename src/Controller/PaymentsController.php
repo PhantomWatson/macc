@@ -101,12 +101,13 @@ class PaymentsController extends AppController
                 'user_id' => $userId,
                 'membership_level_id' => $membershipLevelId,
                 'payment_id' => $payment->id,
-                'recurring_billing' => $this->request->data('recurringBilling'),
+                'auto_renew' => $this->request->data('autoRenew'),
                 'expires' => new Time(strtotime('+1 year'))
             ]);
             $errors = $membership->errors();
             if (empty($errors)) {
                 $membership = $this->Memberships->save($membership);
+                $this->Memberships->disablePreviousAutoRenewal($userId, $membership->id);
 
                 $this->set('retval', [
                     'success' => true,
@@ -218,7 +219,7 @@ class PaymentsController extends AppController
                 'user_id' => $membership->user_id,
                 'membership_level_id' => $membership->membership_level_id,
                 'payment_id' => $payment->id,
-                'recurring_billing' => true,
+                'auto_renew' => 1,
                 'expires' => new Time(strtotime('+1 year'))
             ]);
             $errors = $newMembership->errors();
@@ -226,6 +227,7 @@ class PaymentsController extends AppController
                 throw new InternalErrorException('Errors saving new membership record: '.json_encode($errors));
             }
             $newMembership = $this->Memberships->save($newMembership);
+            $this->Memberships->disablePreviousAutoRenewal($membership->user_id, $newMembership->id);
 
             $this->Flash->success('Membership renewed for '.$membership->user['name']);
         }

@@ -148,7 +148,7 @@ var membershipPurchase = {
         };
         paymentProcessor.beforePurchase = function () {
             var renewal = $('input[name=renewal]:checked').val();
-            paymentProcessor.postData.recurringBilling = (renewal == 'automatic') ? 1 : 0;
+            paymentProcessor.postData.autoRenew = (renewal == 'automatic') ? 1 : 0;
             
             paymentProcessor.confirmationMessage = 'Confirm payment of $'+params.costDollars+' to purchase one year of membership?';
             if (renewal == 'automatic') {

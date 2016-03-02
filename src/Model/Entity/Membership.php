@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\MembershipLevel $membership_level
  * @property int $payment_id
  * @property \App\Model\Entity\Payment $payment
- * @property bool $recurring_billing
+ * @property bool $auto_renew
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \Cake\I18n\Time $expires

@@ -72,9 +72,9 @@ class MembershipsTable extends Table
             ->requirePresence('user_id', 'create');
 
         $validator
-            ->add('recurring_billing', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('recurring_billing', 'create')
-            ->notEmpty('recurring_billing');
+            ->add('auto_renew', 'valid', ['rule' => 'boolean'])
+            ->requirePresence('auto_renew', 'create')
+            ->notEmpty('auto_renew');
 
         $validator
             ->add('expires', 'valid', ['rule' => 'datetime'])
@@ -136,7 +136,7 @@ class MembershipsTable extends Table
                 return $exp->lte('expires', date('Y-m-d H:i:s', strtotime('+1 day')));
             })
             ->where([
-                'recurring_billing' => 1,
+                'auto_renew' => 1,
             ])
             ->order(['expires' => 'ASC']);
     }
@@ -155,5 +155,25 @@ class MembershipsTable extends Table
             ->limit(1)
             ->order(['Memberships.created' => 'DESC'])
             ->first();
+    }
+
+    /**
+     * When a membership is purchased, that user's previous memberships
+     * need to have their automatic renewal option turned off. So this does that.
+     *
+     * @param int $userId
+     * @param int $newMembershipId
+     */
+    public function disablePreviousAutoRenewal($userId, $newMembershipId)
+    {
+        $memberships = $this->find('all')
+            ->where([
+                'id !=' => $newMembershipId,
+                'user_id' => $userId
+            ]);
+        foreach ($memberships as $membership) {
+            $membership = $this->patchEntity($membership, ['auto_renew' => 0]);
+            $this->save($membership);
+        }
     }
 }

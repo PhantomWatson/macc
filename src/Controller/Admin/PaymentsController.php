@@ -71,7 +71,7 @@ class PaymentsController extends AppController
                         'expires' => new Time(strtotime('+1 year')),
                         'membership_level_id' => $membershipLevelId,
                         'payment_id' => $payment->id,
-                        'recurring_billing' => 0,
+                        'auto_renew' => 0,
                         'user_id' => $userId
                     ]);
                     $errors = $membership->errors();

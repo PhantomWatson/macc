@@ -49,7 +49,7 @@ class MembershipsController extends AppController
         $membership = $this->Memberships->getCurrentMembership($userId);
         $membershipEntity = $this->Memberships->get($membership['id']);
         $membershipEntity = $this->Memberships->patchEntity($membershipEntity, [
-            'recurring_billing' => $value
+            'auto_renew' => $value
         ]);
         $this->Memberships->save($membershipEntity);
         $msg = 'Membership auto-renewal turned '.($value ? 'on' : 'off').'.';

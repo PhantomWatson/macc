@@ -62,7 +62,7 @@
                         Automatic renewal:
                     </th>
                     <td>
-                        <?php if ($membership->recurring_billing): ?>
+                        <?php if ($membership->auto_renew): ?>
                             <span class="text-success">
                                 On
                             </span>
@@ -74,16 +74,16 @@
                     </td>
                     <td>
                         <?= $this->Form->postLink(
-                            'Turn automatic renewal '.($membership->recurring_billing ? 'off' : 'on'),
+                            'Turn automatic renewal '.($membership->auto_renew ? 'off' : 'on'),
                             [
                                 'prefix' => false,
                                 'controller' => 'Memberships',
                                 'action' => 'toggleAutoRenewal',
-                                ($membership->recurring_billing ? 0 : 1)
+                                ($membership->auto_renew ? 0 : 1)
                             ],
                             [
                                 'class' => 'btn btn-default',
-                                'confirm' => 'Are you sure you want to turn automatic membership renewal '.($membership->recurring_billing ? 'off' : 'on').'?'
+                                'confirm' => 'Are you sure you want to turn automatic membership renewal '.($membership->auto_renew ? 'off' : 'on').'?'
                             ]
                         ) ?>
                     </td>
