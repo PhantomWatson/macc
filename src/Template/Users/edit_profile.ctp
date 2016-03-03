@@ -8,6 +8,16 @@
         <p>
             Tell about your past and present role in the community,
             the groups you associate with, and the work that you do.
+            If you'd like to, you can
+            <?= $this->Html->link(
+                'style your bio with markdown',
+                [
+                    'prefix' => false,
+                    'controller' => 'Pages',
+                    'action' => 'styling'
+                ],
+                ['target' => '_blank']
+            ) ?>.
         </p>
         <?= $this->Form->input(
             'profile',
