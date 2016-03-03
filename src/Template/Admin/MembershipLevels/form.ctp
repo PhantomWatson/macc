@@ -29,7 +29,7 @@
             'action' => 'styling'
         ],
         ['target' => '_blank']
-    ) ?>.
+    ) ?>, but HTML is not allowed.
 </p>
 <?= $this->Form->button('Submit', [
     'class' => 'btn btn-primary'
