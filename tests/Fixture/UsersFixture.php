@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\Fixture;
 
+use Cake\Auth\DefaultPasswordHasher;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -39,15 +40,23 @@ class UsersFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
-        [
+    public $records = [];
+
+    public function init()
+    {
+        $password = (new DefaultPasswordHasher)->hash('testpassword');
+
+        $this->records[] = [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'email' => 'Lorem ipsum dolor sit amet',
-            'password' => 'Lorem ipsum dolor sit amet',
-            'role' => 'Lorem ip',
+            'name' => 'Test User 1',
+            'email' => 'testuser1@phantomwatson.com',
+            'password' => $password,
+            'role' => 'user',
+            'profile' => '**Test User 1\'s** profile',
+            'slug' => 'test-user-1',
+            'stripe_customer_id' => null,
             'created' => '2016-02-07 00:14:55',
             'modified' => '2016-02-07 00:14:55'
-        ],
-    ];
+        ];
+    }
 }
