@@ -19,6 +19,18 @@
     'step' => '1'
 ]) ?>
 <?= $this->Form->input('description') ?>
+<p>
+    The description of this membership level can be
+    <?= $this->Html->link(
+        'styled with markdown',
+        [
+            'prefix' => false,
+            'controller' => 'Pages',
+            'action' => 'styling'
+        ],
+        ['target' => '_blank']
+    ) ?>.
+</p>
 <?= $this->Form->button('Submit', [
     'class' => 'btn btn-primary'
 ]) ?>
