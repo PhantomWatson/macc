@@ -38,25 +38,29 @@ class MembershipLevelsController extends AppController
             'membershipLevel' => $membershipLevel,
             'pageTitle' => 'Add New Membership Level'
         ]);
+        return $this->render('form');
     }
 
-    public function edit($id = null)
+    public function edit($membershipLevelId)
     {
-        $membershipLevel = $this->MembershipLevels->get($id, [
-            'contain' => ['Users']
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
+        if ($this->request->is('post')) {
             $membershipLevel = $this->MembershipLevels->patchEntity($membershipLevel, $this->request->data);
             if ($this->MembershipLevels->save($membershipLevel)) {
-                $this->Flash->success(__('The membership level has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success('Membership level updated');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
             } else {
-                $this->Flash->error(__('The membership level could not be saved. Please, try again.'));
+                $this->Flash->error('There was an error updating that membership level');
             }
         }
-        $users = $this->MembershipLevels->Users->find('list', ['limit' => 200]);
-        $this->set(compact('membershipLevel', 'users'));
-        $this->set('_serialize', ['membershipLevel']);
+        $this->set([
+            'membershipLevel' => $membershipLevel,
+            'pageTitle' => 'Update Membership Level'
+        ]);
+        return $this->render('form');
     }
 
     public function delete($id = null)
