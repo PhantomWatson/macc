@@ -28,7 +28,7 @@
 
 <?php foreach ($examples as $header => $example): ?>
     <section class="markdown-example row" id="section-<?= strtolower(str_replace(' ', '-', $header)) ?>">
-        <div class="col-sm-offset-2 col-sm-8">
+        <div class="col-sm-offset-1 col-sm-10">
             <h2>
                 <?= $header ?>
             </h2>
