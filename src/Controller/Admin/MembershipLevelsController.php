@@ -44,7 +44,7 @@ class MembershipLevelsController extends AppController
     public function edit($membershipLevelId)
     {
         $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
-        if ($this->request->is('post')) {
+        if ($this->request->is('put')) {
             $membershipLevel = $this->MembershipLevels->patchEntity($membershipLevel, $this->request->data);
             if ($this->MembershipLevels->save($membershipLevel)) {
                 $this->Flash->success('Membership level updated');
