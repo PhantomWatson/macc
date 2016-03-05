@@ -263,12 +263,9 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
 
-                // If user logs in via cookie, reset cookie login credentials
+                // If user logs in via cookie, update cookie login credentials
                 if ($this->Cookie->read('CookieAuth')) {
-                    $this->Cookie->write('CookieAuth', [
-                        'email' => $this->Auth->user('email'),
-                        'password' => $this->request->data('new_password')
-                    ]);
+                    $this->Cookie->write('CookieAuth.password', $this->request->data('new_password'));
                 }
             }
         }
