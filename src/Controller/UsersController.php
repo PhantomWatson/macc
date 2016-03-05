@@ -7,6 +7,7 @@ use App\MailingList\MailingList;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Routing\Router;
 
 /**
  * Users Controller
@@ -247,6 +248,14 @@ class UsersController extends AppController
         if (! ($isCurrentMember || $ownProfile)) {
             $this->Flash->error('Sorry, no current member of the Muncie Arts and Culture Council was found matching your request.');
             return $this->redirect(['action' => 'members']);
+        }
+
+        if (! $isCurrentMember) {
+            $url = Router::url([
+                'controller' => 'MembershipLevels',
+                'action' => 'index'
+            ]);
+            $this->Flash->error('Your member profile will be visible to the public once you <a href="'.$url.'">purchase a membership</a>');
         }
 
         $user = $this->Users->get($userId, [
