@@ -241,11 +241,12 @@ class UsersController extends AppController
      */
     public function view($userId = null)
     {
-        // Bounce back to index if selected user is not a current member
+        // Bounce back to index if selected user is not a current member or the logged-in user
+        $ownProfile = $this->Auth->user('id') == $userId;
         $isCurrentMember = $this->Users->isCurrentMember($userId);
-        if (! $isCurrentMember) {
+        if (! ($isCurrentMember || $ownProfile)) {
             $this->Flash->error('Sorry, no current member of the Muncie Arts and Culture Council was found matching your request.');
-            $this->redirect(['action' => 'members']);
+            return $this->redirect(['action' => 'members']);
         }
 
         $user = $this->Users->get($userId, [
