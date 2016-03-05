@@ -6,6 +6,7 @@ use Cake\Core\Configure;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Stripe\Customer;
 use Stripe\Stripe;
@@ -186,5 +187,26 @@ class UsersTable extends Table
                 'macc_user_id' => $user->id
             ]
         ]);
+    }
+
+    /**
+     * Returns true if the user has a non-expired, non-canceled membership
+     *
+     * @param int $userId
+     * @return boolean
+     */
+    public function isCurrentMember($userId)
+    {
+        $membershipsTable = TableRegistry::get('Memberships');
+        $count = $membershipsTable->find('all')
+            ->where([
+                'Memberships.user_id' => $userId,
+                'Memberships.expires >=' => date('Y-m-d H:i:s'),
+                function ($exp, $q) {
+                    return $exp->isNull('canceled');
+                }
+            ])
+            ->count();
+        return $count > 0;
     }
 }
