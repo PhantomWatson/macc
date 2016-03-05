@@ -328,7 +328,7 @@ class UsersController extends AppController
                 if ($this->Cookie->read('CookieAuth')) {
                     $this->Cookie->write('CookieAuth', [
                         'email' => $this->Auth->user('email'),
-                        'password' => $this->request->data('new-password')
+                        'password' => $this->request->data('new_password')
                     ]);
                 }
             }
