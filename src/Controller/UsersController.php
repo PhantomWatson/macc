@@ -323,6 +323,14 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data());
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
+
+                // If user logs in via cookie, reset cookie login credentials
+                if ($this->Cookie->read('CookieAuth')) {
+                    $this->Cookie->write('CookieAuth', [
+                        'email' => $this->Auth->user('email'),
+                        'password' => $this->request->data('new-password')
+                    ]);
+                }
             }
         }
         $this->request->data = [];
