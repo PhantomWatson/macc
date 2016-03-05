@@ -309,6 +309,11 @@ class UsersController extends AppController
             if (empty($errors)) {
                 $this->Users->save($user);
                 $this->Flash->success('Account info updated');
+
+                // If user logs in via cookie, update cookie login credentials
+                if ($this->Cookie->read('CookieAuth')) {
+                    $this->Cookie->write('CookieAuth.email', $this->request->data('email'));
+                }
             }
         }
         $this->set([
