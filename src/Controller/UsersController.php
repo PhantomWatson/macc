@@ -44,7 +44,9 @@ class UsersController extends AppController
                 $this->request->data['email'] = $email;
                 $this->request->data['password'] = $this->request->data('new_password');
                 $this->request->data['role'] = 'user';
-                $user = $this->Users->patchEntity($user, $this->request->data());
+                $user = $this->Users->patchEntity($user, $this->request->data(), [
+                    'fieldList' => ['name', 'email', 'password', 'role']
+                ]);
                 $errors = $user->errors();
                 if (empty($errors)) {
                     $user = $this->Users->save($user);
@@ -199,7 +201,9 @@ class UsersController extends AppController
 
         if ($this->request->is(['post', 'put'])) {
             $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'fieldList' => ['password']
+            ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
                 return $this->redirect(['action' => 'login']);
@@ -320,7 +324,9 @@ class UsersController extends AppController
         $user = $this->Users->get($userId);
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'fieldList' => ['password']
+            ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
 
@@ -363,7 +369,9 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'fieldList' => ['name', 'email']
+            ]);
             $errors = $user->errors();
             if (empty($errors)) {
                 $this->Users->save($user);
