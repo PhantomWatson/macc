@@ -235,20 +235,20 @@ class UsersController extends AppController
     /**
      * View method
      *
-     * @param string|null $id User id.
+     * @param string|null $userId User id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($userId = null)
     {
         // Bounce back to index if selected user is not a current member
-        $isCurrentMember = $this->Users->isCurrentMember($id);
+        $isCurrentMember = $this->Users->isCurrentMember($userId);
         if (! $isCurrentMember) {
             $this->Flash->error('Sorry, no current member of the Muncie Arts and Culture Council was found matching your request.');
             $this->redirect(['action' => 'members']);
         }
 
-        $user = $this->Users->get($id, [
+        $user = $this->Users->get($userId, [
             'contain' => ['Tags']
         ]);
         $this->set([
