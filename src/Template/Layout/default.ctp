@@ -91,7 +91,9 @@
         $(document).ready(function () {
             <?= $this->fetch('buffered') ?>
 
-            $('nav.navbar').scrollToFixed();
+            $('nav.navbar').scrollToFixed({
+                minWidth: 752
+            });
         });
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
