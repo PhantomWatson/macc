@@ -42,7 +42,6 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function ($routes) {
-    $routes->connect('/',        ['controller' => 'Pages', 'action' => 'home']);
     $routes->connect('/styling', ['controller' => 'Pages', 'action' => 'styling']);
 
     $routes->connect('/account',          ['controller' => 'Users', 'action' => 'account']);
@@ -67,6 +66,8 @@ Router::scope('/', function ($routes) {
 
     $routes->connect('/my-membership',     ['controller' => 'Memberships', 'action' => 'myMembership']);
     $routes->connect('/purchase-complete', ['controller' => 'Memberships', 'action' => 'purchaseComplete']);
+
+    $routes->connect('/', ['controller' => 'MembershipLevels', 'action' => 'index']);
 
     $routes->fallbacks('DashedRoute');
 });
