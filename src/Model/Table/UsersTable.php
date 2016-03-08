@@ -43,9 +43,11 @@ class UsersTable extends Table
             'foreignKey' => 'user_id'
         ]);
         $this->hasMany('Memberships', [
+            'dependent' => true,
             'foreignKey' => 'user_id'
         ]);
         $this->belongsToMany('Tags', [
+            'dependent' => true,
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'tag_id',
             'joinTable' => 'tags_users'
