@@ -93,7 +93,8 @@ class PaymentsController extends AppController
         $payment = $this->Payments->newEntity([
             'user_id' => $userId,
             'membership_level_id' => $membershipLevelId,
-            'amount' => $membershipLevel->cost
+            'amount' => $membershipLevel->cost,
+            'stripe_charge_id' => $charge->id
         ]);
         $errors = $payment->errors();
         if (empty($errors)) {
@@ -207,7 +208,8 @@ class PaymentsController extends AppController
             $payment = $this->Payments->newEntity([
                 'user_id' => $membership->user_id,
                 'membership_level_id' => $membership->membership_level_id,
-                'amount' => $membership->membership_level['cost']
+                'amount' => $membership->membership_level['cost'],
+                'stripe_charge_id' => $charge->id
             ]);
             $errors = $payment->errors();
             if (! empty($errors)) {
