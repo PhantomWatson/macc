@@ -74,7 +74,11 @@ class PaymentsController extends AppController
                 'amount' => $membershipLevel->cost.'00', // in cents
                 'currency' => 'usd',
                 'customer' => $customer->id,
-                'description' => "$user->name purchasing '$membershipLevel->name' membership"
+                'description' => "$user->name purchasing '$membershipLevel->name' membership",
+                'metadata' => [
+                    'macc_user_id' => $userId,
+                    'membership_level_id' => $membershipLevelId
+                ]
             ]);
         } catch (\Stripe\Error\Card $e) {
             $this->set('retval', [
