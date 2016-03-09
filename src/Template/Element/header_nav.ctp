@@ -1,14 +1,16 @@
 <?php
 use Cake\Routing\Router;
 
-function navLink($label, $url, $view) {
-    $url = Router::url($url);
-    $class = $view->request->here == $url ? 'current' : '';
-    return $view->Html->link(
-        $label,
-        $url,
-        ['class' => $class]
-    );
+if (! function_exists('navLink')) {
+    function navLink($label, $url, $view) {
+        $url = Router::url($url);
+        $class = $view->request->here == $url ? 'current' : '';
+        return $view->Html->link(
+            $label,
+            $url,
+            ['class' => $class]
+        );
+    }
 }
 ?>
 
