@@ -54,7 +54,7 @@
         'membershipLevelId' => $membershipLevel->id,
         'membershipLevelName' => $membershipLevel->name,
         'postUrl' => Router::url([
-            'controller' => 'Payments',
+            'controller' => 'Memberships',
             'action' => 'completePurchase'
         ], true),
         'redirectUrl' => Router::url([
