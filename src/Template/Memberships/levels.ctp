@@ -24,8 +24,8 @@
             <?= $this->Html->link(
                 'Purchase',
                 [
-                    'controller' => 'MembershipLevels',
-                    'action' => 'view',
+                    'controller' => 'Memberships',
+                    'action' => 'level',
                     $membershipLevel->id
                 ],
                 [

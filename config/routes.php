@@ -64,10 +64,9 @@ Router::scope('/', function ($routes) {
     $routes->connect('/donate',            ['controller' => 'Donations', 'action' => 'donate']);
     $routes->connect('/donation-complete', ['controller' => 'Donations', 'action' => 'donationComplete']);
 
+    $routes->connect('/',                  ['controller' => 'Memberships', 'action' => 'levels']);
     $routes->connect('/my-membership',     ['controller' => 'Memberships', 'action' => 'myMembership']);
     $routes->connect('/purchase-complete', ['controller' => 'Memberships', 'action' => 'purchaseComplete']);
-
-    $routes->connect('/', ['controller' => 'MembershipLevels', 'action' => 'index']);
 
     $routes->fallbacks('DashedRoute');
 });

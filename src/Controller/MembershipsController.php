@@ -17,7 +17,7 @@ class MembershipsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['purchase']);
+        $this->Auth->allow(['purchase', 'levels']);
     }
 
     public function purchase($membershipLevelId = null)
@@ -340,5 +340,28 @@ class MembershipsController extends AppController
         if (empty($membership->user['stripe_customer_id'])) {
             throw new NotFoundException('User #'.$membership->user_id.' has no Stripe customer id.');
         }
+    }
+
+    public function levels()
+    {
+        $this->loadModel('MembershipLevels');
+        $membershipLevels = $this->MembershipLevels
+            ->find('all')
+            ->order(['cost' => 'ASC']);
+
+        $this->set([
+            'membershipLevels' => $membershipLevels,
+            'pageTitle' => 'Become a Member'
+        ]);
+    }
+
+    public function level($id = null)
+    {
+        $this->loadModel('MembershipLevels');
+        $membershipLevel = $this->MembershipLevels->get($id);
+        $this->set([
+            'membershipLevel' => $membershipLevel,
+            'pageTitle' => 'Purchase "'.$membershipLevel->name.'" Membership'
+        ]);
     }
 }

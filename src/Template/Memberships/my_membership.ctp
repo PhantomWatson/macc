@@ -5,8 +5,8 @@
             'purchased a membership',
             [
                 'prefix' => false,
-                'controller' => 'MembershipLevels',
-                'action' => 'index'
+                'controller' => 'Memberships',
+                'action' => 'levels'
             ]
         ) ?>.
     </p>
@@ -20,8 +20,8 @@
                 'renew your membership',
                 [
                     'prefix' => false,
-                    'controller' => 'MembershipLevels',
-                    'action' => 'index'
+                    'controller' => 'Memberships',
+                    'action' => 'levels'
                 ]
             ) ?>?
         </p>
@@ -49,8 +49,8 @@
                         <?= $this->Html->link(
                             'Renew now',
                             [
-                                'controller' => 'MembershipLevels',
-                                'action' => 'view',
+                                'controller' => 'Memberships',
+                                'action' => 'level',
                                 $membership->membership_level['id']
                             ],
                             ['class' => 'btn btn-default']
@@ -97,8 +97,8 @@
                 <?= $this->Html->link(
                     'Manually renew your membership',
                     [
-                        'controller' => 'MembershipLevels',
-                        'action' => 'view',
+                        'controller' => 'Memberships',
+                        'action' => 'level',
                         $membership->membership_level['id']
                     ]
                 ) ?>

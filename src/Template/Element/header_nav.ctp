@@ -23,8 +23,8 @@ function navLink($label, $url, $view) {
             'Become a Member',
             [
                 'prefix' => false,
-                'controller' => 'MembershipLevels',
-                'action' => 'index'
+                'controller' => 'Memberships',
+                'action' => 'levels'
             ],
             $this
         ) ?>
