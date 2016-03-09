@@ -28,9 +28,6 @@ class TagsTableTest extends TestCase
         'app.users',
         'app.payments',
         'app.membership_levels',
-        'app.membership_levels_users',
-        'app.admin_adders',
-        'app.refunders',
         'app.tags_users'
     ];
 
