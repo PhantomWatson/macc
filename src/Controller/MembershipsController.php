@@ -17,13 +17,7 @@ class MembershipsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['purchase', 'levels']);
-    }
-
-    public function purchase($membershipLevelId = null)
-    {
-        // If user is not logged in, give them a friendly "create an account or log in" page
-        // Make sure registration / login page redirects back to this page
+        $this->Auth->allow(['levels']);
     }
 
     public function purchaseComplete()
