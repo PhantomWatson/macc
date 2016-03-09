@@ -90,5 +90,20 @@
                 </tr>
             </tbody>
         </table>
+
+        <?php if ($membership->auto_renew): ?>
+            <p class="alert alert-info">
+                Need to update your credit card info?
+                <?= $this->Html->link(
+                    'Manually renew your membership',
+                    [
+                        'controller' => 'MembershipLevels',
+                        'action' => 'view',
+                        $membership->membership_level['id']
+                    ]
+                ) ?>
+                to update your stored credit card info.
+            </p>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
