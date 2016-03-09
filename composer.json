@@ -16,7 +16,8 @@
         "twbs/bootstrap": "~3.0",
         "xety/cake3-cookieauth": "1.*",
         "xety/cake3-sluggable": "1.*",
-        "drewm/mailchimp-api": "^2.1"
+        "drewm/mailchimp-api": "^2.1",
+        "phpunit/phpunit": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
