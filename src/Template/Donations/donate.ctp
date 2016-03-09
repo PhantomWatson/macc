@@ -30,11 +30,11 @@
             'userId' => $authUser ? $authUser['id'] : null
         ],
         'postUrl' => Router::url([
-            'controller' => 'Payments',
+            'controller' => 'Donations',
             'action' => 'completeDonation'
         ], true),
         'redirectUrl' => Router::url([
-            'controller' => 'Payments',
+            'controller' => 'Donations',
             'action' => 'donationComplete'
         ], true)
     ]) ?>);

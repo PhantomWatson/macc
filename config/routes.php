@@ -61,8 +61,8 @@ Router::scope('/', function ($routes) {
         'pass' => ['slug']
     ]);
 
-    $routes->connect('/donate',            ['controller' => 'Payments', 'action' => 'donate']);
-    $routes->connect('/donation-complete', ['controller' => 'Payments', 'action' => 'donationComplete']);
+    $routes->connect('/donate',            ['controller' => 'Donations', 'action' => 'donate']);
+    $routes->connect('/donation-complete', ['controller' => 'Donations', 'action' => 'donationComplete']);
 
     $routes->connect('/my-membership',     ['controller' => 'Memberships', 'action' => 'myMembership']);
     $routes->connect('/purchase-complete', ['controller' => 'Memberships', 'action' => 'purchaseComplete']);
