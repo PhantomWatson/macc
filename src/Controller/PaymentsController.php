@@ -10,11 +10,8 @@ use App\Controller\AppController;
  */
 class PaymentsController extends AppController
 {
-
     public function initialize()
     {
         parent::initialize();
     }
-
-
 }
