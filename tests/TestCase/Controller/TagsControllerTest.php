@@ -20,9 +20,6 @@ class TagsControllerTest extends IntegrationTestCase
         'app.users',
         'app.payments',
         'app.membership_levels',
-        'app.membership_levels_users',
-        'app.admin_adders',
-        'app.refunders',
         'app.tags_users'
     ];
 
@@ -33,7 +30,8 @@ class TagsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/tags/index');
+        $this->assertResponseOk();
     }
 
     /**
@@ -43,36 +41,7 @@ class TagsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/tags/view/lorem');
+        $this->assertResponseOk();
     }
 }

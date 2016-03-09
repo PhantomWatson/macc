@@ -18,59 +18,48 @@ class UsersControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.users',
         'app.payments',
-        'app.membership_levels',
-        'app.membership_levels_users',
-        'app.admin_adders',
-        'app.refunders'
+        'app.membership_levels'
     ];
 
-    /**
-     * Test index method
-     *
-     * @return void
-     */
-    public function testIndex()
+    public function testForgotPassword()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/forgot-password');
+        $this->assertResponseOk();
     }
 
-    /**
-     * Test view method
-     *
-     * @return void
-     */
+    public function testlogin()
+    {
+        $this->get('/users/login');
+        $this->assertResponseOk();
+    }
+
+    public function testLogout()
+    {
+        $this->get('/users/logout');
+        $this->assertResponseOk();
+    }
+
+    public function testMembers()
+    {
+        $this->get('/users/members');
+        $this->assertResponseOk();
+    }
+
+    public function testRegister()
+    {
+        $this->get('/users/register');
+        $this->assertResponseOk();
+    }
+
+    public function testResetPassword()
+    {
+        $this->get('/users/reset-password');
+        $this->assertResponseOk();
+    }
+
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/users/view/1');
+        $this->assertResponseOk();
     }
 }

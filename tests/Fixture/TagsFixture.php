@@ -21,7 +21,8 @@ class TagsFixture extends TestFixture
         'parent_id' => ['type' => 'integer', 'length' => 10, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'lft' => ['type' => 'integer', 'length' => 10, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'rght' => ['type' => 'integer', 'length' => 10, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'name' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => '', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'name' => ['type' => 'string', 'length' => 50, 'null' => true, 'default' => '', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'slug' => ['type' => 'string', 'length' => 50, 'null' => true, 'default' => '', 'comment' => '', 'precision' => null, 'fixed' => null],
         'listed' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'selectable' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '1', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
@@ -47,6 +48,7 @@ class TagsFixture extends TestFixture
             'lft' => 1,
             'rght' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
+            'slug' => 'lorem',
             'listed' => 1,
             'selectable' => 1,
             'created' => '2016-02-08 05:16:04'

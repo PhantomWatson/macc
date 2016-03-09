@@ -14,18 +14,18 @@
  */
 namespace Cake\Test\TestCase\Controller;
 
-use App\Controller\PagesController;
+use App\Controller\DonationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * PagesControllerTest class
+ * DonationsControllerTest class
  */
-class PagesControllerTest extends IntegrationTestCase
+class DonationsControllerTest extends IntegrationTestCase
 {
 
-    public function testStyling()
+    public function testDonate()
     {
-        $this->get('/pages/styling');
+        $this->get('/donations/donate');
         $this->assertResponseOk();
     }
 }
