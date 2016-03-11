@@ -252,8 +252,8 @@ class UsersController extends AppController
 
         if (! $isCurrentMember) {
             $url = Router::url([
-                'controller' => 'MembershipLevels',
-                'action' => 'index'
+                'controller' => 'Memberships',
+                'action' => 'levels'
             ]);
             $this->Flash->error('Your member profile will be visible to the public once you <a href="'.$url.'">purchase a membership</a>');
         }
