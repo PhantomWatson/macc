@@ -20,7 +20,9 @@
         </h1>
 
         <div id="logo">
-            <img src="/img/macc-logo-200px.jpg" alt="Muncie Arts & Culture" />
+            <a href="/">
+                <img src="/img/macc-logo-200px.jpg" alt="Muncie Arts & Culture" />
+            </a>
         </div>
 
         <nav class="navbar navbar-default">
