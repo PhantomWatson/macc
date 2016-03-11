@@ -41,8 +41,11 @@ class MembershipsFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
-        [
+    public $records = [];
+
+    public function init()
+    {
+        $this->records[] = [
             'id' => 1,
             'user_id' => 1,
             'membership_level_id' => 1,
@@ -50,8 +53,10 @@ class MembershipsFixture extends TestFixture
             'auto_renew' => 1,
             'created' => '2016-02-11 05:09:41',
             'modified' => '2016-02-11 05:09:41',
-            'expires' => '2016-02-11 05:09:41',
-            'canceled' => '2016-02-11 05:09:41'
-        ],
-    ];
+            'expires' => date('Y-m-d H:i:s', strtotime('+6 month')),
+            'canceled' => null
+        ];
+
+        parent::init();
+    }
 }
