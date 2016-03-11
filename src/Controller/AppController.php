@@ -64,11 +64,7 @@ class AppController extends Controller
                 'controller' => 'Users',
                 'action' => 'login'
             ],
-            'logoutRedirect' => [
-                'prefix' => false,
-                'controller' => 'Pages',
-                'action' => 'home'
-            ],
+            'logoutRedirect' => '/',
             'authenticate' => [
                 'Form' => [
                     'fields' => ['username' => 'email']
