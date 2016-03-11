@@ -52,7 +52,6 @@ class MembershipsControllerTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'login'
         ]);
-        $this->assertResponseOk();
     }
 
     public function testLevelAuth()
@@ -64,5 +63,29 @@ class MembershipsControllerTest extends IntegrationTestCase
             1
         ]);
         $this->assertResponseOk();
+    }
+
+    public function testMyMembershipAuth()
+    {
+        $this->setNonMemberSession();
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'myMembership',
+            1
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testMyMembershipUnauth()
+    {
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'myMembership',
+            1
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
     }
 }
