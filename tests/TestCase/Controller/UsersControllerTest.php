@@ -2,6 +2,8 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\UsersController;
+use App\Mailer\Mailer;
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -53,7 +55,17 @@ class UsersControllerTest extends IntegrationTestCase
 
     public function testResetPassword()
     {
-        $this->get('/users/reset-password');
+        $userId = 1;
+        $timestamp = time();
+        $hash = Mailer::getPasswordResetHash($userId, $timestamp);
+
+        $this->get(Router::url([
+            'controller' => 'Users',
+            'action' => 'resetPassword',
+            $userId,
+            $timestamp,
+            $hash
+        ]));
         $this->assertResponseOk();
     }
 
