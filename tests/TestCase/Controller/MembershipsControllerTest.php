@@ -19,9 +19,6 @@ class MembershipsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.membership_levels',
         'app.memberships',
-        'app.payments',
-        'app.tags',
-        'app.tags_users',
         'app.users'
     ];
 
