@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\MembershipsController;
+use App\Test\Fixture\UsersFixture;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -16,17 +17,52 @@ class MembershipsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.memberships',
-        'app.users',
-        'app.payments',
         'app.membership_levels',
+        'app.memberships',
+        'app.payments',
         'app.tags',
-        'app.tags_users'
+        'app.tags_users',
+        'app.users'
     ];
+
+    public function setNonMemberSession()
+    {
+        $usersFixture = new UsersFixture();
+        $this->session([
+            'Auth' => [
+                'User' => $usersFixture->records[1]
+            ]
+        ]);
+    }
 
     public function testLevels()
     {
         $this->get('/memberships/levels');
+        $this->assertResponseOk();
+    }
+
+    public function testLevelUnauth()
+    {
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'level',
+            1
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testLevelAuth()
+    {
+        $this->setNonMemberSession();
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'level',
+            1
+        ]);
         $this->assertResponseOk();
     }
 }
