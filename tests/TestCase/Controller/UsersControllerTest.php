@@ -49,7 +49,9 @@ class UsersControllerTest extends IntegrationTestCase
 
     public function testLogout()
     {
+        $this->setNonMemberSession();
         $this->get('/users/logout');
+        $this->assertSession(null, 'Auth.User.id');
         $this->assertRedirect('/');
     }
 
