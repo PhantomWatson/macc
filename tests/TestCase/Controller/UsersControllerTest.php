@@ -120,7 +120,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testAccount()
+    public function testAccountAuth()
     {
         $this->setNonMemberSession();
         $this->get([
@@ -130,7 +130,19 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testChangePassword()
+    public function testAccountUnauth()
+    {
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'account'
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+    }
+
+    public function testChangePasswordAuth()
     {
         $this->setNonMemberSession();
         $this->get([
@@ -140,7 +152,19 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testEditProfile()
+    public function testChangePasswordUnauth()
+    {
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'changePassword'
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+    }
+
+    public function testEditProfileAuth()
     {
         $this->setNonMemberSession();
         $this->get([
@@ -148,5 +172,17 @@ class UsersControllerTest extends IntegrationTestCase
             'action' => 'editProfile'
         ]);
         $this->assertResponseOk();
+    }
+
+    public function testEditProfileUnauth()
+    {
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'editProfile'
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
     }
 }
