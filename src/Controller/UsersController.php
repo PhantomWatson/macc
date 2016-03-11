@@ -220,20 +220,6 @@ class UsersController extends AppController
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Network\Response|null
-     */
-    public function index()
-    {
-        $users = $this->paginate($this->Users);
-        $this->set([
-            'pageTitle' => 'Members',
-            'users' => $users
-        ]);
-    }
-
-    /**
      * View method
      *
      * @param string|null $userId User id.
