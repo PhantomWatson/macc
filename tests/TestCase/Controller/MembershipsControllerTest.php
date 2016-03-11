@@ -85,4 +85,26 @@ class MembershipsControllerTest extends IntegrationTestCase
             'action' => 'login'
         ]);
     }
+
+    public function testPurchaseCompleteAuth()
+    {
+        $this->setNonMemberSession();
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'purchaseComplete'
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testPurchaseCompleteUnauth()
+    {
+        $this->get([
+            'controller' => 'Memberships',
+            'action' => 'purchaseComplete'
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+    }
 }
