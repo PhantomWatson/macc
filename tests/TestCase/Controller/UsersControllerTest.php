@@ -36,7 +36,7 @@ class UsersControllerTest extends IntegrationTestCase
     public function testLogout()
     {
         $this->get('/users/logout');
-        $this->assertResponseOk();
+        $this->assertRedirect('/');
     }
 
     public function testMembers()
