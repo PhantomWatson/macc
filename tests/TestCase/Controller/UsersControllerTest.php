@@ -127,4 +127,14 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
         $this->assertResponseOk();
     }
+
+    public function testChangePassword()
+    {
+        $this->setNonMemberSession();
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'changePassword'
+        ]);
+        $this->assertResponseOk();
+    }
 }
