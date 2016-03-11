@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Controller;
 
 use App\Controller\UsersController;
 use App\Mailer\Mailer;
+use App\Test\Fixture\UsersFixture;
 use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
@@ -23,6 +24,16 @@ class UsersControllerTest extends IntegrationTestCase
         'app.payments',
         'app.users'
     ];
+
+    public function setNonMemberSession()
+    {
+        $usersFixture = new UsersFixture();
+        $this->session([
+            'Auth' => [
+                'User' => $usersFixture->records[1]
+            ]
+        ]);
+    }
 
     public function testForgotPassword()
     {
@@ -93,5 +104,17 @@ class UsersControllerTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'members'
         ]);
+    }
+
+    public function testViewOwnProfile()
+    {
+        $this->setNonMemberSession();
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'view',
+            2,
+            'test-user-2'
+        ]);
+        $this->assertResponseOk();
     }
 }
