@@ -51,12 +51,25 @@ class UsersFixture extends TestFixture
 
         $this->records[] = [
             'id' => 1,
-            'name' => 'Test User 1',
+            'name' => 'Member User',
             'email' => 'testuser1@phantomwatson.com',
             'password' => $password,
             'role' => 'user',
             'profile' => '**Test User 1\'s** profile',
             'slug' => 'test-user-1',
+            'stripe_customer_id' => null,
+            'created' => '2016-02-07 00:14:55',
+            'modified' => '2016-02-07 00:14:55'
+        ];
+
+        $this->records[] = [
+            'id' => 2,
+            'name' => 'Non-Member User',
+            'email' => 'testuser2@phantomwatson.com',
+            'password' => $password,
+            'role' => 'user',
+            'profile' => '**Test User 2\'s** profile',
+            'slug' => 'test-user-2',
             'stripe_customer_id' => null,
             'created' => '2016-02-07 00:14:55',
             'modified' => '2016-02-07 00:14:55'

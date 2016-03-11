@@ -18,9 +18,10 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.users',
+        'app.membership_levels',
+        'app.memberships',
         'app.payments',
-        'app.membership_levels'
+        'app.users'
     ];
 
     public function testForgotPassword()
@@ -69,9 +70,28 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testView()
+    public function testViewMember()
     {
-        $this->get('/users/view/1');
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'view',
+            1,
+            'test-user-1'
+        ]);
         $this->assertResponseOk();
+    }
+
+    public function testViewNonMember()
+    {
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'view',
+            2,
+            'test-user-2'
+        ]);
+        $this->assertRedirect([
+            'controller' => 'Users',
+            'action' => 'members'
+        ]);
     }
 }
