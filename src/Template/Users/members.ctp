@@ -9,8 +9,8 @@
         <?= $this->Html->link(
             'Learn about the membership options available.',
             [
-                'controller' => 'MembershipLevels',
-                'action' => 'index'
+                'controller' => 'Memberships',
+                'action' => 'levels'
             ]
         ) ?>
     </p>
