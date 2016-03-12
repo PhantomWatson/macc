@@ -73,7 +73,12 @@ class AppController extends Controller
                     'fields' => ['username' => 'email']
                 ]
             ],
-            'authorize' => ['Controller']
+            'authorize' => ['Controller'],
+            'flash' => [
+                'params' => [
+                    'class' => 'danger'
+                ]
+            ]
         ]);
         $this->Auth->deny();
         $errorMessage = $this->Auth->user() ?
