@@ -45,12 +45,14 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
     public function testIndex()
     {
-        // User not logged in
-        $this->get([
+        $url = [
             'prefix' => 'admin',
             'controller' => 'MembershipLevels',
             'action' => 'index'
-        ]);
+        ];
+
+        // User not logged in
+        $this->get($url);
         $this->assertRedirect([
             'prefix' => false,
             'controller' => 'Users',
@@ -59,20 +61,99 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
         // Non-admin user
         $this->setUserSession();
-        $this->get([
-            'prefix' => 'admin',
-            'controller' => 'MembershipLevels',
-            'action' => 'index'
-        ]);
+        $this->get($url);
         $this->assertRedirect('/');
 
         // Admin
         $this->setAdminSession();
-        $this->get([
+        $this->get($url);
+        $this->assertResponseOk();
+    }
+
+    public function testAdd()
+    {
+        $url = [
+            'prefix' => 'admin',
+            'controller' => 'MembershipLevels',
+            'action' => 'add'
+        ];
+
+        // User not logged in
+        $this->get($url);
+        $this->assertRedirect([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+
+        // Non-admin user
+        $this->setUserSession();
+        $this->get($url);
+        $this->assertRedirect('/');
+
+        // Admin
+        $this->setAdminSession();
+        $this->get($url);
+        $this->assertResponseOk();
+    }
+
+    public function testEdit()
+    {
+        $url = [
+            'prefix' => 'admin',
+            'controller' => 'MembershipLevels',
+            'action' => 'edit',
+            1
+        ];
+
+        // User not logged in
+        $this->get($url);
+        $this->assertRedirect([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+
+        // Non-admin user
+        $this->setUserSession();
+        $this->get($url);
+        $this->assertRedirect('/');
+
+        // Admin
+        $this->setAdminSession();
+        $this->get($url);
+        $this->assertResponseOk();
+    }
+
+    public function testDelete()
+    {
+        $url = [
+            'prefix' => 'admin',
+            'controller' => 'MembershipLevels',
+            'action' => 'delete',
+            1
+        ];
+
+        // User not logged in
+        $this->post($url);
+        $this->assertRedirect([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+
+        // Non-admin user
+        $this->setUserSession();
+        $this->post($url);
+        $this->assertRedirect('/');
+
+        // Admin
+        $this->setAdminSession();
+        $this->post($url);
+        $this->assertRedirect([
             'prefix' => 'admin',
             'controller' => 'MembershipLevels',
             'action' => 'index'
         ]);
-        $this->assertResponseOk();
     }
 }
