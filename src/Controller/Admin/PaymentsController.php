@@ -103,6 +103,8 @@ class PaymentsController extends AppController
 
     public function refund($paymentId)
     {
+        $this->request->allowMethod(['post']);
+
         try {
             $payment = $this->Payments->get($paymentId);
         } catch (RecordNotFoundException $e) {
@@ -110,28 +112,26 @@ class PaymentsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        if ($this->request->is('post')) {
-            // Bounce user back if the payment was already refunded
-            if ($payment->refunded_date) {
-                $timestamp = strtotime($payment->refunded_date);
-                $date = date('F j, Y', $timestamp);
-                $this->loadModel('Users');
-                try {
-                    $user = $this->Users->get($payment->refunder_id);
-                    $admin = $user->name;
-                } catch (RecordNotFoundException $e) {
-                    $admin = "(unknown user #$payment->refunder_id)";
-                }
-                $this->Flash->error("That payment record was already marked refunded on $date by $admin.");
+        // Bounce user back if the payment was already refunded
+        if ($payment->refunded_date) {
+            $timestamp = strtotime($payment->refunded_date);
+            $date = date('F j, Y', $timestamp);
+            $this->loadModel('Users');
+            try {
+                $user = $this->Users->get($payment->refunder_id);
+                $admin = $user->name;
+            } catch (RecordNotFoundException $e) {
+                $admin = "(unknown user #$payment->refunder_id)";
+            }
+            $this->Flash->error("That payment record was already marked refunded on $date by $admin.");
+        } else {
+            // Record refund
+            $payment->refunded_date = date('Y-m-d H:i:s');
+            $payment->refunder_id = $this->Auth->user('id');
+            if ($this->Payments->save($payment)) {
+                $this->Flash->success('Refund recorded.');
             } else {
-                // Record refund
-                $payment->refunded_date = date('Y-m-d H:i:s');
-                $payment->refunder_id = $this->Auth->user('id');
-                if ($this->Payments->save($payment)) {
-                    $this->Flash->success('Refund recorded.');
-                } else {
-                    $this->Flash->error('There was an error saving that refund record.');
-                }
+                $this->Flash->error('There was an error saving that refund record.');
             }
         }
 
