@@ -96,4 +96,39 @@ class PaymentsControllerTest extends IntegrationTestCase
         $this->get($url);
         $this->assertResponseOk();
     }
+
+    public function testRefund()
+    {
+        $url = [
+            'prefix' => 'admin',
+            'controller' => 'Payments',
+            'action' => 'refund',
+            1
+        ];
+
+        // User not logged in
+        $this->post($url);
+        $this->assertRedirect([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]);
+
+        // Non-admin user
+        /*$this->setUserSession();
+        $this->post($url);
+        $this->assertRedirect('/');
+
+        // Admin
+        $this->setAdminSession();
+        $this->post($url);
+        $this->assertRedirect([
+            'prefix' => 'admin',
+            'controller' => 'Payments',
+            'action' => 'index'
+        ]);
+        $paymentsTable = TableRegistry::get('Payments');
+        $payment = $paymentsTable->get(1);
+        $this->assertNotEquals($payment->refunded, null);*/
+    }
 }
