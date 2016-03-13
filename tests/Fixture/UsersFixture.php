@@ -75,6 +75,19 @@ class UsersFixture extends TestFixture
             'modified' => '2016-02-07 00:14:55'
         ];
 
+        $this->records[] = [
+            'id' => 3,
+            'name' => 'Admin User',
+            'email' => 'testuser3@phantomwatson.com',
+            'password' => $password,
+            'role' => 'admin',
+            'profile' => '**Admin User\'s** profile',
+            'slug' => 'admin-user',
+            'stripe_customer_id' => null,
+            'created' => '2016-02-07 00:14:55',
+            'modified' => '2016-02-07 00:14:55'
+        ];
+
         parent::init();
     }
 }
