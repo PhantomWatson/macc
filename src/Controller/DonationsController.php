@@ -14,6 +14,7 @@ class DonationsController extends AppController
             'donate',
             'donationComplete'
         ]);
+        $this->Security->requireSecure(['donate']);
     }
 
     public function donate()

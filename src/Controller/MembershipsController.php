@@ -18,6 +18,7 @@ class MembershipsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['levels']);
+        $this->Security->requireSecure(['level']);
     }
 
     public function purchaseComplete()
