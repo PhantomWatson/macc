@@ -26,7 +26,8 @@
                 [
                     'controller' => 'Memberships',
                     'action' => 'level',
-                    $membershipLevel->id
+                    $membershipLevel->id,
+                    '_ssl' => true
                 ],
                 [
                     'class' => 'btn btn-primary',
