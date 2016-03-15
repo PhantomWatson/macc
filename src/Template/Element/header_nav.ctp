@@ -58,8 +58,9 @@ if (! function_exists('navLink')) {
             'Donate',
             [
                 'prefix' => false,
-                'controller' => 'Payments',
-                'action' => 'donate'
+                'controller' => 'Donations',
+                'action' => 'donate',
+                '_ssl' => true
             ],
             $this
         ) ?>
