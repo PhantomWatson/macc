@@ -36,7 +36,7 @@
                         ]
                     ) ?>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="previewProfile">
+                <div role="tabpanel" class="tab-pane commonmark-preview" id="previewProfile">
 
                 </div>
             </div>
