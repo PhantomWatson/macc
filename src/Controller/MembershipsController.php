@@ -127,6 +127,7 @@ class MembershipsController extends AppController
         }
 
         // Save payment record in MACC's database
+        $this->loadModel('Payments');
         $payment = $this->Payments->newEntity([
             'user_id' => $userId,
             'membership_level_id' => $membershipLevelId,
