@@ -85,8 +85,6 @@ class AppController extends Controller
             'Sorry, you are not authorized to access that page.'
             : 'Please log in before accessing that page.';
         $this->Auth->config('authError', $errorMessage);
-        
-        $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
     }
 
     /**
@@ -133,7 +131,7 @@ class AppController extends Controller
         $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
         return $prefix != 'admin';
     }
-    
+
     /**
      * Redirect to HTTPS protocol
      */
