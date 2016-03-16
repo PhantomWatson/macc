@@ -63,6 +63,7 @@
 <?= $this->Form->end() ?>
 
 <?php $this->Html->script('commonmark', ['block' => 'script']); ?>
+<?php $this->Html->script('sanitize', ['block' => 'script']); ?>
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewDescriptionLink', 'description', 'previewDescription');
 <?php $this->end(); ?>

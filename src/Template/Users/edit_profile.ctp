@@ -81,6 +81,7 @@
 </div>
 
 <?php $this->Html->script('commonmark', ['block' => 'script']); ?>
+<?php $this->Html->script('sanitize', ['block' => 'script']); ?>
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
 <?php $this->end(); ?>

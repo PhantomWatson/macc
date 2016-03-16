@@ -190,6 +190,26 @@ var commonmarkPreviewer = {
 
             var parsed = reader.parse(profileCommonmark);
             var htmlResult = writer.render(parsed);
+            
+            // Strip out any tags created by parser but not approved
+            var sanitizer = new Sanitize({
+                elements: [
+                    'p', 'br',
+                    'i', 'em',
+                    'b', 'strong',
+                    'a',
+                    'ul', 'ol', 'li',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                    'blockquote'
+                ],
+                attributes: { 
+                    a: ['href']
+                }
+            });
+            var dummyInputNode = document.createElement('div');
+            dummyInputNode.innerHTML = htmlResult;
+            htmlResult = sanitizer.clean_node(dummyInputNode);
+            
             $('#'+output).html(htmlResult);
         });
     }
