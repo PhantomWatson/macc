@@ -2,8 +2,9 @@
 use League\CommonMark\CommonMarkConverter;
 $converter = new CommonMarkConverter();
 
-// Prevent any HTML tags entered by the user from appearing
-$input = strip_tags($input);
+// Escape HTML in input
+$input = str_replace('<', '&lt;', $input);
+$input = str_replace('>', '&gt;', $input);
 
 $html = $converter->convertToHtml($input);
 

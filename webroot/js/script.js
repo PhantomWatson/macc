@@ -184,9 +184,9 @@ var commonmarkPreviewer = {
             var writer = new commonmark.HtmlRenderer();
             var profileCommonmark = $('#'+input).val();
 
-            // Strip HTML out of input
-            var pattern = /(<([^>]+)>)/ig;
-            profileCommonmark = profileCommonmark.replace(pattern, '');
+            // Escape HTML in input
+            profileCommonmark = profileCommonmark.replace(/</g, '&lt;');
+            profileCommonmark = profileCommonmark.replace(/>/g, '&gt;');
 
             var parsed = reader.parse(profileCommonmark);
             var htmlResult = writer.render(parsed);
