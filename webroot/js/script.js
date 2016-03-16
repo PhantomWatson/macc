@@ -177,21 +177,20 @@ var donation = {
     }
 };
 
-var profileEditor = {
-    init: function () {
-        $('#previewProfileLink').click(function (event) {
+var commonmarkPreviewer = {
+    init: function (previewButton, input, output) {
+        $('#'+previewButton).click(function (event) {
             var reader = new commonmark.Parser();
             var writer = new commonmark.HtmlRenderer();
-            var profileCommonmark = $('#profile').val();
+            var profileCommonmark = $('#'+input).val();
 
             // Strip HTML out of input
             var pattern = /(<([^>]+)>)/ig;
             profileCommonmark = profileCommonmark.replace(pattern, '');
-            console.log(profileCommonmark);
 
             var parsed = reader.parse(profileCommonmark);
             var htmlResult = writer.render(parsed);
-            $('#previewProfile').html(htmlResult);
+            $('#'+output).html(htmlResult);
         });
     }
 };

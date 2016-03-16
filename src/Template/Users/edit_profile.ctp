@@ -82,5 +82,5 @@
 
 <?php $this->Html->script('commonmark', ['block' => 'script']); ?>
 <?php $this->append('buffered'); ?>
-    profileEditor.init();
+    commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
 <?php $this->end(); ?>
