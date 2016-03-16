@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 
 class DonationsController extends AppController
 {
@@ -14,7 +15,7 @@ class DonationsController extends AppController
             'donate',
             'donationComplete'
         ]);
-        if (! $this->onLocalhost()) {
+        if (Configure::read('forceSSL')) {
             $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
             $this->Security->requireSecure(['donate']);
         }

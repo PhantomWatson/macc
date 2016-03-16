@@ -18,7 +18,7 @@ class MembershipsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['levels']);
-        if (! $this->onLocalhost()) {
+        if (Configure::read('forceSSL')) {
             $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
             $this->Security->requireSecure(['level']);
         }
