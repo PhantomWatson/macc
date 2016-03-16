@@ -1,8 +1,3 @@
-<?php
-    use League\CommonMark\CommonMarkConverter;
-    $converter = new CommonMarkConverter();
-?>
-
 <div id="membership-levels-index">
     <p>
         Becoming a member of the Muncie Arts and Culture Council is a great
@@ -19,7 +14,7 @@
                 $<?= number_format($membershipLevel->cost) ?>
             </h2>
             <p>
-                <?= $converter->convertToHtml($membershipLevel->description) ?>
+                <?= $this->element('commonmark_parsed', ['input' => $membershipLevel->description]) ?>
             </p>
             <?= $this->Html->link(
                 'Purchase',

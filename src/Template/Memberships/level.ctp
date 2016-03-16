@@ -1,8 +1,6 @@
 <?php
     use Cake\Core\Configure;
     use Cake\Routing\Router;
-    use League\CommonMark\CommonMarkConverter;
-    $converter = new CommonMarkConverter();
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
 ?>
 
@@ -11,7 +9,7 @@
         Membership Benefits:
     </strong>
     <div class="well">
-        <?= $converter->convertToHtml($membershipLevel->description) ?>
+        <?= $this->element('commonmark_parsed', ['input' => $membershipLevel->description]) ?>
     </div>
 
     <p>
