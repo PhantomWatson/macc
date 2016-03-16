@@ -139,4 +139,15 @@ class AppController extends Controller
     {
         return $this->redirect('https://'.env('SERVER_NAME').$this->request->here);
     }
+
+    /**
+     * Returns TRUE if it appears that the site is being served from localhost
+     *
+     * @return boolean
+     */
+    protected function onLocalhost()
+    {
+        $whitelist = ['127.0.0.1', '::1'];
+        return in_array(env('REMOTE_ADDR'), $whitelist);
+    }
 }

@@ -18,8 +18,10 @@ class MembershipsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['levels']);
-        $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
-        $this->Security->requireSecure(['level']);
+        if (! $this->onLocalhost()) {
+            $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
+            $this->Security->requireSecure(['level']);
+        }
     }
 
     public function purchaseComplete()

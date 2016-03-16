@@ -14,8 +14,10 @@ class DonationsController extends AppController
             'donate',
             'donationComplete'
         ]);
-        $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
-        $this->Security->requireSecure(['donate']);
+        if (! $this->onLocalhost()) {
+            $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
+            $this->Security->requireSecure(['donate']);
+        }
     }
 
     public function donate()
