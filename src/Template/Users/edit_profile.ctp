@@ -9,15 +9,39 @@
             Tell about your past and present role in the community,
             the groups you associate with, and the work that you do.
         </p>
-        <?= $this->Form->input(
-            'profile',
-            [
-                'class' => 'form-control',
-                'div' => ['class' => 'form-group'],
-                'label' => false,
-                'type' => 'textarea'
-            ]
-        ) ?>
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#editProfile" aria-controls="editProfile" role="tab" data-toggle="tab">
+                        Edit
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#previewProfile" id="previewProfileLink" aria-controls="previewProfile" role="tab" data-toggle="tab">
+                        Preview
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="editProfile">
+                    <?= $this->Form->input(
+                        'profile',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'label' => false,
+                            'type' => 'textarea'
+                        ]
+                    ) ?>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="previewProfile">
+
+                </div>
+            </div>
+        </div>
+
         <p class="footnote">
             If you need to style your bio, such as with links, lists, italics, or bold, please use our
             <?= $this->Html->link(
@@ -55,3 +79,8 @@
         echo $this->element('jquery_ui');
     ?>
 </div>
+
+<?php $this->Html->script('commonmark', ['block' => 'script']); ?>
+<?php $this->append('buffered'); ?>
+    profileEditor.init();
+<?php $this->end(); ?>
