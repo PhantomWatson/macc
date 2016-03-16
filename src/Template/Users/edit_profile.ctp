@@ -18,7 +18,7 @@
                 'type' => 'textarea'
             ]
         ) ?>
-        <p>
+        <p class="footnote">
             If you need to style your bio, such as with links, lists, italics, or bold, please use our
             <?= $this->Html->link(
                 'Markdown styling guide',
