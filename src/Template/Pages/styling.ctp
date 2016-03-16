@@ -4,7 +4,6 @@
 </p>
 
 <?php
-    $markdownHelper = $this->loadHelper('Gourmet/CommonMark.CommonMark');
     $examples = [
         'Links' => "[Muncie Arts and Culture Council](http://MuncieArts.org)",
         'Italics and Bold' => "This is *italics*. \nSo is _this_.\nAnd both **this** and __this__ is bold.\n\nIf you want to mix bold and italics, *you can do it __like this__*.",
@@ -35,7 +34,7 @@
             <pre><?= $example ?></pre>
             becomes...
             <div>
-                <?= $markdownHelper->convertToHtml($example) ?>
+                <?= $this->element('commonmark_parsed', ['input' => $example]) ?>
             </div>
         </div>
     </section>
