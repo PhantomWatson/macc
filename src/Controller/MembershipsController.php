@@ -65,7 +65,7 @@ class MembershipsController extends AppController
     public function completePurchase()
     {
         $this->viewBuilder()->layout('json');
-        $this->set('_serialize', true);
+        $this->set('_serialize', ['retval']);
 
         // Verify user
         $userId = $this->request->data('userId');
