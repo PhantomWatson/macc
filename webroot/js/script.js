@@ -176,6 +176,7 @@ var donation = {
                 alert('Sorry, your donation amount must be at least one dollar.');
                 return false;
             }
+            paymentProcessor.postData.amount = amount;
             paymentProcessor.costDollars = amount;
             paymentProcessor.confirmationMessage = 'Confirm donation of $'+amount+'?';
             paymentProcessor.description = 'Donation of $'+amount+' to MACC';
