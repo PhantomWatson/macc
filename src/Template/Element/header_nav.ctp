@@ -1,5 +1,6 @@
 <?php
 use Cake\Routing\Router;
+use Cake\Core\Configure;
 
 if (! function_exists('navLink')) {
     function navLink($label, $url, $view) {
@@ -60,7 +61,7 @@ if (! function_exists('navLink')) {
                 'prefix' => false,
                 'controller' => 'Donations',
                 'action' => 'donate',
-                '_ssl' => true
+                '_ssl' => Configure::read('forceSSL')
             ],
             $this
         ) ?>

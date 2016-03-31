@@ -1,3 +1,7 @@
+<?php
+    use Cake\Core\Configure;
+?>
+
 <div id="membership-levels-index">
     <p>
         Becoming a member of the Muncie Arts and Culture Council is a great
@@ -22,7 +26,7 @@
                     'controller' => 'Memberships',
                     'action' => 'level',
                     $membershipLevel->id,
-                    '_ssl' => true
+                    '_ssl' => Configure::read('forceSSL')
                 ],
                 [
                     'class' => 'btn btn-primary',
