@@ -41,6 +41,7 @@ var paymentProcessor = {
             event.preventDefault();
             var data = paymentProcessor.postData;
             data.stripeToken = token.id;
+            data.email = token.email;
             $.ajax({
                 type: 'POST',
                 url: paymentProcessor.postUrl,
