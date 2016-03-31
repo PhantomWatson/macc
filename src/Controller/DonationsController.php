@@ -50,11 +50,10 @@ class DonationsController extends AppController
         $metadata = [];
         if ($this->Auth->user('id')) {
             $metadata['Donor name'] = $this->Auth->user('name');
-            $metadata['Donor email'] = $this->Auth->user('email');
         } else {
-            $metadata['Donor name'] = '(anonymous)';
-            $metadata['Donor email'] = '(unknown)';
+            $metadata['Donor name'] = '';
         }
+        $metadata['Donor email'] = $this->request->data('email');
 
         // Create the charge on Stripe's servers - this will charge the user's card
         $apiKey = Configure::read('Stripe.Secret');
