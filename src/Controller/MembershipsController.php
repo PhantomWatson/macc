@@ -72,7 +72,14 @@ class MembershipsController extends AppController
         $this->loadModel('Users');
         try {
             $user = $this->Users->get($userId);
-        } catch (RecordNotFoundException $e) {
+        } catch (\Cake\Datasource\Exception\InvalidPrimaryKeyException $e) {
+            $this->set('retval', [
+                'success' => false,
+                'message' => "Error: No valid user ID"
+            ]);
+            $this->response->statusCode('404');
+            return $this->render();
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => "Sorry, but that user account ('$userId') was not found."
