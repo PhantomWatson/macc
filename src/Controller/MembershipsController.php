@@ -128,12 +128,16 @@ class MembershipsController extends AppController
 
         // Save payment record in MACC's database
         $this->loadModel('Payments');
-        $payment = $this->Payments->newEntity([
+        $paymentData = [
             'user_id' => $userId,
             'membership_level_id' => $membershipLevelId,
             'amount' => $membershipLevel->cost,
             'stripe_charge_id' => $charge->id
-        ]);
+        ];
+        if (Configure::read('Stripe.mode') == 'Test') {
+            $paymentData['notes'] = 'Payment made in Stripe test mode';
+        }
+        $payment = $this->Payments->newEntity($paymentData);
         $errors = $payment->errors();
         if (empty($errors)) {
             $payment = $this->Payments->save($payment);
