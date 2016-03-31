@@ -68,7 +68,7 @@ class DonationsController extends AppController
                 'metadata' => $metadata,
                 'receipt_email' => $this->request->data('email')
             ]);
-        } catch(\Stripe\Error\Card $e) {
+        } catch (\Stripe\Error\Card $e) {
             throw new ForbiddenException('The provided credit card has been declined');
         }
 
