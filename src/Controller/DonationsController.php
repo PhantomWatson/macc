@@ -33,10 +33,8 @@ class DonationsController extends AppController
         // No validation or recording currently takes place for donations
         $this->viewBuilder()->layout('json');
         $this->set([
-            '_serialize' => true,
-            'retval' => [
-                'success' => true
-            ]
+            '_serialize' => ['retval'],
+            'retval' => ['success' => true]
         ]);
     }
 
