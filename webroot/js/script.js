@@ -19,7 +19,7 @@ var paymentProcessor = {
         return {
             email: this.email,
             key: this.key,
-            //image: '', (logo)
+            image: 'http://members.munciearts.org/img/macc-logo-200px.jpg',
             panelLabel: 'Continue (Total: {{amount}})',
             token: function (token) {
                 paymentProcessor.getToken(token);
