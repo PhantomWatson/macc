@@ -92,7 +92,9 @@ var paymentProcessor = {
         $(this.buttonSelector).on('click', function(event) {
             event.preventDefault();
             if (paymentProcessor.beforePurchase !== null) {
-                paymentProcessor.beforePurchase();
+                if (! paymentProcessor.beforePurchase()) {
+                    return;
+                }
             }
             handler.open({
                 name: 'Muncie Arts and Culture Council',
@@ -154,6 +156,7 @@ var membershipPurchase = {
             if (renewal == 'automatic') {
                 paymentProcessor.confirmationMessage += ' You will be automatically charged to renew your membership every year and can cancel automatic renewal at any time.';
             }
+            return true;
         };
         paymentProcessor.setupPurchaseButton();
     }
@@ -168,10 +171,15 @@ var donation = {
         paymentProcessor.redirectUrl = params.redirectUrl;
         paymentProcessor.beforePurchase = function () {
             var amount = $('#donation-amount').val();
+            amount = parseInt(amount);
+            if (isNaN(amount) || amount < 1) {
+                alert('Sorry, your donation amount must be at least one dollar.');
+                return false;
+            }
             paymentProcessor.costDollars = amount;
-            // validate amount
             paymentProcessor.confirmationMessage = 'Confirm donation of $'+amount+'?';
             paymentProcessor.description = 'Donation of $'+amount+' to MACC';
+            return true;
         };
         paymentProcessor.setupPurchaseButton();
     }
