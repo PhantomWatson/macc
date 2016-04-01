@@ -62,7 +62,11 @@
                         Automatic renewal:
                     </th>
                     <td>
-                        <?php if ($membership->auto_renew): ?>
+                        <?php if (! $canBeAutoRenewed): ?>
+                            <span class="text-danger">
+                                Unavailable
+                            </span>
+                        <?php elseif ($membership->auto_renew): ?>
                             <span class="text-success">
                                 On
                             </span>
@@ -73,23 +77,32 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?= $this->Form->postLink(
-                            'Turn automatic renewal '.($membership->auto_renew ? 'off' : 'on'),
-                            [
-                                'prefix' => false,
-                                'controller' => 'Memberships',
-                                'action' => 'toggleAutoRenewal',
-                                ($membership->auto_renew ? 0 : 1)
-                            ],
-                            [
-                                'class' => 'btn btn-default',
-                                'confirm' => 'Are you sure you want to turn automatic membership renewal '.($membership->auto_renew ? 'off' : 'on').'?'
-                            ]
-                        ) ?>
+                        <?php if ($canBeAutoRenewed): ?>
+                            <?= $this->Form->postLink(
+                                'Turn automatic renewal '.($membership->auto_renew ? 'off' : 'on'),
+                                [
+                                    'prefix' => false,
+                                    'controller' => 'Memberships',
+                                    'action' => 'toggleAutoRenewal',
+                                    ($membership->auto_renew ? 0 : 1)
+                                ],
+                                [
+                                    'class' => 'btn btn-default',
+                                    'confirm' => 'Are you sure you want to turn automatic membership renewal '.($membership->auto_renew ? 'off' : 'on').'?'
+                                ]
+                            ) ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <?php if (! $canBeAutoRenewed): ?>
+            <p class="alert alert-info">
+                Renew your membership online with a credit card to take
+                advantage of automatic renewal.
+            </p>
+        <?php endif; ?>
 
         <?php if ($membership->auto_renew): ?>
             <p class="alert alert-info">
@@ -102,7 +115,7 @@
                         $membership->membership_level['id']
                     ]
                 ) ?>
-                to update your stored credit card info.
+                and your stored credit card information will be updated.
             </p>
         <?php endif; ?>
     <?php endif; ?>

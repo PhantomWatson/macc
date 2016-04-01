@@ -41,8 +41,16 @@ class MembershipsController extends AppController
     {
         $userId = $this->Auth->user('id');
         $membership = $this->Memberships->getCurrentMembership($userId);
+        if ($membership && $membership->payment_id) {
+            $this->loadModel('Payments');
+            $payment = $this->Payments->get($membership->payment_id);
+            $canBeAutoRenewed = $payment->stripe_charge_id != null;
+        } else {
+            $canBeAutoRenewed = false;
+        }
 
         $this->set([
+            'canBeAutoRenewed' => $canBeAutoRenewed,
             'membership' => $membership,
             'pageTitle' => 'My Membership Info'
         ]);
@@ -56,11 +64,23 @@ class MembershipsController extends AppController
 
         $userId = $this->Auth->user('id');
         $membership = $this->Memberships->getCurrentMembership($userId);
-        $membershipEntity = $this->Memberships->get($membership['id']);
-        $membershipEntity = $this->Memberships->patchEntity($membershipEntity, [
+
+        if ($membership && $membership->payment_id) {
+            $this->loadModel('Payments');
+            $payment = $this->Payments->get($membership->payment_id);
+            $canBeAutoRenewed = $payment->stripe_charge_id != null;
+        } else {
+            $canBeAutoRenewed = false;
+        }
+
+        if ($value == 1 && ! $canBeAutoRenewed) {
+            throw new BadRequestException('Cannot turn on automatic renewal, since initial payment was not made online');
+        }
+
+        $membership = $this->Memberships->patchEntity($membership, [
             'auto_renew' => $value
         ]);
-        $this->Memberships->save($membershipEntity);
+        $this->Memberships->save($membership);
         $msg = 'Membership auto-renewal turned '.($value ? 'on' : 'off').'.';
         if ($value) {
             $timestamp = $membership->expires->format('U') - (60 * 60 * 24);
