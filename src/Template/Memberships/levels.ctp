@@ -10,6 +10,28 @@
         you're an artist yourself or simply want to contribute.
     </p>
 
+    <?php if (! $authUser): ?>
+        <p class="alert alert-info">
+            Be sure to
+            <?= $this->Html->link(
+                'register an account',
+                [
+                    'controller' => 'Users',
+                    'action' => 'register'
+                ]
+            ) ?>
+            and
+            <?= $this->Html->link(
+                'log in',
+                [
+                    'controller' => 'Users',
+                    'action' => 'login'
+                ]
+            ) ?>
+            <em>before</em> purchasing a membership.
+        </p>
+    <?php endif; ?>
+
     <?php foreach ($membershipLevels as $membershipLevel): ?>
         <section>
             <h2>

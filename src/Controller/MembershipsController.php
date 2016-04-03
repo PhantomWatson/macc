@@ -17,7 +17,7 @@ class MembershipsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['levels']);
+        $this->Auth->allow(['levels', 'level']);
         if (Configure::read('forceSSL')) {
             $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
             $this->Security->requireSecure(['level']);
@@ -29,7 +29,9 @@ class MembershipsController extends AppController
          /* Prevent Security component from stripping out "unknown fields"
           * from AJAX request to completePurchase and causing errors
           * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
-         $this->Security->config('unlockedActions', ['completePurchase']);
+         if (Configure::read('forceSSL')) {
+            $this->Security->config('unlockedActions', ['completePurchase']);
+         }
     }
 
     public function purchaseComplete()
@@ -386,7 +388,6 @@ class MembershipsController extends AppController
         $membershipLevels = $this->MembershipLevels
             ->find('all')
             ->order(['cost' => 'ASC']);
-
         $this->set([
             'membershipLevels' => $membershipLevels,
             'pageTitle' => 'Become a Member'
@@ -395,6 +396,13 @@ class MembershipsController extends AppController
 
     public function level($id = null)
     {
+        if (! $this->Auth->user()) {
+            $this->Flash->set('Thanks for your interest in becoming a member of MACC! Please register an account and log in, then proceed with your membership purchase.');
+            return $this->redirect([
+                'controller' => 'Users',
+                'action' => 'register'
+            ]);
+        }
         $this->loadModel('MembershipLevels');
         $membershipLevel = $this->MembershipLevels->get($id);
         $this->set([
