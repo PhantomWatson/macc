@@ -1,3 +1,14 @@
+<p>
+    Already have an account?
+    <?= $this->Html->link(
+        'Log in',
+        [
+            'controller' => 'Users',
+            'action' => 'login'
+        ]
+    ) ?>.
+</p>
+
 <?php
     echo $this->Form->create($user);
     echo $this->Form->input(
