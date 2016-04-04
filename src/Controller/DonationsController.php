@@ -27,7 +27,9 @@ class DonationsController extends AppController
          /* Prevent Security component from stripping out "unknown fields"
           * from AJAX request to completeDonation and causing errors
           * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
-         $this->Security->config('unlockedActions', ['completeDonation']);
+         if (Configure::read('forceSSL')) {
+            $this->Security->config('unlockedActions', ['completeDonation']);
+         }
     }
 
     public function donate()
