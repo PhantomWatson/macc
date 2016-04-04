@@ -89,6 +89,7 @@ class AppController extends Controller
         if (Configure::read('forceSSL')) {
             $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
             $this->Security->requireSecure();
+            $this->Security->config('validatePost', false);
         }
     }
 
