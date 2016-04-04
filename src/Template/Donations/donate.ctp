@@ -14,7 +14,11 @@
         <label for="donation-amount">
             Donation Amount (in dollars)
         </label>
-        <input type="number" class="form-control" id="donation-amount" min="1" required="required" />
+        <div class="input-group">
+            <div class="input-group-addon">$</div>
+            <input type="number" class="form-control" id="donation-amount" min="1" required="required" />
+            <div class="input-group-addon">.00</div>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary" id="donation-button">
         Enter payment information
