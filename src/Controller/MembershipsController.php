@@ -18,10 +18,6 @@ class MembershipsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['levels', 'level']);
-        if (Configure::read('forceSSL')) {
-            $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
-            $this->Security->requireSecure(['level']);
-        }
     }
 
     public function beforeFilter(\Cake\Event\Event $event)
