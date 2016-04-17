@@ -2,7 +2,7 @@
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
-    $email = $authUser ? $authUser['email'] : null;
+    $email = isset($authUser['email']) ? $authUser['email'] : null;
 ?>
 
 <p>
@@ -28,10 +28,10 @@
 <?php $this->append('buffered'); ?>
     donation.init(<?= json_encode([
         'buttonSelector' => '#donation-amount',
-        'email' => $authUser ? $authUser['email'] : null,
+        'email' => $email,
         'key' => Configure::read('Stripe.Public'),
         'postData' => [
-            'userId' => $authUser ? $authUser['id'] : null
+            'userId' => isset($authUser['id']) ? $authUser['id'] : null
         ],
         'postUrl' => Router::url([
             'controller' => 'Donations',

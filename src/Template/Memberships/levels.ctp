@@ -10,7 +10,7 @@
         you're an artist yourself or simply want to contribute.
     </p>
 
-    <?php if (! $authUser): ?>
+    <?php if (! isset($authUser) || empty($authUser)): ?>
         <p class="alert alert-info">
             Be sure to
             <?= $this->Html->link(

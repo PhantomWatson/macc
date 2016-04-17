@@ -47,7 +47,7 @@
 <?php $this->append('buffered'); ?>
     membershipPurchase.init(<?= json_encode([
         'costDollars' => $membershipLevel->cost,
-        'email' => $authUser['email'],
+        'email' => isset($authUser['email']) ? $authUser['email'] : null,
         'key' => Configure::read('Stripe.Public'),
         'membershipLevelId' => $membershipLevel->id,
         'membershipLevelName' => $membershipLevel->name,
@@ -59,6 +59,6 @@
             'controller' => 'Memberships',
             'action' => 'purchaseComplete'
         ], true),
-        'userId' => $authUser['id']
+        'userId' => isset($authUser['id']) ? $authUser['id'] : null
     ]) ?>);
 <?php $this->end(); ?>
