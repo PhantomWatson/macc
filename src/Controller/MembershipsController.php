@@ -220,7 +220,7 @@ class MembershipsController extends AppController
     {
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
-        $logMsgPrefix = "Running /memberships/processRecurring\n";
+        $logMsgPrefix = "Running /memberships/process-recurring\n";
         $logResults = true;
 
         $this->loadModel('Memberships');
