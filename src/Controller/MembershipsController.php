@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\I18n\Time;
+use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 
@@ -17,17 +18,17 @@ class MembershipsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['levels', 'level']);
+        $this->Auth->allow(['levels', 'level', 'processRecurring']);
     }
 
     public function beforeFilter(\Cake\Event\Event $event)
     {
-         /* Prevent Security component from stripping out "unknown fields"
-          * from AJAX request to completePurchase and causing errors
-          * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
-         if (Configure::read('forceSSL')) {
+        /* Prevent Security component from stripping out "unknown fields"
+         * from AJAX request to completePurchase and causing errors
+         * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
+        if (Configure::read('forceSSL')) {
             $this->Security->config('unlockedActions', ['completePurchase']);
-         }
+        }
     }
 
     public function purchaseComplete()
@@ -219,12 +220,18 @@ class MembershipsController extends AppController
     {
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
+        $logMsgPrefix = "Running /memberships/processRecurring\n";
+        $logResults = true;
 
         $this->loadModel('Memberships');
         $memberships = $this->Memberships->find('toAutoRenew');
 
         if ($memberships->isEmpty()) {
-            $this->Flash->set('No memberships need to be renewed at this time.');
+            $msg = 'No memberships need to be renewed at this time.';
+            $this->Flash->set($msg);
+            if ($logResults) {
+                Log::write('debug', $logMsgPrefix.$msg);
+            }
         }
 
         $chargedUsers = [];
@@ -238,7 +245,7 @@ class MembershipsController extends AppController
             $userName = $membership->user['name'];
             $membershipLevelName = $membership->membership_level['name'];
 
-            $charge = $this->createStripeCharge([
+            $chargeParams = [
                 'amount'   => $amount,
                 'currency' => 'usd',
                 'customer' => $membership->user['stripe_customer_id'],
@@ -249,22 +256,34 @@ class MembershipsController extends AppController
                 ],
                 'receipt_email' => $membership->user['email'],
                 'statement_descriptor' => 'MACC member renewal' // 22 characters max
-            ]);
+            ];
+            $charge = $this->createStripeCharge($chargeParams);
 
             if (! $charge->paid) {
-                throw new InternalErrorException('Charge did not complete successfully');
+                $msg = 'Charge did not complete successfully';
+                if ($logResults) {
+                    Log::write('debug', $logMsgPrefix.$msg);
+                    Log::write('error', "$msg\n\$chargeParams:\n".print_r($chargeParams, true));
+                }
+                throw new InternalErrorException($msg);
             }
 
             // Save payment
-            $payment = $this->Payments->newEntity([
+            $paymentParams = [
                 'user_id' => $membership->user_id,
                 'membership_level_id' => $membership->membership_level_id,
                 'amount' => $membership->membership_level['cost'],
                 'stripe_charge_id' => $charge->id
-            ]);
+            ];
+            $payment = $this->Payments->newEntity($paymentParams);
             $errors = $payment->errors();
             if (! empty($errors)) {
-                throw new InternalErrorException('Errors saving payment record: '.json_encode($errors));
+                $msg = 'Errors saving payment record: '.json_encode($errors);
+                if ($logResults) {
+                    Log::write('debug', $logMsgPrefix.$msg);
+                    Log::write('error', "$msg\n\$paymentParams:\n".print_r($paymentParams, true));
+                }
+                throw new InternalErrorException($msg);
             }
             $payment = $this->Payments->save($payment);
 
@@ -274,21 +293,31 @@ class MembershipsController extends AppController
             ]);
             $errors = $membership->errors();
             if (! empty($errors)) {
-                throw new InternalErrorException('Errors updating membership record: '.json_encode($errors));
+                $msg = 'Errors updating membership record: '.json_encode($errors);
+                if ($logResults) {
+                    Log::write('debug', $logMsgPrefix.$msg);
+                }
+                throw new InternalErrorException($msg);
             }
             $membership = $this->Memberships->save($membership);
 
             // Save new membership
-            $newMembership = $this->Memberships->newEntity([
+            $membershipParams = [
                 'user_id' => $membership->user_id,
                 'membership_level_id' => $membership->membership_level_id,
                 'payment_id' => $payment->id,
                 'auto_renew' => 1,
                 'expires' => new Time(strtotime('+1 year'))
-            ]);
+            ];
+            $newMembership = $this->Memberships->newEntity($membershipParams);
             $errors = $newMembership->errors();
             if (! empty($errors)) {
-                throw new InternalErrorException('Errors saving new membership record: '.json_encode($errors));
+                $msg = 'Errors saving new membership record: '.json_encode($errors);
+                if ($logResults) {
+                    Log::write('debug', $logMsgPrefix.$msg);
+                    Log::write('error', "$msg\n\$membershipParams:\n".print_r($membershipParams, true));
+                }
+                throw new InternalErrorException($msg);
             }
             $newMembership = $this->Memberships->save($newMembership);
 
@@ -298,7 +327,11 @@ class MembershipsController extends AppController
             // Prevent this user from being charged again in this loop
             $chargedUsers[] = $membership->user_id;
 
-            $this->Flash->success('Membership renewed for '.$membership->user['name']);
+            $msg = 'Membership renewed for '.$membership->user['name'];
+            $this->Flash->success($msg);
+            if ($logResults) {
+                Log::write('debug', $logMsgPrefix.$msg);
+            }
         }
 
         $this->set([
