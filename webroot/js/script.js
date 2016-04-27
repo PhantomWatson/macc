@@ -224,3 +224,36 @@ var commonmarkPreviewer = {
         });
     }
 };
+
+var pictureUploader = {
+    init: function (params) {
+        $('#picture-upload').uploadifive({
+            'uploadScript': '/pictures/add',
+            'checkScript': false,
+            'onCheck': false,
+            'fileSizeLimit': params.filesizeLimit,
+            'buttonText': 'Click to select an image to upload',
+            'width': 300,
+            'fileType': '.jpg,.jpeg,.png,.gif',
+            'formData': {
+                'timestamp': params.timestamp,
+                'token': params.token,
+                'user_id': params.user_id
+            },
+            'onUploadComplete': function(file, data) {
+                data = JSON.parse(data);
+                var filename = data.picture;
+                var imgPath = '/img/members/'+params.user_id+'/'+filename;
+                var img = $('<img src="'+imgPath+'" style="max-height: 200px; max-width: 200px;" />');
+                var li = $('<li></li>').append(img);
+                $('#pictures').append(li);
+            },
+            'onError': function(errorType, files) {
+                alert('There was an error uploading that file: '+file.xhr.responseText);
+            },
+            'onQueueComplete': function() {
+                this.uploadifive('clearQueue');
+            }
+        });
+    }
+};

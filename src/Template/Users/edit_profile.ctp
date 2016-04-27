@@ -1,3 +1,7 @@
+<?php
+    use Cake\Core\Configure;
+?>
+
 <div id="edit_profile">
     <?= $this->Form->create($user) ?>
 
@@ -74,14 +78,75 @@
         ) ?>
     </section>
 
+    <section>
+        <h2>
+            Pictures
+        </h2>
+        <p>
+            You can upload up to ten pictures of yourself and/or the artwork that you create.
+        </p>
+
+        <?php
+            $uploadMax = ini_get('upload_max_filesize');
+            $postMax = ini_get('post_max_size');
+            $serverFilesizeLimit = min($uploadMax, $postMax);
+            $manualFilesizeLimit = min('10M', $serverFilesizeLimit);
+        ?>
+        <ul class="footnote">
+            <li>
+                Images must be .jpg, .jpeg, .gif, or .png
+            </li>
+            <li>
+                Each file cannot exceed <?php echo $manualFilesizeLimit; ?>B
+            </li>
+            <li>
+                By uploading an image, you affirm that you are not violating any copyrights
+            </li>
+            <li>
+                To be considerate of our diverse audience, images must not include offensive language, nudity, or graphic violence
+            </li>
+        </ul>
+
+        <p>
+            <button id="picture-upload">
+                Select images
+            </button>
+        </p>
+
+        <p id="upload-status"></p>
+
+        <ul id="pictures">
+            <?php foreach ($user->pictures as $picture): ?>
+                <li>
+                    <img src="/img/members/<?= $user['id'] ?>/<?= $picture['filename'] ?>" />
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <?php $this->append('buffered'); ?>
+            pictureUploader.init(<?= json_encode([
+                'filesizeLimit' => $manualFilesizeLimit.'B',
+                'token' => md5(Configure::read('upload_verify_token').time()),
+                'timestamp' => time(),
+                'user_id' => $user['id']
+            ]) ?>);
+        <?php $this->end(); ?>
+
+    </section>
+
     <?php
         echo $this->Form->end();
         echo $this->element('jquery_ui');
     ?>
 </div>
 
-<?php $this->Html->script('commonmark', ['block' => 'script']); ?>
-<?php $this->Html->script('sanitize', ['block' => 'script']); ?>
+<?php
+    $this->Html->script('commonmark', ['block' => 'script']);
+    $this->Html->script('sanitize', ['block' => 'script']);
+    $this->Html->script('/uploadifive/jquery.uploadifive.min.js', ['block' => 'script']);
+    $this->Html->css('/uploadifive/uploadifive.css', ['block' => 'css']);
+?>
+
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
 <?php $this->end(); ?>

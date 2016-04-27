@@ -81,7 +81,7 @@ class UsersController extends AppController
     {
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId, [
-            'contain' => ['Tags']
+            'contain' => ['Tags', 'Pictures']
         ]);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data(), [
