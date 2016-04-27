@@ -4,8 +4,13 @@
 /config/recaptcha.php
 /tmp/*
 /logs/*
+/webroot/img/members/*
+
+# Client-side libraries
 /webroot/bootstrap/*
 /webroot/ckeditor/*
+/webroot/js/jquery*
+/webroot/uploadifive/*
 
 # Eclipse
 *.pydevproject
@@ -46,5 +51,4 @@ composer.lock
 /webroot/coverage/*
 /node_modules/*
 phpunit.xml.dist
-/webroot/js/jquery*
 empty
