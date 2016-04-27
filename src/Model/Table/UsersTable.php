@@ -46,6 +46,10 @@ class UsersTable extends Table
             'dependent' => true,
             'foreignKey' => 'user_id'
         ]);
+        $this->hasMany('Pictures', [
+            'dependent' => true,
+            'foreignKey' => 'user_id'
+        ]);
         $this->belongsToMany('Tags', [
             'dependent' => true,
             'foreignKey' => 'user_id',
