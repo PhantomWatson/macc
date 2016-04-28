@@ -183,7 +183,6 @@ Request::addDetector('tablet', function ($request) {
 Plugin::load('Migrations');
 Plugin::load('Xety/Cake3CookieAuth');
 Plugin::load('Xety/Cake3Sluggable');
-Plugin::load('Burzum/Imagine');
 Plugin::load('Josegonzalez/Upload');
 
 // Only try to load DebugKit in development mode
