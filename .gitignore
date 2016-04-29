@@ -11,6 +11,7 @@
 /webroot/ckeditor/*
 /webroot/js/jquery*
 /webroot/uploadifive/*
+/webroot/magnific-popup/*
 
 # Eclipse
 *.pydevproject
