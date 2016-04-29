@@ -30,4 +30,13 @@ class Picture extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getThumbnailFilename()
+    {
+        $filenameParts = explode('.', $this->_properties['filename']);
+        $extension = array_pop($filenameParts);
+        $filenameParts[] = 'thumb';
+        $filenameParts[] = $extension;
+        return implode('.', $filenameParts);
+    }
 }
