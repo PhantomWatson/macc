@@ -249,7 +249,11 @@ var pictureUploader = {
                 $('#pictures').append(li);
             },
             'onError': function(errorType, files) {
-                alert('There was an error uploading that file: '+file.xhr.responseText);
+                var response = JSON.parse(file.xhr.responseText);
+                $('#upload-status')
+                    .attr('class', 'alert alert-danger')
+                    .html(response.message)
+                    .show();
             },
             'onQueueComplete': function() {
                 this.uploadifive('clearQueue');
