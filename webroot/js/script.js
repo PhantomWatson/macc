@@ -228,7 +228,7 @@ var commonmarkPreviewer = {
 var pictureUploader = {
     init: function (params) {
         $('#picture-upload').uploadifive({
-            'uploadScript': '/pictures/add',
+            'uploadScript': '/pictures/add.json',
             'checkScript': false,
             'onCheck': false,
             'fileSizeLimit': params.filesizeLimit,

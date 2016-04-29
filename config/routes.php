@@ -42,6 +42,8 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function ($routes) {
+    $routes->extensions(['json']);
+
     $routes->connect('/styling', ['controller' => 'Pages', 'action' => 'styling']);
 
     $routes->connect('/account',          ['controller' => 'Users', 'action' => 'account']);
