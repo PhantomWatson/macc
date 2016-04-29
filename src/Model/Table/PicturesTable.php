@@ -33,6 +33,7 @@ class PicturesTable extends Table
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'filename' => [
                 'pathProcessor' => 'App\Media\PathProcessor',
+                'transformer' => 'App\Media\Transformer',
                 'path' => 'webroot{DS}img{DS}members{DS}{user_id}{DS}',
                 'keepFilesOnDelete' => false
             ]
@@ -67,45 +68,53 @@ class PicturesTable extends Table
 
         $validator->provider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
         $fileUploaded = function ($context) {
-            return !empty($context['data']['file']) && $context['data']['file']['error'] == UPLOAD_ERR_OK;
+            return !empty($context['data']['filename']) && $context['data']['filename']['error'] == UPLOAD_ERR_OK;
         };
+        $fileUploaded = true;
         $validator
-            ->add('file', 'fileUnderPhpSizeLimit', [
+            ->add('filename', 'isValidExtension', [
+                'rule' => ['extension', ['jpg', 'jpeg', 'gif', 'png']],
+                'message' => 'Sorry, your images need to have a filetype of .jpg, .png, or .gif',
+                'on' => $fileUploaded,
+                'last' => true
+            ])
+            ->add('filename', 'fileUnderPhpSizeLimit', [
                 'rule' => 'isUnderPhpSizeLimit',
                 'message' => 'Sorry, this image exceeds the maximum filesize',
                 'provider' => 'upload',
-                'on' => $fileUploaded
+                'on' => $fileUploaded,
+                'last' => true
             ])
-            ->add('file', 'fileCompletedUpload', [
+            ->add('filename', 'fileCompletedUpload', [
                 'rule' => 'isCompletedUpload',
                 'message' => 'This file could not be uploaded completely',
                 'provider' => 'upload',
-                'on' => $fileUploaded
+                'on' => $fileUploaded,
+                'last' => true
             ])
-            ->add('file', 'fileFileUpload', [
+            ->add('filename', 'fileFileUpload', [
                 'rule' => 'isFileUpload',
                 'message' => 'No file was uploaded',
-                'provider' => 'upload'
-            ])->add('file', 'fileSuccessfulWrite', [
+                'provider' => 'upload',
+                'last' => true
+            ])
+            ->add('filename', 'fileSuccessfulWrite', [
                 'rule' => 'isSuccessfulWrite',
                 'message' => 'There was an error saving the uploaded file',
                 'provider' => 'upload',
-                'on' => $fileUploaded
-            ])->add('file', 'fileAboveMinHeight', [
+                'on' => $fileUploaded,
+                'last' => true
+            ])
+            ->add('filename', 'fileAboveMinHeight', [
                 'rule' => ['isAboveMinHeight', 200],
                 'message' => 'This image should at least be 200px high',
                 'provider' => 'upload',
                 'on' => $fileUploaded
             ])
-            ->add('file', 'fileAboveMinWidth', [
+            ->add('filename', 'fileAboveMinWidth', [
                 'rule' => ['isAboveMinWidth', 200],
                 'message' => 'This image should at least be 200px wide',
                 'provider' => 'upload',
-                'on' => $fileUploaded
-            ])
-            ->add('file', 'isValidExtension', [
-                'rule' => ['extension', ['jpg', 'jpeg', 'gif', 'png']],
-                'message' => 'Sorry, your images need to have a filetype of .jpg, .png, or .gif',
                 'on' => $fileUploaded
             ]);
 
