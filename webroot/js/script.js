@@ -246,7 +246,7 @@ var pictureUploader = {
                 var fullPath = '/img/members/'+params.user_id+'/'+filename;
                 var thumbnailFilename = pictureUploader.getThumbnailFilename(filename);
                 var thumbPath = '/img/members/'+params.user_id+'/'+thumbnailFilename;
-                var img = $('<img src="'+thumbPath+'" style="max-height: 200px; max-width: 200px;" />');
+                var img = $('<img src="'+thumbPath+'" />');
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
                 link.magnificPopup({type: 'image'});
                 var li = $('<li></li>').append(link);
