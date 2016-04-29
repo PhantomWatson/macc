@@ -6,7 +6,6 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Josegonzalez\Upload\File\Path\ProcessorInterface;
 
-
 class PathProcessor implements ProcessorInterface
 {
     /**
