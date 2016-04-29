@@ -249,8 +249,16 @@ var pictureUploader = {
                 var img = $('<img src="'+thumbPath+'" />');
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
                 link.magnificPopup({type: 'image'});
-                var li = $('<li></li>').append(link);
-                $('#pictures').append(li);
+                var pictureCell = $('<td></td>').append(link);
+                var removeButton = $('<button class="btn btn-link remove" title="Remove" data-picture-id="'+data.pictureId+'"></button>');
+                removeButton.html('<span class="glyphicon glyphicon-remove text-danger"></span>');
+                removeButton.click(function (event) {
+                    event.preventDefault();
+                    profileEditor.deletePicture($(this));
+                });
+                var actionsCell = $('<td></td>').append(removeButton);
+                var row = $('<tr></tr>').append(actionsCell).append(pictureCell);
+                $('#pictures tbody').append(row);
             },
             'onError': function(errorType, files) {
                 var response = JSON.parse(file.xhr.responseText);
@@ -275,5 +283,45 @@ var pictureUploader = {
 var profileEditor = {
     init: function () {
         $('#pictures a').magnificPopup({type: 'image'});
+        $('#pictures button.remove').click(function (event) {
+            event.preventDefault();
+            profileEditor.deletePicture($(this));
+        });
+    },
+    
+    deletePicture: function (button) {
+        if (! confirm('Are you sure you want to remove this picture?')) {
+            return;
+        }
+        var pictureId = button.data('picture-id');
+        $.ajax({
+            type: 'DELETE',
+            url: '/pictures/delete/'+pictureId,
+            dataType: 'json',
+            beforeSend: function (jqXHR, settings) {
+                button.find('.glyphicon').hide();
+                button.append('<img src="/img/loading_small.gif" class="loading" />');
+                button.closest('tr').addClass('deleting');
+            },
+            success: function (data, textStatus, jqXHR) {
+                var row = button.closest('tr');
+                row.removeClass('deleting').addClass('deleted');
+                var msg = $('<span class="text-success">Picture deleted</span>');
+                var cell = row.find('td:nth-child(2)');
+                cell.prepend(msg);
+                cell.find('img').slideUp();
+                setTimeout(function () {
+                    row.fadeOut(500, function () {
+                        $(this).remove();
+                    });
+                }, 3000);
+                
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                button.find('.glyphicon').show();
+                button.find('img.loading').remove();
+                button.closest('tr').removeClass('deleting');
+            }
+        });
     }
 };

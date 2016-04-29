@@ -213,28 +213,34 @@ header {
 	margin: 0;
 	padding: 0;
 
-	li {
-		background-color: #eee;
-		border: 1px solid #ccc;
-		display: inline-block;
-		height: 220px;
-		margin: 1px;
+	tr {
+		&.deleting {
+			img {
+				opacity: 0.5;
+			}
+		}
+		&.deleted {
+			td:first-child {
+				button {
+					visibility: hidden;
+				}
+			}
+			img {
+				visibility: hidden;
+			}
+		}
+	}
+	td {
 		padding: 10px;
-		position: relative;
-		text-align: center;
-		width: 215px;
+		vertical-align: top;
 	}
 	img {
 		max-height: 200px;
 		max-width: 200px;
-		width: auto;
-	    height: auto;
-	    position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	    margin: auto;
+		vertical-align: top;
+	}
+	button.remove {
+		padding: 0;
 	}
 }
 

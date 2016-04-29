@@ -115,15 +115,24 @@
 
         <p id="upload-status"></p>
 
-        <ul id="pictures">
-            <?php foreach ($user->pictures as $picture): ?>
-                <li>
-                    <a href="/img/members/<?= $user->id ?>/<?= $picture->filename ?>" title="Click for full-size">
-                        <img src="/img/members/<?= $user->id ?>/<?= $picture->thumbnail_filename ?>" />
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <table id="pictures">
+            <tbody>
+                <?php foreach ($user->pictures as $picture): ?>
+                    <tr>
+                        <td>
+                            <button class="btn btn-link remove" title="Remove" data-picture-id="<?= $picture->id ?>">
+                                <span class="glyphicon glyphicon-remove text-danger"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <a href="/img/members/<?= $user->id ?>/<?= $picture->filename ?>" title="Click for full-size">
+                                <img src="/img/members/<?= $user->id ?>/<?= $picture->thumbnail_filename ?>" />
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
         <?php $this->append('buffered'); ?>
             pictureUploader.init(<?= json_encode([

@@ -37,20 +37,24 @@ class PicturesController extends AppController
                 }
                 $exceptionMsg .= '</ul>';
                 throw new BadRequestException($exceptionMsg);
-            } elseif ($this->Pictures->save($picture)) {
-                $message = 'Picture successfully uploaded';
-                $this->set([
-                    'message' => $message,
-                    'picture' => $picture->filename
-                ]);
             } else {
-                $msg = 'There was an error uploading that picture. Please try again.';
-                throw new InternalErrorException($msg);
+                $picture = $this->Pictures->save($picture);
+                if ($picture) {
+                    $message = 'Picture successfully uploaded';
+                    $this->set([
+                        'message' => $message,
+                        'picture' => $picture->filename,
+                        'pictureId' => $picture->id
+                    ]);
+                } else {
+                    $msg = 'There was an error uploading that picture. Please try again.';
+                    throw new InternalErrorException($msg);
+                }
             }
         } else {
             throw new BadRequestException('No picture was uploaded');
         }
-        $this->set('_serialize', ['message', 'picture']);
+        $this->set('_serialize', ['message', 'picture', 'pictureId']);
     }
 
     /**
@@ -65,10 +69,10 @@ class PicturesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $picture = $this->Pictures->get($id);
         if ($this->Pictures->delete($picture)) {
-            $this->Flash->success(__('The picture has been deleted.'));
+            $message = 'The picture has been deleted.';
         } else {
-            $this->Flash->error(__('The picture could not be deleted. Please, try again.'));
+            $message = 'The picture could not be deleted. Please, try again.';
         }
-        return $this->redirect(['action' => 'index']);
+        $this->set('message', $message);
     }
 }
