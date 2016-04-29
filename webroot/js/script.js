@@ -243,9 +243,13 @@ var pictureUploader = {
             'onUploadComplete': function(file, data) {
                 data = JSON.parse(data);
                 var filename = data.picture;
-                var imgPath = '/img/members/'+params.user_id+'/'+filename;
-                var img = $('<img src="'+imgPath+'" style="max-height: 200px; max-width: 200px;" />');
-                var li = $('<li></li>').append(img);
+                var fullPath = '/img/members/'+params.user_id+'/'+filename;
+                var thumbnailFilename = pictureUploader.getThumbnailFilename(filename);
+                var thumbPath = '/img/members/'+params.user_id+'/'+thumbnailFilename;
+                var img = $('<img src="'+thumbPath+'" style="max-height: 200px; max-width: 200px;" />');
+                var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
+                link.magnificPopup({type: 'image'});
+                var li = $('<li></li>').append(link);
                 $('#pictures').append(li);
             },
             'onError': function(errorType, files) {
@@ -259,5 +263,17 @@ var pictureUploader = {
                 this.uploadifive('clearQueue');
             }
         });
+    },
+    
+    getThumbnailFilename: function (fullsizeFilename) {
+        var filenameParts = fullsizeFilename.split('.');
+        var extension = filenameParts.pop();
+        return filenameParts.join('.') + '.thumb.' + extension;
+    }
+};
+
+var profileEditor = {
+    init: function () {
+        $('#pictures a').magnificPopup({type: 'image'});
     }
 };

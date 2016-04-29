@@ -118,7 +118,9 @@
         <ul id="pictures">
             <?php foreach ($user->pictures as $picture): ?>
                 <li>
-                    <img src="/img/members/<?= $user['id'] ?>/<?= $picture['filename'] ?>" />
+                    <a href="/img/members/<?= $user->id ?>/<?= $picture->filename ?>" title="Click for full-size">
+                        <img src="/img/members/<?= $user->id ?>/<?= $picture->thumbnail_filename ?>" />
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -145,8 +147,11 @@
     $this->Html->script('sanitize', ['block' => 'script']);
     $this->Html->script('/uploadifive/jquery.uploadifive.min.js', ['block' => 'script']);
     $this->Html->css('/uploadifive/uploadifive.css', ['block' => 'css']);
+    $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
+    $this->Html->script('/magnific-popup/jquery.magnific-popup.js', ['block' => 'script']);
 ?>
 
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
+    profileEditor.init();
 <?php $this->end(); ?>
