@@ -18,8 +18,8 @@
         "xety/cake3-sluggable": "1.*",
         "drewm/mailchimp-api": "^2.1",
         "phpunit/phpunit": "*",
-        "burzum/cakephp-imagine-plugin": "2.*",
-        "josegonzalez/cakephp-upload": "~3.0"
+        "josegonzalez/cakephp-upload": "~3.0",
+        "imagine/imagine": "^0.6.3"
     },
     "require-dev": {
         "psy/psysh": "@stable",
