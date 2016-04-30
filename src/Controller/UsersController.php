@@ -104,7 +104,8 @@ class UsersController extends AppController
         $this->set([
             'pageTitle' => 'Update Profile',
             'tags' => $this->Tags->getThreaded(),
-            'user' => $user
+            'user' => $user,
+            'picLimit' => Configure::read('maxPicturesPerUser')
         ]);
     }
 

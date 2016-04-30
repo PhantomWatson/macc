@@ -83,7 +83,7 @@
             Pictures
         </h2>
         <p>
-            You can upload up to ten pictures of yourself and/or the artwork that you create.
+            You can upload <strong>up to <?= $picLimit ?> <?= __n('picture', 'pictures', $picLimit) ?></strong> of yourself and/or the artwork that you create.
         </p>
 
         <?php
