@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
@@ -22,11 +23,21 @@ class PicturesController extends AppController
     public function add()
     {
         $this->viewBuilder()->layout('json');
+
+        // Ensure user doesn't exceed picture limit
+        $userId = $this->Auth->user('id');
+        $currentCount = $this->Pictures->getCountForUser($userId);
+        $maxPicturesPerUser = Configure::read('maxPicturesPerUser');
+        if ($currentCount >= $maxPicturesPerUser) {
+            $msg = 'Sorry, you\'ve reached your limit of '.$maxPicturesPerUser.__n(' picture', ' pictures', $maxPicturesPerUser);
+            throw new ForbiddenException($msg);
+        }
+
         $picture = $this->Pictures->newEntity();
         if ($this->request->is('post')) {
             $this->request->data['filename'] = $this->request->data('Filedata');
             $this->request->data['is_primary'] = false;
-            $this->request->data['user_id'] = $this->Auth->user('id');
+            $this->request->data['user_id'] = $userId;
             $picture = $this->Pictures->patchEntity($picture, $this->request->data);
             if ($picture->errors()) {
                 $exceptionMsg = 'There was an error uploading that picture. Please try again.';

@@ -156,4 +156,16 @@ class PicturesTable extends Table
         $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
         $file->delete();
     }
+
+    /**
+     * Returns number of pictures associated with specified user
+     *
+     * @param int $userId
+     * @return int
+     */
+    public function getCountForUser($userId) {
+        return $this->find('all')
+            ->where(['user_id' => $userId])
+            ->count();
+    }
 }
