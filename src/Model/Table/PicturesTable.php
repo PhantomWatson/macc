@@ -1,7 +1,11 @@
 <?php
 namespace App\Model\Table;
 
+use App\Media\Transformer;
 use App\Model\Entity\Picture;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\Filesystem\File;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -132,5 +136,24 @@ class PicturesTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
+    }
+
+    /**
+     * Deletes the generated thumbnail after a picture record is deleted
+     *
+     * josegonzalez/cakephp-upload plugin already takes care of deleting
+     * the file for the full-size picture
+     *
+     * @param \Cake\Event\Event $event The afterDelete event that was fired
+     * @param \App\Model\Table\Entity\Picture $entity The entity that was deleted
+     * @param \ArrayObject $options the options passed to the delete method
+     * @return void|false
+     */
+    public function afterDelete(Event $event, Picture $entity, ArrayObject $options)
+    {
+        $fullsizeFilename = $entity->filename;
+        $thumbFilename = \App\Media\Transformer::generateThumbnailFilename($fullsizeFilename);
+        $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
+        $file->delete();
     }
 }

@@ -87,13 +87,7 @@ class Transformer implements TransformerInterface
             $mode = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
             $image->thumbnail($size, $mode)->save($this->data['tmp_name']);
         }
-
-        // Generate thumbnail filename
-        $thumbFilenameParts = explode('.', $this->data['name']);
-        $extension = array_pop($thumbFilenameParts);
-        $thumbFilenameParts[] = 'thumb';
-        $thumbFilenameParts[] = $extension;
-        $thumbFilename = implode('.', $thumbFilenameParts);
+        $thumbFilename = $this->generateThumbnailFilename($this->data['name']);
 
         // Create thumbnail
         $size = new \Imagine\Image\Box(200, 200);
@@ -107,5 +101,21 @@ class Transformer implements TransformerInterface
             $this->data['tmp_name'] => $this->data['name'],
             $tmpPath.DS.$thumbFilename => $thumbFilename
         ];
+    }
+
+    /**
+     * Returns a filename with ".thumb" inserted before the extension,
+     * e.g. "picture.jpg" => "picture.thumb.jpg"
+     *
+     * @param string $fullsizeFilename
+     * @return string
+     */
+    public static function generateThumbnailFilename($fullsizeFilename)
+    {
+        $thumbFilenameParts = explode('.', $fullsizeFilename);
+        $extension = array_pop($thumbFilenameParts);
+        $thumbFilenameParts[] = 'thumb';
+        $thumbFilenameParts[] = $extension;
+        return implode('.', $thumbFilenameParts);
     }
 }
