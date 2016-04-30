@@ -272,6 +272,11 @@ var userPictureEditor = {
                 var row = $('<tr></tr>').append(actionsCell).append(pictureCell);
                 $('#pictures tbody').append(row);
                 
+                $('#upload-status')
+                    .attr('class', 'alert alert-success')
+                    .html('Picture added')
+                    .show();
+                
                 userPictureEditor.checkLimitReached(true);
             },
             'onError': function(errorType, files) {
