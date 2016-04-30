@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 
 /**
@@ -68,6 +69,11 @@ class PicturesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $picture = $this->Pictures->get($id);
+        $userId = $this->Auth->user('id');
+        $ownerId = $picture->user_id;
+        if ($userId != $ownerId) {
+            throw new ForbiddenException('You cannot delete pictures that you are not the owner of.');
+        }
         if ($this->Pictures->delete($picture)) {
             $message = 'The picture has been deleted.';
         } else {
