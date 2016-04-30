@@ -315,12 +315,19 @@ var profileEditor = {
                         $(this).remove();
                     });
                 }, 3000);
-                
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                var message;
                 button.find('.glyphicon').show();
                 button.find('img.loading').remove();
                 button.closest('tr').removeClass('deleting');
+                try {
+                    var response = JSON.parse(jqXHR.responseText);
+                    message = response.message;
+                } catch(error) {
+                    message = 'There was an error deleting that picture.';
+                }
+                alert(message);
             }
         });
     }
