@@ -250,11 +250,15 @@ class UsersController extends AppController
         }
 
         $user = $this->Users->get($userId, [
-            'contain' => ['Tags']
+            'contain' => ['Tags', 'Pictures']
         ]);
         $this->set([
             'pageTitle' => $user->name,
-            'user' => $user
+            'user' => $user,
+            'mainPicture' => [
+                'fullsize' => $user->main_picture_fullsize,
+                'thumb' => $user->main_picture_thumb
+            ]
         ]);
     }
 
@@ -297,6 +301,7 @@ class UsersController extends AppController
             ])
             ->order(['Users.name' => 'ASC'])
             ->all();
+
         foreach ($members as $member) {
             $member->main_picture_thumbnail = false;
             $member->main_picture_fullsize = false;

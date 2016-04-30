@@ -47,4 +47,30 @@ class User extends Entity
     {
         return (new DefaultPasswordHasher)->hash($password);
     }
+
+    protected function _getMainPictureFullsize()
+    {
+        if (! $this->_properties['main_picture_id']) {
+            return null;
+        }
+        foreach ($this->_properties['pictures'] as $picture) {
+            if ($picture['id'] == $this->_properties['main_picture_id']) {
+                return $picture['filename'];
+            }
+        }
+        return null;
+    }
+
+    protected function _getMainPictureThumb()
+    {
+        if (! $this->_properties['main_picture_id']) {
+            return null;
+        }
+        foreach ($this->_properties['pictures'] as $picture) {
+            if ($picture['id'] == $this->_properties['main_picture_id']) {
+                return $picture['thumbnail_filename'];
+            }
+        }
+        return null;
+    }
 }

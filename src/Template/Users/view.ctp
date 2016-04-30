@@ -1,3 +1,11 @@
+<?php if ($mainPicture['fullsize']): ?>
+    <div id="main-profile-picture">
+        <a href="/img/members/<?= $user->id ?>/<?= $mainPicture['fullsize'] ?>" title="Click to view full-sized picture">
+            <img src="/img/members/<?= $user->id ?>/<?= $mainPicture['thumb'] ?>" alt="Main profile picture" />
+        </a>
+    </div>
+<?php endif; ?>
+
 <section>
     <h2>
         About
@@ -34,3 +42,38 @@
         </ul>
     <?php endif; ?>
 </section>
+
+<?php
+    $nonMainPictures = [];
+    foreach ($user->pictures as $picture) {
+        if ($picture['id'] != $user['main_picture_id']) {
+            $nonMainPictures[] = $picture;
+        }
+    }
+?>
+
+<?php if (! empty($nonMainPictures)): ?>
+    <section id="profile-pictures">
+        <h2>
+            Pictures
+        </h2>
+        <ul>
+            <?php foreach ($nonMainPictures as $picture): ?>
+                <li>
+                    <a href="/img/members/<?= $user->id ?>/<?= $picture['filename'] ?>" title="Click to view full-sized picture">
+                        <img src="/img/members/<?= $user->id ?>/<?= $picture['thumbnail_filename'] ?>" alt="Profile picture" />
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+
+    <?php
+        $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
+        $this->Html->script('/magnific-popup/jquery.magnific-popup.js', ['block' => 'script']);
+    ?>
+    <?php $this->append('buffered'); ?>
+        memberProfile.init();
+    <?php $this->end(); ?>
+
+<?php endif; ?>

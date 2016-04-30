@@ -422,3 +422,9 @@ var membersList = {
         $('.picture a').magnificPopup({type: 'image'});
     }
 };
+
+var memberProfile = {
+    init: function () {
+        $('#profile-pictures a').magnificPopup({type: 'image'});
+    }    
+};
