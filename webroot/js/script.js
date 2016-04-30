@@ -225,8 +225,15 @@ var commonmarkPreviewer = {
     }
 };
 
-var pictureUploader = {
+var userPictureEditor = {
     init: function (params) {
+        $('#pictures a').magnificPopup({type: 'image'});
+        
+        $('#pictures button.remove').click(function (event) {
+            event.preventDefault();
+            userPictureEditor.deletePicture($(this));
+        });
+        
         $('#picture-upload').uploadifive({
             'uploadScript': '/pictures/add.json',
             'checkScript': false,
@@ -244,7 +251,7 @@ var pictureUploader = {
                 data = JSON.parse(data);
                 var filename = data.picture;
                 var fullPath = '/img/members/'+params.user_id+'/'+filename;
-                var thumbnailFilename = pictureUploader.getThumbnailFilename(filename);
+                var thumbnailFilename = userPictureEditor.getThumbnailFilename(filename);
                 var thumbPath = '/img/members/'+params.user_id+'/'+thumbnailFilename;
                 var img = $('<img src="'+thumbPath+'" />');
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
@@ -254,7 +261,7 @@ var pictureUploader = {
                 removeButton.html('<span class="glyphicon glyphicon-remove text-danger"></span>');
                 removeButton.click(function (event) {
                     event.preventDefault();
-                    profileEditor.deletePicture($(this));
+                    userPictureEditor.deletePicture($(this));
                 });
                 var actionsCell = $('<td></td>').append(removeButton);
                 var row = $('<tr></tr>').append(actionsCell).append(pictureCell);
@@ -270,22 +277,6 @@ var pictureUploader = {
             'onQueueComplete': function() {
                 this.uploadifive('clearQueue');
             }
-        });
-    },
-    
-    getThumbnailFilename: function (fullsizeFilename) {
-        var filenameParts = fullsizeFilename.split('.');
-        var extension = filenameParts.pop();
-        return filenameParts.join('.') + '.thumb.' + extension;
-    }
-};
-
-var profileEditor = {
-    init: function () {
-        $('#pictures a').magnificPopup({type: 'image'});
-        $('#pictures button.remove').click(function (event) {
-            event.preventDefault();
-            profileEditor.deletePicture($(this));
         });
     },
     
@@ -330,5 +321,11 @@ var profileEditor = {
                 alert(message);
             }
         });
+    },
+    
+    getThumbnailFilename: function (fullsizeFilename) {
+        var filenameParts = fullsizeFilename.split('.');
+        var extension = filenameParts.pop();
+        return filenameParts.join('.') + '.thumb.' + extension;
     }
 };

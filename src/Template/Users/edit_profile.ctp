@@ -135,7 +135,7 @@
         </table>
 
         <?php $this->append('buffered'); ?>
-            pictureUploader.init(<?= json_encode([
+            userPictureEditor.init(<?= json_encode([
                 'filesizeLimit' => $manualFilesizeLimit.'B',
                 'token' => md5(Configure::read('upload_verify_token').time()),
                 'timestamp' => time(),
@@ -162,5 +162,4 @@
 
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
-    profileEditor.init();
 <?php $this->end(); ?>
