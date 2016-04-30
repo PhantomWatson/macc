@@ -168,4 +168,32 @@ class PicturesTable extends Table
             ->where(['user_id' => $userId])
             ->count();
     }
+
+    /**
+     * Takes an array of Picture entities and moves the main picture
+     * (if it's in this array) to the front
+     *
+     * @param array $pictures
+     * @param int|null $mainPictureId
+     * @return array
+     */
+    public function moveMainToFront($pictures, $mainPictureId)
+    {
+        if (! $mainPictureId) {
+            return $pictures;
+        }
+
+        $main = null;
+        foreach ($pictures as $n => $picture) {
+            if ($picture->id == $mainPictureId) {
+                $main = $picture;
+                unset($pictures[$n]);
+                break;
+            }
+        }
+        if ($main) {
+            array_unshift($pictures, $main);
+        }
+        return $pictures;
+    }
 }

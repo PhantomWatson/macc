@@ -307,10 +307,12 @@ var userPictureEditor = {
                     button.append('<img src="/img/loading_small.gif" alt="..." title="Loading..." />');
                 },
                 success: function () {
+                    var row = button.closest('tr');
                     button.find('img').remove();
                     button.find('.glyphicon').show();
                     userPictureEditor.mainPictureId = pictureId;
                     userPictureEditor.toggleMainPicButtons();
+                    row.parent().prepend(row);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     button.find('.glyphicon').show();

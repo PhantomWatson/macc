@@ -7,6 +7,7 @@ use App\MailingList\MailingList;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 /**
@@ -83,6 +84,8 @@ class UsersController extends AppController
         $user = $this->Users->get($userId, [
             'contain' => ['Tags', 'Pictures']
         ]);
+        $picturesTable = TableRegistry::get('Pictures');
+        $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data(), [
                 'fieldList' => ['profile', 'tags'],
