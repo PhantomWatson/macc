@@ -227,9 +227,12 @@ var commonmarkPreviewer = {
 
 var userPictureEditor = {
     limit: null,
+    mainPictureId: null,
 
     init: function (params) {
         this.limit = params.limit;
+        this.mainPictureId = params.mainPictureId;
+        
         this.checkLimitReached(false);
         
         $('#pictures a').magnificPopup({type: 'image'});
@@ -250,26 +253,26 @@ var userPictureEditor = {
             'formData': {
                 'timestamp': params.timestamp,
                 'token': params.token,
-                'user_id': params.user_id
+                'user_id': params.userId
             },
             'onUploadComplete': function(file, data) {
                 data = JSON.parse(data);
                 var filename = data.picture;
-                var fullPath = '/img/members/'+params.user_id+'/'+filename;
+                var fullPath = '/img/members/'+params.userId+'/'+filename;
                 var thumbnailFilename = userPictureEditor.getThumbnailFilename(filename);
-                var thumbPath = '/img/members/'+params.user_id+'/'+thumbnailFilename;
+                var thumbPath = '/img/members/'+params.userId+'/'+thumbnailFilename;
                 var img = $('<img src="'+thumbPath+'" />');
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
                 link.magnificPopup({type: 'image'});
                 var pictureCell = $('<td></td>').append(link);
-                var removeButton = $('<button class="btn btn-link remove" title="Remove" data-picture-id="'+data.pictureId+'"></button>');
+                var removeButton = $('<button class="btn btn-link remove" title="Remove"></button>');
                 removeButton.html('<span class="glyphicon glyphicon-remove text-danger"></span>');
                 removeButton.click(function (event) {
                     event.preventDefault();
                     userPictureEditor.deletePicture($(this));
                 });
                 var actionsCell = $('<td></td>').append(removeButton);
-                var row = $('<tr></tr>').append(actionsCell).append(pictureCell);
+                var row = $('<tr data-picture-id="'+data.pictureId+'"></tr>').append(actionsCell).append(pictureCell);
                 $('#pictures tbody').append(row);
                 
                 $('#upload-status')
@@ -290,13 +293,63 @@ var userPictureEditor = {
                 this.uploadifive('clearQueue');
             }
         });
+            
+        this.toggleMainPicButtons();
+        
+        $('#pictures .make-main').click(function (event) {
+            event.preventDefault();
+            var button = $(this);
+            var pictureId = button.closest('tr').data('picture-id');
+            $.ajax({
+                url: '/pictures/make-main/'+pictureId+'.json',
+                beforeSend: function () {
+                    button.find('.glyphicon').hide();
+                    button.append('<img src="/img/loading_small.gif" alt="..." title="Loading..." />');
+                },
+                success: function () {
+                    button.find('img').remove();
+                    button.find('.glyphicon').show();
+                    userPictureEditor.mainPictureId = pictureId;
+                    userPictureEditor.toggleMainPicButtons();
+                    
+                    //var buttonContainer = button.closest('.make-main-container');
+                    //buttonContainer.hide();
+                    //buttonContainer.siblings('.is-main').show();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    button.find('.glyphicon').show();
+                    button.find('img').remove();
+                    try {
+                        var response = JSON.parse(jqXHR.responseText);
+                        message = response.message;
+                    } catch(error) {
+                        message = 'There was an error making that your main picture.';
+                    }
+                    alert(message);
+                }
+            });
+        });
+    },
+    
+    toggleMainPicButtons: function () {
+        $('#pictures tr').each(function () {
+            var row = $(this);
+            var pictureId = row.data('picture-id');
+            if (pictureId == userPictureEditor.mainPictureId) {
+                row.find('.is-main').show();
+                row.find('.make-main-container').hide();
+            } else {
+                row.find('.is-main').hide();
+                row.find('.make-main-container').show();
+            }
+        });
     },
     
     deletePicture: function (button) {
         if (! confirm('Are you sure you want to remove this picture?')) {
             return;
         }
-        var pictureId = button.data('picture-id');
+        var pictureId = button.closest('tr').data('picture-id');
         $.ajax({
             type: 'DELETE',
             url: '/pictures/delete/'+pictureId,

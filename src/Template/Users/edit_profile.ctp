@@ -107,6 +107,11 @@
             </li>
         </ul>
 
+        <p>
+            Click <span class="glyphicon glyphicon-star"></span> to make a picture your <strong>main picture</strong>,
+            which will be displayed next to your name on the list of members.
+        </p>
+
         <div id="picture-upload-container">
             <button id="picture-upload">
                 Select images
@@ -122,9 +127,15 @@
         <table id="pictures">
             <tbody>
                 <?php foreach ($user->pictures as $picture): ?>
-                    <tr>
+                    <tr data-picture-id="<?= $picture->id ?>">
                         <td>
-                            <button class="btn btn-link remove" title="Remove" data-picture-id="<?= $picture->id ?>">
+                            <span class="glyphicon glyphicon-star is-main" title="Main picture"></span>
+                            <div class="make-main-container">
+                                <button class="btn btn-link make-main">
+                                    <span class="glyphicon glyphicon-star-empty" title="Make main picture"></span>
+                                </button>
+                            </div>
+                            <button class="btn btn-link remove" title="Remove">
                                 <span class="glyphicon glyphicon-remove text-danger"></span>
                             </button>
                         </td>
@@ -142,9 +153,10 @@
             userPictureEditor.init(<?= json_encode([
                 'filesizeLimit' => $manualFilesizeLimit.'B',
                 'limit' => $picLimit,
-                'token' => md5(Configure::read('upload_verify_token').time()),
+                'mainPictureId' => $user['main_picture_id'],
                 'timestamp' => time(),
-                'user_id' => $user['id']
+                'token' => md5(Configure::read('upload_verify_token').time()),
+                'userId' => $user['id']
             ]) ?>);
         <?php $this->end(); ?>
 

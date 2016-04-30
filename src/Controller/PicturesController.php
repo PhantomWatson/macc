@@ -6,6 +6,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Pictures Controller
@@ -91,5 +92,14 @@ class PicturesController extends AppController
             $message = 'The picture could not be deleted. Please, try again.';
         }
         $this->set('message', $message);
+    }
+
+    public function makeMain($pictureId)
+    {
+        $userId = $this->Auth->user('id');
+        $usersTable = TableRegistry::get('Users');
+        $user = $usersTable->get($userId);
+        $user = $usersTable->patchEntity($user, ['main_picture_id' => $pictureId]);
+        $usersTable->save($user);
     }
 }

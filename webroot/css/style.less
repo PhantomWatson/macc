@@ -239,14 +239,49 @@ header {
 	td {
 		padding: 10px;
 		vertical-align: top;
+
+		&:first-child {
+			text-align: center;
+		}
 	}
 	img {
 		max-height: 200px;
 		max-width: 200px;
 		vertical-align: top;
 	}
+	.glyphicon {
+		font-size: 20px;
+	}
 	button.remove {
+		display: block;
 		padding: 0;
+	}
+	button.make-main {
+		display: block;
+		padding: 0;
+
+		.glyphicon-star {
+			cursor: default;
+		}
+		.glyphicon-star-empty {
+			opacity: 0.7;
+		}
+
+		&:hover,
+		&:focus {
+			.glyphicon-star-empty {
+				opacity: 1;
+			}
+		}
+	}
+	.make-main-container {
+		display: none;
+	}
+	.is-main {
+		color: #ffd728;
+		cursor: default;
+		display: none;
+    	text-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
 	}
 }
 
