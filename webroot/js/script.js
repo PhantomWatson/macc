@@ -311,10 +311,6 @@ var userPictureEditor = {
                     button.find('.glyphicon').show();
                     userPictureEditor.mainPictureId = pictureId;
                     userPictureEditor.toggleMainPicButtons();
-                    
-                    //var buttonContainer = button.closest('.make-main-container');
-                    //buttonContainer.hide();
-                    //buttonContainer.siblings('.is-main').show();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     button.find('.glyphicon').show();
