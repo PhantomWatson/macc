@@ -286,14 +286,29 @@ class UsersController extends AppController
     public function members()
     {
         $members = $this->Users->find('members')
-            ->select(['id', 'name', 'slug'])
+            ->select(['id', 'name', 'slug', 'main_picture_id'])
             ->contain([
                 'Tags' => function ($q) {
                     return $q->select(['id', 'name', 'slug']);
+                },
+                'Pictures' => function ($q) {
+                    return $q->select(['id', 'user_id', 'filename']);
                 }
             ])
             ->order(['Users.name' => 'ASC'])
             ->all();
+        foreach ($members as $member) {
+            $member->main_picture_thumbnail = false;
+            $member->main_picture_fullsize = false;
+            if ($member->main_picture_id) {
+                foreach ($member->pictures as $picture) {
+                    if ($picture['id'] == $member->main_picture_id) {
+                        $member->main_picture_fullsize = $picture->filename;
+                        $member->main_picture_thumbnail = $picture->thumbnail_filename;
+                    }
+                }
+            }
+        }
 
         $this->set([
             'members' => $members,

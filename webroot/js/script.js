@@ -416,3 +416,9 @@ var userPictureEditor = {
         }
     }
 };
+
+var membersList = {
+    init: function () {
+        $('.picture a').magnificPopup({type: 'image'});
+    }
+};
