@@ -107,10 +107,14 @@
             </li>
         </ul>
 
-        <p>
+        <div id="picture-upload-container">
             <button id="picture-upload">
                 Select images
             </button>
+        </div>
+
+        <p id="limit-reached" class="alert alert-info">
+            You have reached the limit of <?= $picLimit ?> <?= __n('picture', 'pictures', $picLimit) ?>.
         </p>
 
         <p id="upload-status"></p>
@@ -137,6 +141,7 @@
         <?php $this->append('buffered'); ?>
             userPictureEditor.init(<?= json_encode([
                 'filesizeLimit' => $manualFilesizeLimit.'B',
+                'limit' => $picLimit,
                 'token' => md5(Configure::read('upload_verify_token').time()),
                 'timestamp' => time(),
                 'user_id' => $user['id']

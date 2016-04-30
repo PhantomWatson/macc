@@ -226,7 +226,12 @@ var commonmarkPreviewer = {
 };
 
 var userPictureEditor = {
+    limit: null,
+
     init: function (params) {
+        this.limit = params.limit;
+        this.checkLimitReached(false);
+        
         $('#pictures a').magnificPopup({type: 'image'});
         
         $('#pictures button.remove').click(function (event) {
@@ -266,6 +271,8 @@ var userPictureEditor = {
                 var actionsCell = $('<td></td>').append(removeButton);
                 var row = $('<tr></tr>').append(actionsCell).append(pictureCell);
                 $('#pictures tbody').append(row);
+                
+                userPictureEditor.checkLimitReached(true);
             },
             'onError': function(errorType, files) {
                 var response = JSON.parse(file.xhr.responseText);
@@ -306,6 +313,8 @@ var userPictureEditor = {
                         $(this).remove();
                     });
                 }, 3000);
+                
+                userPictureEditor.checkLimitReached(true);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 var message;
@@ -327,5 +336,27 @@ var userPictureEditor = {
         var filenameParts = fullsizeFilename.split('.');
         var extension = filenameParts.pop();
         return filenameParts.join('.') + '.thumb.' + extension;
+    },
+    
+    checkLimitReached: function (animate) {
+        var picCount = $('#pictures tbody tr').not('.deleted').length;
+        var alert = $('#limit-reached');
+        var input = $('#picture-upload-container');
+        var slideDuration = animate ? 300 : 0;
+        if (picCount < this.limit) {
+            if (alert.is(':visible')) {
+                alert.slideUp(slideDuration);
+            }
+            if (! input.is(':visible')) {
+                input.slideDown(slideDuration);
+            }
+        } else {
+            if (! alert.is(':visible')) {
+                alert.slideDown(slideDuration);
+            }
+            if (input.is(':visible')) {
+                input.slideUp(slideDuration);
+            }
+        }
     }
 };
