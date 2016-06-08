@@ -419,7 +419,7 @@ var userPictureEditor = {
 
 var membersList = {
     init: function () {
-        $('.picture a').magnificPopup({type: 'image'});
+        $('a.popup-img').magnificPopup({type: 'image'});
     }
 };
 

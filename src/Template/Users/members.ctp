@@ -33,7 +33,7 @@
 
                     <?php if ($member->main_picture_thumbnail): ?>
                         <td class="picture">
-                            <a href="/img/members/<?= $member->id ?>/<?= $member->main_picture_fullsize ?>" title="Click to view full-sized picture">
+                            <a href="/img/members/<?= $member->id ?>/<?= $member->main_picture_fullsize ?>" title="Click to view full-sized picture" class="popup-img">
                                 <img src="/img/members/<?= $member->id ?>/<?= $member->main_picture_thumbnail ?>" alt="Profile picture for <?= $member->name ?>" />
                             </a>
                         </td>
