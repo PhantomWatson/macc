@@ -94,7 +94,7 @@
         ?>
         <ul class="footnote">
             <li>
-                Images must be .jpg, .jpeg, .gif, or .png
+                Images must be .jpg, .jpeg, .gif, or .png and at least 200px by 200px
             </li>
             <li>
                 Each file cannot exceed <?php echo $manualFilesizeLimit; ?>B
