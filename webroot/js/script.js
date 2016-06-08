@@ -265,13 +265,29 @@ var userPictureEditor = {
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
                 link.magnificPopup({type: 'image'});
                 var pictureCell = $('<td></td>').append(link);
+                
+                var isMainIndicator = $('<span class="glyphicon glyphicon-star is-main" title="Main picture"></span>').hide();
+                var makeMainButtonContainer = $('<div class="make-main-container"></div>').show();
+                var makeMainButton = $('<button class="btn btn-link make-main" title="Make main picture"></button>');
+                makeMainButton.click(function (event) {
+                    event.preventDefault();
+                    var button = $(this);
+                    userPictureEditor.makeMain(button);
+                });
+                makeMainButton.append('<span class="glyphicon glyphicon-star-empty"></span>');
+                makeMainButtonContainer.append(makeMainButton);
+                
                 var removeButton = $('<button class="btn btn-link remove" title="Remove"></button>');
                 removeButton.html('<span class="glyphicon glyphicon-remove text-danger"></span>');
                 removeButton.click(function (event) {
                     event.preventDefault();
                     userPictureEditor.deletePicture($(this));
                 });
-                var actionsCell = $('<td></td>').append(removeButton);
+                
+                var actionsCell = $('<td></td>');
+                actionsCell.append(isMainIndicator);
+                actionsCell.append(makeMainButtonContainer);
+                actionsCell.append(removeButton);
                 var row = $('<tr data-picture-id="'+data.pictureId+'"></tr>').append(actionsCell).append(pictureCell);
                 $('#pictures tbody').append(row);
                 
@@ -299,33 +315,37 @@ var userPictureEditor = {
         $('#pictures .make-main').click(function (event) {
             event.preventDefault();
             var button = $(this);
-            var pictureId = button.closest('tr').data('picture-id');
-            $.ajax({
-                url: '/pictures/make-main/'+pictureId+'.json',
-                beforeSend: function () {
-                    button.find('.glyphicon').hide();
-                    button.append('<img src="/img/loading_small.gif" alt="..." title="Loading..." />');
-                },
-                success: function () {
-                    var row = button.closest('tr');
-                    button.find('img').remove();
-                    button.find('.glyphicon').show();
-                    userPictureEditor.mainPictureId = pictureId;
-                    userPictureEditor.toggleMainPicButtons();
-                    row.parent().prepend(row);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    button.find('.glyphicon').show();
-                    button.find('img').remove();
-                    try {
-                        var response = JSON.parse(jqXHR.responseText);
-                        message = response.message;
-                    } catch(error) {
-                        message = 'There was an error making that your main picture.';
-                    }
-                    alert(message);
+            userPictureEditor.makeMain(button);
+        });
+    },
+    
+    makeMain: function (button) {
+        var pictureId = button.closest('tr').data('picture-id');
+        $.ajax({
+            url: '/pictures/make-main/'+pictureId+'.json',
+            beforeSend: function () {
+                button.find('.glyphicon').hide();
+                button.append('<img src="/img/loading_small.gif" alt="..." title="Loading..." />');
+            },
+            success: function () {
+                var row = button.closest('tr');
+                button.find('img').remove();
+                button.find('.glyphicon').show();
+                userPictureEditor.mainPictureId = pictureId;
+                userPictureEditor.toggleMainPicButtons();
+                row.parent().prepend(row);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                button.find('.glyphicon').show();
+                button.find('img').remove();
+                try {
+                    var response = JSON.parse(jqXHR.responseText);
+                    message = response.message;
+                } catch(error) {
+                    message = 'There was an error making that your main picture.';
                 }
-            });
+                alert(message);
+            }
         });
     },
     
