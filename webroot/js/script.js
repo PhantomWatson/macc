@@ -256,7 +256,15 @@ var userPictureEditor = {
                 'user_id': params.userId
             },
             'onUploadComplete': function(file, data) {
-                data = JSON.parse(data);
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    $('#upload-status')
+                        .attr('class', 'alert alert-danger')
+                        .html('There was an error uploading that image. Please try again, or contact an administrator if you need assistance.')
+                        .show();
+                    return;
+                }
                 var filename = data.picture;
                 var fullPath = '/img/members/'+params.userId+'/'+filename;
                 var thumbnailFilename = userPictureEditor.getThumbnailFilename(filename);
