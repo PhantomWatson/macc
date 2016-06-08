@@ -131,8 +131,8 @@
                         <td>
                             <span class="glyphicon glyphicon-star is-main" title="Main picture"></span>
                             <div class="make-main-container">
-                                <button class="btn btn-link make-main">
-                                    <span class="glyphicon glyphicon-star-empty" title="Make main picture"></span>
+                                <button class="btn btn-link make-main" title="Make main picture">
+                                    <span class="glyphicon glyphicon-star-empty"></span>
                                 </button>
                             </div>
                             <button class="btn btn-link remove" title="Remove">
