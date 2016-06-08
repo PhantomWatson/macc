@@ -258,7 +258,8 @@ class UsersController extends AppController
             'mainPicture' => [
                 'fullsize' => $user->main_picture_fullsize,
                 'thumb' => $user->main_picture_thumb
-            ]
+            ],
+            'ownProfile' => $ownProfile
         ]);
     }
 

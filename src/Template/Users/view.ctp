@@ -1,3 +1,18 @@
+<?php if ($ownProfile): ?>
+    <p>
+        <?= $this->Html->link(
+            'Edit Profile',
+            [
+                'controller' => 'Users',
+                'action' => 'editProfile'
+            ],
+            [
+                'class' => 'btn btn-default'
+            ]
+        ) ?>
+    </p>
+<?php endif; ?>
+
 <?php if ($mainPicture['fullsize']): ?>
     <div id="main-profile-picture">
         <a href="/img/members/<?= $user->id ?>/<?= $mainPicture['fullsize'] ?>" title="Click to view full-sized picture" class="popup-img">
