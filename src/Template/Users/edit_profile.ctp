@@ -97,6 +97,9 @@
                 Images must be .jpg, .jpeg, .gif, or .png and at least 200px by 200px
             </li>
             <li>
+                Very large images (over 3,000px by 3,000px) may fail to upload
+            </li>
+            <li>
                 Each file cannot exceed <?php echo $manualFilesizeLimit; ?>B
             </li>
             <li>

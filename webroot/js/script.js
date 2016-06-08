@@ -259,9 +259,11 @@ var userPictureEditor = {
                 try {
                     data = JSON.parse(data);
                 } catch (e) {
+                    var msg = 'There was an error uploading that image.';
+                    msg += ' Please try again with a smaller image, or contact an administrator if you need assistance.';
                     $('#upload-status')
                         .attr('class', 'alert alert-danger')
-                        .html('There was an error uploading that image. Please try again, or contact an administrator if you need assistance.')
+                        .html(msg)
                         .show();
                     return;
                 }
