@@ -163,7 +163,8 @@ class PicturesTable extends Table
      * @param int $userId
      * @return int
      */
-    public function getCountForUser($userId) {
+    public function getCountForUser($userId)
+    {
         return $this->find('all')
             ->where(['user_id' => $userId])
             ->count();
