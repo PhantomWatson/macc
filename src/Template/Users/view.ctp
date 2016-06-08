@@ -82,13 +82,12 @@
             <?php endforeach; ?>
         </ul>
     </section>
-
-    <?php
-        $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
-        $this->Html->script('/magnific-popup/jquery.magnific-popup.js', ['block' => 'script']);
-    ?>
-    <?php $this->append('buffered'); ?>
-        memberProfile.init();
-    <?php $this->end(); ?>
-
 <?php endif; ?>
+
+<?php
+    $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
+    $this->Html->script('/magnific-popup/jquery.magnific-popup.js', ['block' => 'script']);
+?>
+<?php $this->append('buffered'); ?>
+    memberProfile.init();
+<?php $this->end(); ?>
