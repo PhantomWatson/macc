@@ -426,5 +426,5 @@ var membersList = {
 var memberProfile = {
     init: function () {
         $('#profile-pictures a').magnificPopup({type: 'image'});
-    }    
+    }
 };
