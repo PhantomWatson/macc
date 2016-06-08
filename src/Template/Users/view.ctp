@@ -1,6 +1,6 @@
 <?php if ($mainPicture['fullsize']): ?>
     <div id="main-profile-picture">
-        <a href="/img/members/<?= $user->id ?>/<?= $mainPicture['fullsize'] ?>" title="Click to view full-sized picture">
+        <a href="/img/members/<?= $user->id ?>/<?= $mainPicture['fullsize'] ?>" title="Click to view full-sized picture" class="popup-img">
             <img src="/img/members/<?= $user->id ?>/<?= $mainPicture['thumb'] ?>" alt="Main profile picture" />
         </a>
     </div>
@@ -60,7 +60,7 @@
         <ul>
             <?php foreach ($nonMainPictures as $picture): ?>
                 <li>
-                    <a href="/img/members/<?= $user->id ?>/<?= $picture['filename'] ?>" title="Click to view full-sized picture">
+                    <a href="/img/members/<?= $user->id ?>/<?= $picture['filename'] ?>" title="Click to view full-sized picture" class="popup-img">
                         <img src="/img/members/<?= $user->id ?>/<?= $picture['thumbnail_filename'] ?>" alt="Profile picture" />
                     </a>
                 </li>
