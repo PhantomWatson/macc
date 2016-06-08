@@ -77,28 +77,32 @@ class Transformer implements TransformerInterface
     {
         $imagine = new \Imagine\Gd\Imagine();
         $image = $imagine->open($this->data['tmp_name']);
+        $tmpPathParts = explode(DS, $this->data['tmp_name']);
+        array_pop($tmpPathParts); // remove filename from path
+        $tmpPath = implode(DS, $tmpPathParts);
 
         // Shrink image to max dimensions
         $maxDimension = 2000;
         $width = $image->getSize()->getWidth();
         $height = $image->getSize()->getHeight();
         if ($width > $maxDimension || $height > $maxDimension) {
+            // Save resized image with microtime-prefixed name in tmp dir
             $size = new \Imagine\Image\Box(2000, 2000);
             $mode = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
-            $image->thumbnail($size, $mode)->save($this->data['tmp_name']);
+            $tmpFullsize = $tmpPath.DS.microtime().$this->data['name'];
+            $image->thumbnail($size, $mode)->save($tmpFullsize);
+        } else {
+            $tmpFullsize = $this->data['tmp_name'];
         }
         $thumbFilename = $this->generateThumbnailFilename($this->data['name']);
 
         // Create thumbnail
         $size = new \Imagine\Image\Box(200, 200);
         $mode = \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
-        $tmpPathParts = explode(DS, $this->data['tmp_name']);
-        array_pop($tmpPathParts); // remove filename from path
-        $tmpPath = implode(DS, $tmpPathParts);
         $image->thumbnail($size, $mode)->save($tmpPath.DS.$thumbFilename);
 
         return [
-            $this->data['tmp_name'] => $this->data['name'],
+            $tmpFullsize => $this->data['name'],
             $tmpPath.DS.$thumbFilename => $thumbFilename
         ];
     }
