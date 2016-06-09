@@ -142,6 +142,7 @@ class PicturesTable extends Table
 
     /**
      * Deletes the generated thumbnail after a picture record is deleted
+     * and sets Users.main_picture_id to null if necessary
      *
      * josegonzalez/cakephp-upload plugin already takes care of deleting
      * the file for the full-size picture
@@ -157,6 +158,13 @@ class PicturesTable extends Table
         $thumbFilename = \App\Media\Transformer::generateThumbnailFilename($fullsizeFilename);
         $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
         $file->delete();
+
+        $usersTable = TableRegistry::get('Users');
+        $user = $usersTable->get($entity->user_id);
+        if ($user->main_picture_id == $entity->id) {
+            $user->main_picture_id = null;
+            $usersTable->save($user);
+        }
     }
 
     /**
