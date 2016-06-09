@@ -163,6 +163,17 @@ if (! function_exists('navLink')) {
                     </li>
                     <li>
                         <?= navLink(
+                            'Memberships',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Memberships',
+                                'action' => 'index'
+                            ],
+                            $this
+                        ) ?>
+                    </li>
+                    <li>
+                        <?= navLink(
                             'Payment Records',
                             [
                                 'prefix' => 'admin',
