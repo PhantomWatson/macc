@@ -38,7 +38,7 @@ class MembershipsController extends AppController
 
         $this->set([
             'members' => $members,
-            'pageTitle' => 'Members'
+            'pageTitle' => 'Memberships'
         ]);
     }
 }
