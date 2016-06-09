@@ -315,6 +315,14 @@ var userPictureEditor = {
                     .html('Picture added')
                     .show();
                 
+                /* If this is the only picture, it's automatically set (in the back end)
+                 * as the user's main picture. Update page to reflect that. */
+                var pictures = $('#pictures tbody tr').not('.deleting');
+                if (pictures.length == 1) {
+                    userPictureEditor.mainPictureId = pictures.first().data('picture-id');
+                    userPictureEditor.toggleMainPicButtons();
+                }
+                
                 userPictureEditor.checkLimitReached(true);
             },
             'onError': function(errorType, files) {

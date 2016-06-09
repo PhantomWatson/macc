@@ -4,11 +4,13 @@ namespace App\Model\Table;
 use App\Media\Transformer;
 use App\Model\Entity\Picture;
 use ArrayObject;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Filesystem\File;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -196,5 +198,28 @@ class PicturesTable extends Table
             array_unshift($pictures, $main);
         }
         return $pictures;
+    }
+
+    /**
+     * Automatically sets a picture to be the user's main picture if it's their only picture
+     *
+     * @param Event $event
+     * @param EntityInterface $entity
+     * @param ArrayObject $options
+     * @return void
+     */
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $userId = $entity->user_id;
+        $count = $this->find('all')
+            ->where(['user_id' => $userId])
+            ->count();
+        if ($count === 1) {
+            $pictureId = $entity->id;
+            $usersTable = TableRegistry::get('Users');
+            $user = $usersTable->get($userId);
+            $user->main_picture_id = $pictureId;
+            $usersTable->save($user);
+        }
     }
 }
