@@ -1,3 +1,12 @@
+var defaultMagnificConfig = {
+    type: 'image',
+    image: {
+        titleSrc: function () {
+            return null;
+        }
+    }
+};
+
 var paymentProcessor = {
     buttonSelector: null,
     confirmationMessage: null,
@@ -235,7 +244,7 @@ var userPictureEditor = {
         
         this.checkLimitReached(false);
         
-        $('#pictures a').magnificPopup({type: 'image'});
+        $('#pictures a').magnificPopup(defaultMagnificConfig);
         
         $('#pictures button.remove').click(function (event) {
             event.preventDefault();
@@ -273,7 +282,7 @@ var userPictureEditor = {
                 var thumbPath = '/img/members/'+params.userId+'/'+thumbnailFilename;
                 var img = $('<img src="'+thumbPath+'" />');
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
-                link.magnificPopup({type: 'image'});
+                link.magnificPopup(defaultMagnificConfig);
                 var pictureCell = $('<td></td>').append(link);
                 
                 var isMainIndicator = $('<span class="glyphicon glyphicon-star is-main" title="Main picture"></span>').hide();
@@ -449,12 +458,12 @@ var userPictureEditor = {
 
 var membersList = {
     init: function () {
-        $('a.popup-img').magnificPopup({type: 'image'});
+        $('a.popup-img').magnificPopup(defaultMagnificConfig);
     }
 };
 
 var memberProfile = {
     init: function () {
-        $('a.popup-img').magnificPopup({type: 'image'});
+        $('a.popup-img').magnificPopup(defaultMagnificConfig);
     }
 };
