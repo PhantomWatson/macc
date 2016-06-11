@@ -23,6 +23,8 @@ class MembershipsController extends AppController
 
     public function beforeFilter(\Cake\Event\Event $event)
     {
+        parent::beforeFilter($event);
+
         /* Prevent Security component from stripping out "unknown fields"
          * from AJAX request to completePurchase and causing errors
          * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
