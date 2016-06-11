@@ -7,7 +7,7 @@
         Muncie Arts and Culture Council
         <?= isset($pageTitle) ? " - $pageTitle" : '' ?>
     </title>
-
+    <?= $this->element('favicons') ?>
     <?= $this->fetch('meta') ?>
     <?= $this->Html->css('style') ?>
     <?= $this->fetch('css') ?>
