@@ -10,14 +10,27 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
+    public $paginate = [
+        'limit' => 25,
+        'order' => [
+            'Users.created' => 'desc'
+        ],
+        'sortWhitelist' => [
+            'name', 'role', 'created'
+        ]
+    ];
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
     public function index()
     {
-        $users = $this->Users->find('all')
-            ->order(['Users.name' => 'ASC']);
-
         $this->set([
             'pageTitle' => 'Manage Users',
-            'users' => $users
+            'users' => $this->paginate('Users')
         ]);
     }
 
