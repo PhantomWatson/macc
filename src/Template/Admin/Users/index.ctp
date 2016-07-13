@@ -10,6 +10,8 @@
         ) ?>
     </p>
 
+    <?= $this->element('pagination') ?>
+
     <table class="table">
         <thead>
             <tr>
@@ -70,4 +72,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?= $this->element('pagination') ?>
 </div>
