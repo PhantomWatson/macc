@@ -250,7 +250,12 @@ class UsersController extends AppController
         }
 
         $user = $this->Users->get($userId, [
-            'contain' => ['Tags', 'Pictures']
+            'contain' => [
+                'Tags' => function ($q) {
+                    return $q->order(['name' => 'ASC']);
+                },
+                'Pictures'
+            ]
         ]);
         $this->set([
             'pageTitle' => $user->name,
