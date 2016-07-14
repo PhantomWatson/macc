@@ -11,6 +11,25 @@ use Cake\ORM\TableRegistry;
  */
 class MembershipsController extends AppController
 {
+    public $paginate = [
+        'limit' => 25,
+        'order' => [
+            'Memberships.expires' => 'ASC'
+        ],
+        'sortWhitelist' => [
+            'Users.name',
+            'Memberships.expires',
+            'Memberships.membership_level_id',
+            'Memberships.auto_renew'
+        ]
+    ];
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
     /**
      * List of current and expired memberships
      *
@@ -19,7 +38,7 @@ class MembershipsController extends AppController
     public function index()
     {
         $usersTable = TableRegistry::get('Users');
-        $members = $usersTable->find('members')
+        $query = $usersTable->find('members')
             ->select(['id', 'name', 'slug'])
             ->contain([
                 'Memberships' => function ($q) {
@@ -32,9 +51,9 @@ class MembershipsController extends AppController
                         ->contain('MembershipLevels')
                         ->order(['expires' => 'DESC']);
                 }
-            ])
-            ->order(['Users.name' => 'ASC'])
-            ->all();
+            ]);
+        $members = $this->paginate($query);
+            //->all();
 
         $this->set([
             'members' => $members,

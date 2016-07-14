@@ -3,20 +3,23 @@
         No current or expired memberships were found.
     </p>
 <?php else: ?>
+
+    <?= $this->element('pagination') ?>
+
     <table class="table" id="admin-memberships">
         <thead>
             <tr>
                 <th>
-                    Name
+                    <?= $this->Paginator->sort('Users.name', 'Name') ?>
                 </th>
                 <th>
-                    Membership Status
+                    <?= $this->Paginator->sort('Memberships.membership_level_id', 'Membership Status') ?>
                 </th>
                 <th>
-                    Expiration
+                    <?= $this->Paginator->sort('Memberships.expires', 'Expiration') ?>
                 </th>
                 <th>
-                    Auto Renew?
+                    <?= $this->Paginator->sort('Memberships.auto_renew', 'Auto Renew?') ?>
                 </th>
             </tr>
         </thead>
@@ -60,4 +63,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?= $this->element('pagination') ?>
+
 <?php endif; ?>
