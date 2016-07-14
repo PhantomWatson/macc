@@ -7,6 +7,7 @@ use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\MethodNotAllowedException;
 
 /**
  * Memberships Controller
@@ -59,6 +60,10 @@ class MembershipsController extends AppController
 
     public function toggleAutoRenewal($value = null)
     {
+        if (! $this->request->is('post')) {
+            throw new MethodNotAllowedException();
+        }
+
         if (! in_array($value, ['1', '0'])) {
             throw new BadRequestException('Invalid value supplied');
         }
