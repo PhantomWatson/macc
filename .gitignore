@@ -48,6 +48,9 @@ org.eclipse.*
 composer.phar
 composer.lock
 
+# PhpStorm
+.idea/*
+
 # Misc
 /webroot/coverage/*
 /node_modules/*
