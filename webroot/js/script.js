@@ -488,25 +488,36 @@ var membershipsList = {
                     button.append(loading);
                 },
                 success: function (data, textStatus, jqXHR) {
-                    var container = $('#auto-renew-results');
-                    if (container.is(':visible')) {
-                        container.slideUp(300, function () {
-                            container.html(data);
-                            container.slideDown();
-                        });
-                    } else {
-                        container.html(data);
-                        container.slideDown(300);
-                    }
-
+                    membershipsList.showRenewalResults(data, false);
                 },
-                error: function () {
-
+                error: function (jqXHR, textStatus, errorThrown) {
+                    membershipsList.showRenewalResults(jqXHR.responseText, true);
                 },
                 complete: function () {
                     button.find('img').remove();
                 }
             });
         });
+    },
+
+    showRenewalResults: function (msg, error) {
+        var container = $('#auto-renew-results');
+        if (error) {
+            container.removeClass('alert-success');
+            container.addClass('alert-error');
+        } else {
+            container.removeClass('alert-error');
+            container.addClass('alert-success');
+        }
+        container.removeClass('alert-error');
+        if (container.is(':visible')) {
+            container.slideUp(300, function () {
+                container.html(msg);
+                container.slideDown();
+            });
+        } else {
+            container.html(msg);
+            container.slideDown(300);
+        }
     }
 };

@@ -8,6 +8,7 @@ use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Memberships Controller
@@ -225,19 +226,16 @@ class MembershipsController extends AppController
      */
     public function processRecurring()
     {
+        $logsTable = TableRegistry::get('MembershipRenewalLogs');
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
-        $logMsgPrefix = "Running /memberships/process-recurring\n";
-        $logResults = true;
 
         $this->loadModel('Memberships');
         $memberships = $this->Memberships->find('toAutoRenew');
 
         if ($memberships->isEmpty()) {
             $msg = 'No memberships need to be renewed at this time.';
-            if ($logResults) {
-                Log::write('debug', $logMsgPrefix.$msg);
-            }
+            $logsTable->logAutoRenewal($msg);
         }
 
         $chargedUsers = [];
@@ -267,10 +265,9 @@ class MembershipsController extends AppController
 
             if (! $charge->paid) {
                 $msg = 'Charge did not complete successfully';
-                if ($logResults) {
-                    Log::write('debug', $logMsgPrefix.$msg);
-                    Log::write('error', "$msg\n\$chargeParams:\n".print_r($chargeParams, true));
-                }
+                $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
+                $logsTable->logAutoRenewal($msg . $details, true);
+                Log::write('error', $msg . $details);
                 throw new InternalErrorException($msg);
             }
 
@@ -284,11 +281,10 @@ class MembershipsController extends AppController
             $payment = $this->Payments->newEntity($paymentParams);
             $errors = $payment->errors();
             if (! empty($errors)) {
-                $msg = 'Errors saving payment record: '.json_encode($errors);
-                if ($logResults) {
-                    Log::write('debug', $logMsgPrefix.$msg);
-                    Log::write('error', "$msg\n\$paymentParams:\n".print_r($paymentParams, true));
-                }
+                $msg = 'Errors saving payment record: ' . json_encode($errors);
+                $details = "\n\$paymentParams:\n" . print_r($paymentParams, true);
+                Log::write('error', $msg . $details);
+                $logsTable->logAutoRenewal($msg . $details, true);
                 throw new InternalErrorException($msg);
             }
             $payment = $this->Payments->save($payment);
@@ -299,10 +295,8 @@ class MembershipsController extends AppController
             ]);
             $errors = $membership->errors();
             if (! empty($errors)) {
-                $msg = 'Errors updating membership record: '.json_encode($errors);
-                if ($logResults) {
-                    Log::write('debug', $logMsgPrefix.$msg);
-                }
+                $msg = 'Errors updating membership record: ' . json_encode($errors);
+                $logsTable->logAutoRenewal($msg, true);
                 throw new InternalErrorException($msg);
             }
             $membership = $this->Memberships->save($membership);
@@ -319,10 +313,8 @@ class MembershipsController extends AppController
             $errors = $newMembership->errors();
             if (! empty($errors)) {
                 $msg = 'Errors saving new membership record: '.json_encode($errors);
-                if ($logResults) {
-                    Log::write('debug', $logMsgPrefix.$msg);
-                    Log::write('error', "$msg\n\$membershipParams:\n".print_r($membershipParams, true));
-                }
+                $details = "\n\$membershipParams:\n" . print_r($membershipParams, true);
+                $logsTable->logAutoRenewal($msg . $details, true);
                 throw new InternalErrorException($msg);
             }
             $newMembership = $this->Memberships->save($newMembership);
@@ -334,9 +326,7 @@ class MembershipsController extends AppController
             $chargedUsers[] = $membership->user_id;
 
             $msg = 'Membership renewed for '.$membership->user['name'];
-            if ($logResults) {
-                Log::write('debug', $logMsgPrefix.$msg);
-            }
+            $logsTable->logAutoRenewal($msg);
         }
 
         $this->set([

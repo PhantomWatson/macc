@@ -9,7 +9,7 @@
         In case there's a problem with this happening automatically, this can also be done manually.
         <br />
         <?= $this->Html->link(
-            'Process auto-renewals',
+            'Process Auto-Renewals',
             [
                 'prefix' => false,
                 'controller' => 'Memberships',
@@ -20,9 +20,21 @@
                 'class' => 'btn btn-default'
             ]
         ) ?>
+        <?= $this->Html->link(
+            'View Auto-Renewal Logs',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Memberships',
+                'action' => 'autoRenewalLogs'
+            ],
+            [
+                'id' => 'auto-renew',
+                'class' => 'btn btn-default'
+            ]
+        ) ?>
     </p>
 
-    <div id="auto-renew-results" class="well">
+    <div id="auto-renew-results" class="alert">
     </div>
 
     <hr />

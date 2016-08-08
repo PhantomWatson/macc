@@ -12,15 +12,23 @@ use Cake\ORM\TableRegistry;
 class MembershipsController extends AppController
 {
     public $paginate = [
-        'limit' => 25,
-        'order' => [
-            'Memberships.expires' => 'ASC'
+        'Memberships' => [
+            'limit' => 25,
+            'order' => [
+                'Memberships.expires' => 'ASC'
+            ],
+            'sortWhitelist' => [
+                'Users.name',
+                'Memberships.expires',
+                'Memberships.membership_level_id',
+                'Memberships.auto_renew'
+            ]
         ],
-        'sortWhitelist' => [
-            'Users.name',
-            'Memberships.expires',
-            'Memberships.membership_level_id',
-            'Memberships.auto_renew'
+        'MembershipRenewalLogs' => [
+            'limit' => 25,
+            'order' => [
+                'MembershipRenewalLogs.created' => 'DESC'
+            ],
         ]
     ];
 
@@ -58,6 +66,17 @@ class MembershipsController extends AppController
         $this->set([
             'members' => $members,
             'pageTitle' => 'Memberships'
+        ]);
+    }
+
+    public function autoRenewalLogs()
+    {
+        $logsTable = TableRegistry::get('MembershipRenewalLogs');
+        $logs = $this->paginate($logsTable);
+
+        $this->set([
+            'logs' => $logs,
+            'pageTitle' => 'Membership Auto-Renewal Logs'
         ]);
     }
 }

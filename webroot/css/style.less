@@ -377,3 +377,14 @@ form {
 #auto-renew-results {
 	display: none;
 }
+#auto-renewal-logs {
+	tr.error {
+		td.message {
+			color: #8b0000;
+		}
+		td.message::before {
+			font-family: 'Glyphicons Halflings';
+			content: '\e107';
+		}
+	}
+}
