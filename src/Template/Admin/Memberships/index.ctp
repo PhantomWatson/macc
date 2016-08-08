@@ -4,6 +4,29 @@
     </p>
 <?php else: ?>
 
+    <p>
+        Every 24 hours, memberships that are set to auto-renew and are about to expire will be automatically renewed.
+        In case there's a problem with this happening automatically, this can also be done manually.
+        <br />
+        <?= $this->Html->link(
+            'Process auto-renewals',
+            [
+                'prefix' => false,
+                'controller' => 'Memberships',
+                'action' => 'processRecurring'
+            ],
+            [
+                'id' => 'auto-renew',
+                'class' => 'btn btn-default'
+            ]
+        ) ?>
+    </p>
+
+    <div id="auto-renew-results" class="well">
+    </div>
+
+    <hr />
+
     <?= $this->element('pagination') ?>
 
     <table class="table" id="admin-memberships">
@@ -67,3 +90,7 @@
     <?= $this->element('pagination') ?>
 
 <?php endif; ?>
+
+<?php $this->append('buffered'); ?>
+    membershipsList.init();
+<?php $this->end(); ?>

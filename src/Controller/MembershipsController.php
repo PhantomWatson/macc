@@ -235,7 +235,6 @@ class MembershipsController extends AppController
 
         if ($memberships->isEmpty()) {
             $msg = 'No memberships need to be renewed at this time.';
-            $this->Flash->set($msg);
             if ($logResults) {
                 Log::write('debug', $logMsgPrefix.$msg);
             }
@@ -335,13 +334,13 @@ class MembershipsController extends AppController
             $chargedUsers[] = $membership->user_id;
 
             $msg = 'Membership renewed for '.$membership->user['name'];
-            $this->Flash->success($msg);
             if ($logResults) {
                 Log::write('debug', $logMsgPrefix.$msg);
             }
         }
 
         $this->set([
+            'msg' => $msg,
             'pageTitle' => 'Process Recurring Payments'
         ]);
     }

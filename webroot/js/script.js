@@ -475,3 +475,38 @@ var memberProfile = {
         $('a.popup-img').magnificPopup(defaultMagnificConfig);
     }
 };
+
+var membershipsList = {
+    init: function () {
+        $('#auto-renew').click(function (event) {
+            event.preventDefault();
+            var button = $(this);
+            $.ajax({
+                url: $(this).attr('href'),
+                beforeSend: function () {
+                    var loading = $(' <img src="/img/loading_small.gif" alt="Loading..." />');
+                    button.append(loading);
+                },
+                success: function (data, textStatus, jqXHR) {
+                    var container = $('#auto-renew-results');
+                    if (container.is(':visible')) {
+                        container.slideUp(300, function () {
+                            container.html(data);
+                            container.slideDown();
+                        });
+                    } else {
+                        container.html(data);
+                        container.slideDown(300);
+                    }
+
+                },
+                error: function () {
+
+                },
+                complete: function () {
+                    button.find('img').remove();
+                }
+            });
+        });
+    }
+};
