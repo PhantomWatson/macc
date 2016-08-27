@@ -266,14 +266,14 @@ class UsersController extends AppController
                     'controller' => 'Memberships',
                     'action' => 'myMembership'
                 ]);
-                $msg = 'Your member profile will be visible to the public once you ' .
+                $msg = 'Sorry, your member profile can\'t be accessed until you ' .
                     '<a href="'.$url.'">renew your membership</a>';
             } else {
                 $url = Router::url([
                     'controller' => 'Memberships',
                     'action' => 'levels'
                 ]);
-                $msg = 'Your member profile will be visible to the public once you ' .
+                $msg = 'Sorry, your member profile can\'t be accessed until you ' .
                     '<a href="'.$url.'">purchase a membership</a>';
             }
             $this->Flash->error($msg);
