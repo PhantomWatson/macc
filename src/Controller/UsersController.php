@@ -241,7 +241,7 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'members']);
         }
 
-        if (! $isCurrentMember) {
+        if ($ownProfile && ! $isCurrentMember) {
             $url = Router::url([
                 'controller' => 'Memberships',
                 'action' => 'levels'
