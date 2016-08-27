@@ -83,11 +83,20 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $isCurrentMember = $this->Users->isCurrentMember($userId);
         if (! $isCurrentMember) {
-            $this->Flash->error('Please purchase a MACC membership to start building your member profile');
-            $this->redirect([
-                'controller' => 'Memberships',
-                'action' => 'levels'
-            ]);
+            $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
+            if ($hasExpiredMembership) {
+                $this->Flash->error('Please renew your MACC membership before updating your member profile');
+                return $this->redirect([
+                    'controller' => 'Memberships',
+                    'action' => 'myMembership'
+                ]);
+            } else {
+                $this->Flash->error('Please purchase a MACC membership to start building your member profile');
+                return $this->redirect([
+                    'controller' => 'Memberships',
+                    'action' => 'levels'
+                ]);
+            }
         }
 
         $user = $this->Users->get($userId, [
@@ -251,11 +260,24 @@ class UsersController extends AppController
         }
 
         if ($ownProfile && ! $isCurrentMember) {
-            $url = Router::url([
-                'controller' => 'Memberships',
-                'action' => 'levels'
-            ]);
-            $this->Flash->error('Your member profile will be visible to the public once you <a href="'.$url.'">purchase a membership</a>');
+            $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
+            if ($hasExpiredMembership) {
+                $url = Router::url([
+                    'controller' => 'Memberships',
+                    'action' => 'myMembership'
+                ]);
+                $msg = 'Your member profile will be visible to the public once you ' .
+                    '<a href="'.$url.'">renew your membership</a>';
+            } else {
+                $url = Router::url([
+                    'controller' => 'Memberships',
+                    'action' => 'levels'
+                ]);
+                $msg = 'Your member profile will be visible to the public once you ' .
+                    '<a href="'.$url.'">purchase a membership</a>';
+            }
+            $this->Flash->error($msg);
+            return $this->redirect(['action' => 'members']);
         }
 
         $user = $this->Users->get($userId, [
