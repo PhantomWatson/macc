@@ -215,4 +215,25 @@ class UsersTable extends Table
             ->count();
         return $count > 0;
     }
+
+    /**
+     * Returns true if the user has no current membership, but has a membership that expired without being canceled
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function hasExpiredMembership($userId)
+    {
+        $membershipsTable = TableRegistry::get('Memberships');
+        $count = $membershipsTable->find('all')
+            ->where([
+                'Memberships.user_id' => $userId,
+                'Memberships.expires <' => date('Y-m-d H:i:s'),
+                function ($exp, $q) {
+                    return $exp->isNull('canceled');
+                }
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
