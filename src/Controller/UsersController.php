@@ -81,6 +81,15 @@ class UsersController extends AppController
     public function editProfile()
     {
         $userId = $this->Auth->user('id');
+        $isCurrentMember = $this->Users->isCurrentMember($userId);
+        if (! $isCurrentMember) {
+            $this->Flash->error('Please purchase a MACC membership to start building your member profile');
+            $this->redirect([
+                'controller' => 'Memberships',
+                'action' => 'levels'
+            ]);
+        }
+
         $user = $this->Users->get($userId, [
             'contain' => ['Tags', 'Pictures']
         ]);
