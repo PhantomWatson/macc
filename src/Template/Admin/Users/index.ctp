@@ -46,15 +46,43 @@
                         <?= $user->created->format('F j, Y') ?>
                     </td>
                     <td class="actions btn-group">
-                        <?= $this->Html->link(
-                            'Edit',
-                            [
-                                'prefix' => 'admin',
-                                'action' => 'edit',
-                                $user['id']
-                            ],
-                            ['class' => 'btn btn-default']
-                        ) ?>
+                        <div class="btn-group">
+                            <?= $this->Html->link(
+                                'Edit',
+                                [
+                                    'prefix' => 'admin',
+                                    'action' => 'edit',
+                                    $user['id']
+                                ],
+                                ['class' => 'btn btn-default']
+                            ) ?>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <?= $this->Html->link(
+                                        'Edit basic account info',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'edit',
+                                            $user['id']
+                                        ]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
+                                        'Edit profile',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'editProfile',
+                                            $user['id']
+                                        ]
+                                    ) ?>
+                                </li>
+                            </ul>
+                        </div>
                         <?= $this->Form->postLink(
                             'Delete',
                             [

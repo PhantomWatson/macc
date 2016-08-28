@@ -2,7 +2,9 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Users Controller
@@ -118,6 +120,57 @@ class UsersController extends AppController
         return $this->redirect([
             'prefix' => 'admin',
             'action' => 'index'
+        ]);
+    }
+
+    /**
+     * Method for /admin/users/edit-profile/$userId
+     *
+     * Allows admins to edit users' profiles
+     *
+     * @param int $userId
+     */
+    public function editProfile($userId)
+    {
+        $user = $this->Users->get($userId, [
+            'contain' => ['Tags', 'Pictures']
+        ]);
+        $picturesTable = TableRegistry::get('Pictures');
+        $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'fieldList' => ['profile', 'tags'],
+                'associated' => ['Tags'],
+                'onlyIds' => true
+            ]);
+            $errors = $user->errors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Profile updated');
+                    return $this->redirect([
+                        'prefix' => 'admin',
+                        'controller' => 'Users',
+                        'action' => 'index'
+                    ]);
+                } else {
+                    $this->Flash->error('There was an error saving that profile');
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s) before proceeding');
+            }
+        }
+
+        $isCurrentMember = $this->Users->isCurrentMember($userId);
+        if (! $isCurrentMember) {
+            $this->Flash->set('Note: This user is not currently a member.');
+        }
+
+        $this->loadModel('Tags');
+        $this->set([
+            'pageTitle' => 'Update ' . $user->name . '\'s Profile',
+            'tags' => $this->Tags->getThreaded(),
+            'user' => $user,
+            'picLimit' => Configure::read('maxPicturesPerUser')
         ]);
     }
 }
