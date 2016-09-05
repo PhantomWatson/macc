@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Utility\Hash;
 
 /**
  * Tags Controller
@@ -28,14 +29,61 @@ class TagsController extends AppController
      */
     public function index()
     {
+        // Get all tag IDs associated with members
         $tags = $this->Tags->find('all')
             ->find('forMembers')
-            ->select(['id', 'name', 'slug'])
-            ->order(['Tags.name' => 'ASC']);
+            ->select(['id', 'parent_id'])
+            ->toArray();
+        $memberTagIds = Hash::extract($tags, '{n}.id');
+
+        // Get all of those tags' parent IDs
+        $tagParentIds = Hash::extract($tags, '{n}.parent_id');
+
+        // Collect all parent tags that lead from member tags to the tag tree root
+        $tagIds = $memberTagIds;
+        while (!empty($tagParentIds)) {
+            // Search for unrecognized parents
+            $parentsToFind = [];
+            foreach ($tagParentIds as $tagId) {
+                if (!in_array($tagId, $tagIds)) {
+                    $parentsToFind[] = $tagId;
+                }
+            }
+            if (empty($parentsToFind)) {
+                break;
+            }
+
+            // Add these parent tag IDs to the full list
+            $additionalTags = $this->Tags->find('all')
+                ->where([
+                    function ($exp, $q) use ($parentsToFind) {
+                        return $exp->in('id', $parentsToFind);
+                    }
+                ])
+                ->select(['id', 'parent_id'])
+                ->order(['Tags.name' => 'ASC'])
+                ->toArray();
+            $tagIds = array_merge(Hash::extract($additionalTags, '{n}.id'), $tagIds);
+
+            // Set up next round of searching for parents
+            $tagParentIds = Hash::extract($additionalTags, '{n}.parent_id');
+        }
+
+        $tags = $this->Tags->find('all')
+            ->find('threaded')
+            ->where([
+                function ($exp, $q) use ($tagIds) {
+                    return $exp->in('id', $tagIds);
+                }
+            ])
+            ->select(['id', 'name', 'slug', 'parent_id'])
+            ->order(['Tags.name' => 'ASC'])
+            ->all();
 
         $this->set([
             'pageTitle' => 'Art Tags',
-            'tags' => $tags
+            'tags' => $tags,
+            'memberTagIds' => $memberTagIds
         ]);
     }
 

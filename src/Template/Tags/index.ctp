@@ -3,22 +3,36 @@
         Sorry, but we couldn't find any art tags associated with any current members.
     </p>
 <?php else: ?>
-    <p>
-        Click on any of the following art tags to see related
-        members of the Muncie Arts and Culture Council.
+    <p class="well">
+        Use the following tags to explore members of the Muncie Arts and Culture Council by their areas of art,
+        music, performance, and community activism.
     </p>
-    <ul>
-        <?php foreach ($tags as $tag): ?>
-            <li>
-                <?= $this->Html->link(
-                    $tag->name,
-                    [
-                        'controller' => 'Tags',
-                        'action' => 'view',
-                        $tag->slug
-                    ]
-                ) ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+    <?php
+        function tagTree($tags, $memberTagIds, $htmlHelper) {
+            $retval = '';
+            $retval .= '<ul>';
+            foreach ($tags as $tag) {
+                $retval .= '<li>';
+                if (in_array($tag->id, $memberTagIds)) {
+                    $retval .= $htmlHelper->link(
+                        ucfirst($tag->name),
+                        [
+                            'controller' => 'Tags',
+                            'action' => 'view',
+                            $tag->slug
+                        ]
+                    );
+                } else {
+                    $retval .= ucfirst($tag->name);
+                }
+                $retval .= '</li>';
+                if (!empty($tag->children)) {
+                    $retval .= tagTree($tag->children, $memberTagIds, $htmlHelper);
+                }
+            }
+            $retval .= '</ul>';
+            return $retval;
+        }
+    ?>
+    <?= tagTree($tags, $memberTagIds, $this->Html) ?>
 <?php endif; ?>

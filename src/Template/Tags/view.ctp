@@ -1,3 +1,17 @@
+<p>
+    <?= $this->Html->link(
+        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Tags',
+        [
+            'controller' => 'Tags',
+            'action' => 'index'
+        ],
+        [
+            'class' => 'btn btn-default',
+            'escape' => false
+        ]
+    ) ?>
+</p>
+
 <?php if (empty($tag->users)): ?>
     Sorry, but we couldn't find any current members that are associated with <?= $tag->name ?>.
 <?php else: ?>
