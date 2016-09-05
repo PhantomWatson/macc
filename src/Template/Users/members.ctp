@@ -15,6 +15,9 @@
             ]
         ) ?>
     </p>
+
+    <?= $this->element('pagination') ?>
+
     <table id="members-table" class="table">
         <tbody>
             <?php foreach ($members as $member): ?>
@@ -44,6 +47,9 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?= $this->element('pagination') ?>
+
 <?php endif; ?>
 
 <?php
