@@ -183,6 +183,17 @@ if (! function_exists('navLink')) {
                             $this
                         ) ?>
                     </li>
+                    <li>
+                        <?= navLink(
+                            'Email Lists',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Users',
+                                'action' => 'emailLists'
+                            ],
+                            $this
+                        ) ?>
+                    </li>
                 </ul>
             </li>
         <?php endif; ?>

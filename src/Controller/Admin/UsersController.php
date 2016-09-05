@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 /**
  * Users Controller
@@ -171,6 +172,35 @@ class UsersController extends AppController
             'tags' => $this->Tags->getThreaded(),
             'user' => $user,
             'picLimit' => Configure::read('maxPicturesPerUser')
+        ]);
+    }
+
+    public function emailLists()
+    {
+        $emailLists = [];
+
+        $results = $this->Users->find('members')
+            ->select(['id', 'email'])
+            ->order(['email' => 'ASC'])
+            ->toArray();
+        $emailLists['Current Members'] = Hash::extract($results, '{n}.email');
+
+        $memberIds = Hash::extract($results, '{n}.id');
+        $results = $this->Users->find('all')
+            ->where([
+                function ($exp, $q) use ($memberIds) {
+                    return $exp->notIn('id', $memberIds);
+                }
+            ])
+            ->select(['id', 'email'])
+            ->order(['email' => 'ASC'])
+            ->toArray();
+        $nonMembers = Hash::extract($results, '{n}.email');
+        $emailLists['Users Without Memberships'] = $nonMembers;
+
+        $this->set([
+            'pageTitle' => 'Email Lists',
+            'emailLists' => $emailLists
         ]);
     }
 }
