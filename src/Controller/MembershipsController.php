@@ -278,6 +278,7 @@ class MembershipsController extends AppController
                 'amount' => $membership->membership_level['cost'],
                 'stripe_charge_id' => $charge->id
             ];
+            $this->loadModel('Payments');
             $payment = $this->Payments->newEntity($paymentParams);
             $errors = $payment->errors();
             if (! empty($errors)) {
