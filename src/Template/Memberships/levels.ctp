@@ -10,6 +10,12 @@
         you're an artist yourself or simply want to contribute.
     </p>
 
+    <p>
+        Members can include a bio on their profile pages and upload pictures of themselves and their work in order to
+        promote themselves, help other members of the community connect to them, and to be featured on MACC's website
+        and social media accounts.
+    </p>
+
     <?php if (! isset($authUser) || empty($authUser)): ?>
         <p class="alert alert-info">
             Be sure to
