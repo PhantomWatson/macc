@@ -202,14 +202,24 @@ class UsersControllerTest extends IntegrationTestCase
         ]));
     }
 
-    public function testEditProfileAuth()
+    public function testEditProfileMember()
+    {
+        $this->setMemberSession();
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'editProfile'
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testEditProfileNonMember()
     {
         $this->setNonMemberSession();
         $this->get([
             'controller' => 'Users',
             'action' => 'editProfile'
         ]);
-        $this->assertResponseOk();
+        $this->assertRedirect();
     }
 
     public function testEditProfileUnauth()
