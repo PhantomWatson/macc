@@ -23,6 +23,21 @@ use Cake\TestSuite\IntegrationTestCase;
 class PagesControllerTest extends IntegrationTestCase
 {
 
+    /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => [
+                'HTTPS' => 'on'
+            ]
+        ]);
+    }
+
     public function testStyling()
     {
         $this->get('/pages/styling');

@@ -22,6 +22,21 @@ class TagsControllerTest extends IntegrationTestCase
     ];
 
     /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => [
+                'HTTPS' => 'on'
+            ]
+        ]);
+    }
+
+    /**
      * Test index method
      *
      * @return void

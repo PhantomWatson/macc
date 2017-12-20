@@ -24,6 +24,21 @@ class PaymentsControllerTest extends IntegrationTestCase
         'app.users'
     ];
 
+    /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => [
+                'HTTPS' => 'on'
+            ]
+        ]);
+    }
+
     private function setUserSession()
     {
         $usersFixture = new UsersFixture();

@@ -24,6 +24,21 @@ class MembershipsControllerTest extends IntegrationTestCase
         'app.users'
     ];
 
+    /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => [
+                'HTTPS' => 'on'
+            ]
+        ]);
+    }
+
     public function setMemberSession()
     {
         $usersFixture = new UsersFixture();
