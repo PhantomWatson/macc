@@ -16,9 +16,10 @@ class TagsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
+        'app.memberships',
         'app.tags',
-        'app.users',
-        'app.tags_users'
+        'app.tags_users',
+        'app.users'
     ];
 
     /**
