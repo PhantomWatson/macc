@@ -46,7 +46,6 @@ org.eclipse.*
 
 # Composer
 composer.phar
-composer.lock
 
 # PhpStorm
 .idea/*
