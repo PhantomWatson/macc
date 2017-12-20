@@ -21,7 +21,7 @@ class MembershipsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.membership_levels',
         'app.memberships',
-        'app.users'
+        'app.payments'
     ];
 
     /**
@@ -143,25 +143,23 @@ class MembershipsControllerTest extends IntegrationTestCase
     {
         $this->setMemberSession();
 
-        $expected = 1;
-        $this->get([
+        $this->post([
             'controller' => 'Memberships',
             'action' => 'toggleAutoRenewal',
-            $expected
+            1
         ]);
         $membershipsTable = TableRegistry::get('Memberships');
         $result = $membershipsTable->get(1)->auto_renew;
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(true, $result);
 
-        $expected = 0;
-        $this->get([
+        $this->post([
             'controller' => 'Memberships',
             'action' => 'toggleAutoRenewal',
-            $expected
+            0
         ]);
         $membershipsTable = TableRegistry::get('Memberships');
         $result = $membershipsTable->get(1)->auto_renew;
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(false, $result);
     }
 
     public function testToggleAutoRenewalUnauth()
