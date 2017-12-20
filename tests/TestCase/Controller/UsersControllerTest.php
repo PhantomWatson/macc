@@ -38,6 +38,16 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
     }
 
+    public function setMemberSession()
+    {
+        $usersFixture = new UsersFixture();
+        $this->session([
+            'Auth' => [
+                'User' => $usersFixture->records[0]
+            ]
+        ]);
+    }
+
     public function setNonMemberSession()
     {
         $usersFixture = new UsersFixture();
@@ -121,7 +131,19 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
     }
 
-    public function testViewOwnProfile()
+    public function testViewOwnMemberProfile()
+    {
+        $this->setMemberSession();
+        $this->get([
+            'controller' => 'Users',
+            'action' => 'view',
+            1,
+            'test-user-1'
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testViewOwnNonMemberProfile()
     {
         $this->setNonMemberSession();
         $this->get([
@@ -130,7 +152,10 @@ class UsersControllerTest extends IntegrationTestCase
             2,
             'test-user-2'
         ]);
-        $this->assertResponseOk();
+        $this->assertRedirectContains(Router::url([
+            'controller' => 'Users',
+            'action' => 'members'
+        ]));
     }
 
     public function testAccountAuth()
