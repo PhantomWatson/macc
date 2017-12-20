@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Controller;
 use App\Controller\Admin\MembershipLevelsController;
 use App\Test\Fixture\UsersFixture;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -53,11 +54,11 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
         // User not logged in
         $this->get($url);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
 
         // Non-admin user
         $this->setUserSession();
@@ -80,11 +81,11 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
         // User not logged in
         $this->get($url);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
 
         // Non-admin user
         $this->setUserSession();
@@ -108,11 +109,11 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
         // User not logged in
         $this->get($url);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
 
         // Non-admin user
         $this->setUserSession();
@@ -136,11 +137,11 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
 
         // User not logged in
         $this->post($url);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
 
         // Non-admin user
         $this->setUserSession();

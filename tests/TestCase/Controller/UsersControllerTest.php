@@ -134,10 +134,10 @@ class UsersControllerTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'account'
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 
     public function testChangePasswordAuth()
@@ -156,10 +156,10 @@ class UsersControllerTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'changePassword'
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 
     public function testEditProfileAuth()
@@ -178,9 +178,9 @@ class UsersControllerTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'editProfile'
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Controller;
 use App\Controller\MembershipsController;
 use App\Test\Fixture\UsersFixture;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -57,10 +58,10 @@ class MembershipsControllerTest extends IntegrationTestCase
             1,
             '_ssl' => true
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 
     public function testLevelAuth()
@@ -96,10 +97,10 @@ class MembershipsControllerTest extends IntegrationTestCase
             'action' => 'myMembership',
             1
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 
     public function testPurchaseCompleteAuth()
@@ -118,10 +119,10 @@ class MembershipsControllerTest extends IntegrationTestCase
             'controller' => 'Memberships',
             'action' => 'purchaseComplete'
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 
     public function testToggleAutoRenewalAuth()
@@ -156,9 +157,9 @@ class MembershipsControllerTest extends IntegrationTestCase
             'action' => 'toggleAutoRenewal',
             1
         ]);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
     }
 }
