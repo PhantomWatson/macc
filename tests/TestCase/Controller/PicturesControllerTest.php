@@ -22,8 +22,7 @@ class PicturesControllerTest extends IntegrationTestCase
         'app.membership_levels',
         'app.memberships',
         'app.tags',
-        'app.tags_users',
-        'app.refunders'
+        'app.tags_users'
     ];
 
     /**
