@@ -70,12 +70,11 @@ class MembershipsControllerTest extends IntegrationTestCase
         $this->get([
             'controller' => 'Memberships',
             'action' => 'level',
-            1,
-            '_ssl' => true
+            1
         ]);
         $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
-            'action' => 'login'
+            'action' => 'register'
         ]));
     }
 
