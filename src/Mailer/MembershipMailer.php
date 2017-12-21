@@ -7,7 +7,7 @@ use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
-class UserMailer extends Mailer
+class MembershipMailer extends Mailer
 {
     /**
      * Defines an email informing an admin that a user has purchased their first membership
@@ -30,13 +30,10 @@ class UserMailer extends Mailer
                 'membershipLevel' => $membershipLevel,
                 'user' => $user,
                 'profileUrl' => Router::url([
-                    $user->name,
-                    [
-                        'controller' => 'Users',
-                        'action' => 'view',
-                        $user->id,
-                        $user->slug
-                    ]
+                    'controller' => 'Users',
+                    'action' => 'view',
+                    $user->id,
+                    $user->slug
                 ], true)
             ])
             ->setTemplate('new_member');
