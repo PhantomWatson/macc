@@ -10,8 +10,13 @@
 A new member has joined the Muncie Arts and Culture Council:
 
 Name: <?= $user->name ?>
+
 Email: <?= $user->email ?>
+
 Level: <?= $membershipLevel->name ?>
+
 Paid: $<?= $membershipLevel->cost ?>
+
 Auto-renew? <?= $membership->auto_renew ? 'Yes' : 'No' ?>
+
 Profile: <?= $profileUrl ?>
