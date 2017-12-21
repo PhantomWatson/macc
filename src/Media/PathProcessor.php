@@ -1,10 +1,12 @@
 <?php
 namespace App\Media;
 
+use App\Model\Entity\Picture;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Josegonzalez\Upload\File\Path\ProcessorInterface;
+use LogicException;
 
 class PathProcessor implements ProcessorInterface
 {
@@ -18,7 +20,7 @@ class PathProcessor implements ProcessorInterface
     /**
      * Entity instance.
      *
-     * @var \Cake\ORM\Entity
+     * @var Picture
      */
     protected $entity;
 

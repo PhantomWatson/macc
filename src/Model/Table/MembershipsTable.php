@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Membership;
+use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -116,16 +118,24 @@ class MembershipsTable extends Table
         return $query
             ->contain([
                 'Users' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'name', 'email', 'stripe_customer_id']);
                 },
                 'MembershipLevels' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'name', 'cost']);
                 }
             ])
             ->where(function ($exp, $q) {
+                /** @var QueryExpression $exp */
+
                 return $exp->isNull('canceled');
             })
             ->where(function ($exp, $q) {
+                /** @var QueryExpression $exp */
+
                 return $exp->lte('expires', date('Y-m-d H:i:s', strtotime('+1 day')));
             })
             ->where([
@@ -138,7 +148,7 @@ class MembershipsTable extends Table
      * Returns the most recently-purchased membership for the selected user
      *
      * @param int $userId
-     * @return array
+     * @return Membership|EntityInterface
      */
     public function getCurrentMembership($userId)
     {

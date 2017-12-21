@@ -2,18 +2,30 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Membership;
+use App\Model\Table\MembershipLevelsTable;
+use App\Model\Table\MembershipRenewalLogsTable;
+use App\Model\Table\PaymentsTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 /**
  * Memberships Controller
  *
  * @property \App\Model\Table\MembershipsTable $Memberships
+ * @property PaymentsTable $Payments
+ * @property MembershipLevelsTable $MembershipLevels
+ * @property UsersTable $Users
  */
 class MembershipsController extends AppController
 {
@@ -226,6 +238,7 @@ class MembershipsController extends AppController
      */
     public function processRecurring()
     {
+        /** @var MembershipRenewalLogsTable $logsTable */
         $logsTable = TableRegistry::get('MembershipRenewalLogs');
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
@@ -376,7 +389,7 @@ class MembershipsController extends AppController
      * simplify createStripeCharge(), which might be modified in
      * the future to handle different Stripe exceptions differently.
      *
-     * @param Exception $3
+     * @param \Stripe\Error\Base $e
      * @throws InternalErrorException
      */
     private function throwStripeException($e)
@@ -414,16 +427,21 @@ class MembershipsController extends AppController
         $membershipsTable = TableRegistry::get('Memberships');
         $userId = $this->Auth->user('id');
         if ($userId) {
+            /** @var Membership $membership */
             $membership = $membershipsTable->find('all')
                 ->select(['id', 'expires'])
                 ->where([
                     'Memberships.user_id' => $userId,
                     function ($exp, $q) {
+                        /** @var QueryExpression $exp */
+
                         return $exp->isNull('canceled');
                     }
                 ])
                 ->contain([
                     'MembershipLevels' => function ($q) {
+                        /** @var Query $q */
+
                         return $q->select(['id', 'name']);
                     }
                 ])

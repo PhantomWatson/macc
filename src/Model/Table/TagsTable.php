@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Tag;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -138,6 +139,7 @@ class TagsTable extends Table
      */
     public function addSlugs()
     {
+        /** @var Tag[] $tags */
         $tags = $this->find('all')->select(['id', 'name'])->where(['slug' => '']);
         foreach ($tags as $tag) {
             $tag->dirty('name', true);
@@ -148,8 +150,12 @@ class TagsTable extends Table
     public function findForMembers(Query $query, array $options)
     {
         return $query->matching('Users.Memberships', function ($q) {
+            /** @var Query $q */
+
             return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
                 function ($exp, $q) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNull('canceled');
                 }
             ]);

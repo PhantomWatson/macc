@@ -148,7 +148,7 @@ class PicturesTable extends Table
      * the file for the full-size picture
      *
      * @param \Cake\Event\Event $event The afterDelete event that was fired
-     * @param \App\Model\Table\Entity\Picture $entity The entity that was deleted
+     * @param \App\Model\Entity\Picture $entity The entity that was deleted
      * @param \ArrayObject $options the options passed to the delete method
      * @return void|false
      */
@@ -212,11 +212,11 @@ class PicturesTable extends Table
      * Automatically sets a picture to be the user's main picture if it's their only picture
      *
      * @param Event $event
-     * @param EntityInterface $entity
+     * @param Picture $entity
      * @param ArrayObject $options
      * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function afterSave(Event $event, Picture $entity, ArrayObject $options)
     {
         $userId = $entity->user_id;
         $count = $this->find('all')

@@ -2,7 +2,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Tag;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
 /**
@@ -57,6 +60,8 @@ class TagsController extends AppController
             $additionalTags = $this->Tags->find('all')
                 ->where([
                     function ($exp, $q) use ($parentsToFind) {
+                        /** @var QueryExpression $exp */
+
                         return $exp->in('id', $parentsToFind);
                     }
                 ])
@@ -73,6 +78,8 @@ class TagsController extends AppController
             ->find('threaded')
             ->where([
                 function ($exp, $q) use ($tagIds) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->in('id', $tagIds);
                 }
             ])
@@ -101,6 +108,8 @@ class TagsController extends AppController
             'slugField' => 'Tags.slug'
         ])->contain([
             'Users' => function ($q) {
+                /** @var Query $q */
+
                 return $q->find('members')->select(['id', 'name', 'slug']);
             }
         ]);
@@ -111,6 +120,7 @@ class TagsController extends AppController
 
         $tag = $tag->first();
 
+        /** @var Tag $tag */
         $this->set([
             'pageTitle' => ucwords($tag->name),
             'tag' => $tag

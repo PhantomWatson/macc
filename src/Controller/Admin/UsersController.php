@@ -2,7 +2,10 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Table\PicturesTable;
+use App\Model\Table\TagsTable;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -11,6 +14,7 @@ use Cake\Utility\Hash;
  * Users Controller
  *
  * @property \App\Model\Table\UsersTable $Users
+ * @property TagsTable $Tags
  */
 class UsersController extends AppController
 {
@@ -136,6 +140,7 @@ class UsersController extends AppController
         $user = $this->Users->get($userId, [
             'contain' => ['Tags', 'Pictures']
         ]);
+        /** @var PicturesTable $picturesTable */
         $picturesTable = TableRegistry::get('Pictures');
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
@@ -189,6 +194,8 @@ class UsersController extends AppController
         $results = $this->Users->find('all')
             ->where([
                 function ($exp, $q) use ($memberIds) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->notIn('id', $memberIds);
                 }
             ])

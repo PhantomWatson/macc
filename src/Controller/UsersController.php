@@ -4,16 +4,22 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\MailingList\MailingList;
+use App\Model\Table\PicturesTable;
+use App\Model\Table\TagsTable;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Recaptcha\Controller\Component\RecaptchaComponent;
 
 /**
  * Users Controller
  *
  * @property \App\Model\Table\UsersTable $Users
+ * @property RecaptchaComponent $Recaptcha
+ * @property TagsTable $Tags
  */
 class UsersController extends AppController
 {
@@ -102,6 +108,7 @@ class UsersController extends AppController
         $user = $this->Users->get($userId, [
             'contain' => ['Tags', 'Pictures']
         ]);
+        /** @var PicturesTable $picturesTable */
         $picturesTable = TableRegistry::get('Pictures');
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
@@ -246,7 +253,7 @@ class UsersController extends AppController
      * View method
      *
      * @param string|null $userId User id.
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($userId = null)
@@ -283,6 +290,8 @@ class UsersController extends AppController
         $user = $this->Users->get($userId, [
             'contain' => [
                 'Tags' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->order(['name' => 'ASC']);
                 },
                 'Pictures'
@@ -330,9 +339,13 @@ class UsersController extends AppController
             ->select(['id', 'name', 'slug', 'main_picture_id'])
             ->contain([
                 'Tags' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'name', 'slug']);
                 },
                 'Pictures' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'user_id', 'filename']);
                 }
             ])

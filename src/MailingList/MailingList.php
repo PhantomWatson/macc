@@ -8,7 +8,7 @@ use DrewM\MailChimp\MailChimp;
 class MailingList
 {
     /**
-     * @return DrewM\MailChimp\MailChimp
+     * @return \DrewM\MailChimp\MailChimp
      */
     public static function getMailChimpObject()
     {

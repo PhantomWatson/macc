@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\User;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -163,8 +164,12 @@ class UsersTable extends Table
     public function findMembers(Query $query, array $options)
     {
         return $query->matching('Memberships', function ($q) {
+            /** @var Query $q */
+
             return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
                 function ($exp, $q) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNull('canceled');
                 }
             ]);
@@ -209,6 +214,8 @@ class UsersTable extends Table
                 'Memberships.user_id' => $userId,
                 'Memberships.expires >=' => date('Y-m-d H:i:s'),
                 function ($exp, $q) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNull('canceled');
                 }
             ])
@@ -230,6 +237,8 @@ class UsersTable extends Table
                 'Memberships.user_id' => $userId,
                 'Memberships.expires <' => date('Y-m-d H:i:s'),
                 function ($exp, $q) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNull('canceled');
                 }
             ])

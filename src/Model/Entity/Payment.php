@@ -13,11 +13,11 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\MembershipLevel $membership_level
  * @property string $postback
  * @property int $admin_adder_id
- * @property \App\Model\Entity\AdminAdder $admin_adder
+ * @property \App\Model\Entity\User $admin_adder
  * @property string $notes
  * @property \Cake\I18n\Time $refunded_date
  * @property int $refunder_id
- * @property \App\Model\Entity\Refunder $refunder
+ * @property \App\Model\Entity\User $refunder
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Membership[] $membership

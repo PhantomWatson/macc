@@ -2,6 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -50,9 +52,13 @@ class MembershipsController extends AppController
             ->select(['id', 'name', 'slug'])
             ->contain([
                 'Memberships' => function ($q) {
+                    /** @var Query $q */
+
                     return $q
                         ->where([
                             function ($exp, $q) {
+                                /** @var QueryExpression $exp */
+
                                 return $exp->isNull('canceled');
                             }
                         ])

@@ -8,14 +8,14 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $parent_id
- * @property \App\Model\Entity\ParentTag $parent_tag
+ * @property \App\Model\Entity\Tag $parent_tag
  * @property int $lft
  * @property int $rght
  * @property string $name
  * @property bool $listed
  * @property bool $selectable
  * @property \Cake\I18n\Time $created
- * @property \App\Model\Entity\ChildTag[] $child_tags
+ * @property \App\Model\Entity\Tag[] $child_tags
  * @property \App\Model\Entity\User[] $users
  */
 class Tag extends Entity

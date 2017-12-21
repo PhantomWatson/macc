@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \Cake\View\View $this
+ * @var array $memberTagIds
+ */
+?>
+
 <?php if (empty($tags)): ?>
     <p class="alert alert-info">
         Sorry, but we couldn't find any art tags associated with any current members.
@@ -9,6 +16,7 @@
     </p>
     <?php
         function tagTree($tags, $memberTagIds, $htmlHelper) {
+            /** @var \Cake\View\Helper\HtmlHelper $htmlHelper */
             $retval = '';
             $retval .= '<ul>';
             foreach ($tags as $tag) {

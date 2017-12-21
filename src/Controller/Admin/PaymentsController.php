@@ -2,9 +2,22 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Entity\Membership;
+use App\Model\Entity\Payment;
+use App\Model\Table\MembershipsTable;
+use App\Model\Table\PaymentsTable;
+use App\Model\Table\UsersTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
+/**
+ * Class PaymentsController
+ * @package App\Controller\Admin
+ * @property PaymentsTable $Payments
+ * @property MembershipsTable $Memberships
+ * @property UsersTable $Users
+ */
 class PaymentsController extends AppController
 {
     public $paginate = [
@@ -57,6 +70,7 @@ class PaymentsController extends AppController
             $membershipLevelId = $this->request->data('membership_level_id');
             $amount = isset($costs[$membershipLevel->id]) ? $costs[$membershipLevel->id] : 0;
             $this->request->data['amount'] = $amount;
+            /** @var Payment $payment */
             $payment = $this->Payments->patchEntity($payment, $this->request->data());
             $errors = $payment->errors();
             if (empty($errors)) {
@@ -67,6 +81,7 @@ class PaymentsController extends AppController
                 $userId = $this->request->data('user_id');
                 if ($membershipLevelId && $userId) {
                     $this->loadModel('Memberships');
+                    /** @var Membership $membership */
                     $membership = $this->Memberships->newEntity([
                         'expires' => new Time(strtotime('+1 year')),
                         'membership_level_id' => $membershipLevelId,
