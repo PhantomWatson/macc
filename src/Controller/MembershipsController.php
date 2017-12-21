@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Event\EmailListener;
 use App\Model\Entity\Membership;
 use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\MembershipRenewalLogsTable;
@@ -10,6 +11,8 @@ use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
@@ -33,6 +36,9 @@ class MembershipsController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['levels', 'level', 'processRecurring']);
+
+        $emailListener = new EmailListener();
+        EventManager::instance()->on($emailListener);
     }
 
     public function beforeFilter(\Cake\Event\Event $event)
@@ -207,10 +213,19 @@ class MembershipsController extends AppController
             ]);
             $errors = $membership->errors();
             if (empty($errors)) {
+                $hadPreviousMembership = $this->Users->hasMembership($userId);
                 $membership = $this->Memberships->save($membership);
 
                 // Turn off any previous membership's auto_renew flag
                 $this->Memberships->disablePreviousAutoRenewal($userId, $membership->id);
+
+                // Dispatch event
+                if (!$hadPreviousMembership) {
+                    $eventName = 'Model.Membership.afterFirstPurchase';
+                    $metadata = ['meta' => compact('membership')];
+                    $event = new Event($eventName, $this, $metadata);
+                    EventManager::instance()->dispatch($event);
+                }
 
                 $this->set('retval', [
                     'success' => true,

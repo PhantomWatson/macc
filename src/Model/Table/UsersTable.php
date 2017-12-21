@@ -245,4 +245,20 @@ class UsersTable extends Table
             ->count();
         return $count > 0;
     }
+
+    /**
+     * Returns true if the user has any previous membership records, regardless of current/expired status
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function hasMembership($userId)
+    {
+        $membershipsTable = TableRegistry::get('Memberships');
+        $count = $membershipsTable->find('all')
+            ->where(['Memberships.user_id' => $userId])
+            ->count();
+
+        return $count > 0;
+    }
 }
