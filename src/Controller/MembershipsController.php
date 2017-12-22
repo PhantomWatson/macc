@@ -289,14 +289,22 @@ class MembershipsController extends AppController
                 'receipt_email' => $membership->user['email'],
                 'statement_descriptor' => 'MACC member renewal' // 22 characters max
             ];
-            $charge = $this->createStripeCharge($chargeParams);
+            try {
+                $charge = $this->createStripeCharge($chargeParams);
+            } catch (\Exception $e) {
+                $msg = 'Charge did not complete successfully: ' . $e->getMessage();
+                $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
+                $logsTable->logAutoRenewal($msg . $details, true);
+                Log::write('error', $msg . $details);
+                continue;
+            }
 
             if (! $charge->paid) {
                 $msg = 'Charge did not complete successfully';
                 $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
                 $logsTable->logAutoRenewal($msg . $details, true);
                 Log::write('error', $msg . $details);
-                throw new InternalErrorException($msg);
+                continue;
             }
 
             // Save payment
@@ -314,7 +322,7 @@ class MembershipsController extends AppController
                 $details = "\n\$paymentParams:\n" . print_r($paymentParams, true);
                 Log::write('error', $msg . $details);
                 $logsTable->logAutoRenewal($msg . $details, true);
-                throw new InternalErrorException($msg);
+                continue;
             }
             $payment = $this->Payments->save($payment);
 
@@ -326,7 +334,7 @@ class MembershipsController extends AppController
             if (! empty($errors)) {
                 $msg = 'Errors updating membership record: ' . json_encode($errors);
                 $logsTable->logAutoRenewal($msg, true);
-                throw new InternalErrorException($msg);
+                continue;
             }
             $membership = $this->Memberships->save($membership);
 
@@ -344,7 +352,7 @@ class MembershipsController extends AppController
                 $msg = 'Errors saving new membership record: '.json_encode($errors);
                 $details = "\n\$membershipParams:\n" . print_r($membershipParams, true);
                 $logsTable->logAutoRenewal($msg . $details, true);
-                throw new InternalErrorException($msg);
+                continue;
             }
             $newMembership = $this->Memberships->save($newMembership);
 
