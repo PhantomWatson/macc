@@ -31,7 +31,14 @@
                     <?= $log->created->format('M j, Y g:ia') ?>
                 </td>
                 <td class="message">
-                    <?= nl2br($log->message) ?>
+                    <?php
+                        if (mb_strpos($log->message, '$chargeParams:')) {
+                            echo str_replace('$chargeParams:', '<br />$chargeParams:<pre>', $log->message);
+                            echo '</pre>';
+                        } else {
+                            echo nl2br($log->message);
+                        }
+                    ?>
                 </td>
             </tr>
         <?php endforeach; ?>
