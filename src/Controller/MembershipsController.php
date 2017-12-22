@@ -261,9 +261,12 @@ class MembershipsController extends AppController
         $this->loadModel('Memberships');
         $memberships = $this->Memberships->find('toAutoRenew');
 
+        $results = [];
+
         if ($memberships->isEmpty()) {
             $msg = 'No memberships need to be renewed at this time.';
             $logsTable->logAutoRenewal($msg);
+            $results[] = $msg;
         }
 
         $chargedUsers = [];
@@ -296,6 +299,7 @@ class MembershipsController extends AppController
                 $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
                 $logsTable->logAutoRenewal($msg . $details, true);
                 Log::write('error', $msg . $details);
+                $results[] = $msg . '<br />' . $details;
                 continue;
             }
 
@@ -304,6 +308,7 @@ class MembershipsController extends AppController
                 $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
                 $logsTable->logAutoRenewal($msg . $details, true);
                 Log::write('error', $msg . $details);
+                $results[] = $msg . '<br />' . $details;
                 continue;
             }
 
@@ -322,6 +327,7 @@ class MembershipsController extends AppController
                 $details = "\n\$paymentParams:\n" . print_r($paymentParams, true);
                 Log::write('error', $msg . $details);
                 $logsTable->logAutoRenewal($msg . $details, true);
+                $results[] = $msg . '<br />' . $details;
                 continue;
             }
             $payment = $this->Payments->save($payment);
@@ -334,6 +340,7 @@ class MembershipsController extends AppController
             if (! empty($errors)) {
                 $msg = 'Errors updating membership record: ' . json_encode($errors);
                 $logsTable->logAutoRenewal($msg, true);
+                $results[] = $msg;
                 continue;
             }
             $membership = $this->Memberships->save($membership);
@@ -352,6 +359,7 @@ class MembershipsController extends AppController
                 $msg = 'Errors saving new membership record: '.json_encode($errors);
                 $details = "\n\$membershipParams:\n" . print_r($membershipParams, true);
                 $logsTable->logAutoRenewal($msg . $details, true);
+                $results[] = $msg . '<br />' . $details;
                 continue;
             }
             $newMembership = $this->Memberships->save($newMembership);
@@ -364,10 +372,11 @@ class MembershipsController extends AppController
 
             $msg = 'Membership renewed for '.$membership->user['name'];
             $logsTable->logAutoRenewal($msg);
+            $results[] = $msg;
         }
 
         $this->set([
-            'msg' => $msg,
+            'results' => $results,
             'pageTitle' => 'Process Recurring Payments'
         ]);
     }
