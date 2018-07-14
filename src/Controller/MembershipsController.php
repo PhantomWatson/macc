@@ -3,8 +3,10 @@ namespace App\Controller;
 
 use App\Event\EmailListener;
 use App\Model\Entity\Membership;
+use App\Model\Entity\User;
 use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\MembershipRenewalLogsTable;
+use App\Model\Table\MembershipsTable;
 use App\Model\Table\PaymentsTable;
 use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
@@ -12,6 +14,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
@@ -24,13 +27,18 @@ use Cake\ORM\TableRegistry;
 /**
  * Memberships Controller
  *
- * @property \App\Model\Table\MembershipsTable $Memberships
+ * @property MembershipsTable $Memberships
  * @property PaymentsTable $Payments
  * @property MembershipLevelsTable $MembershipLevels
  * @property UsersTable $Users
  */
 class MembershipsController extends AppController
 {
+    /**
+     * Initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
@@ -40,7 +48,13 @@ class MembershipsController extends AppController
         EventManager::instance()->on($emailListener);
     }
 
-    public function beforeFilter(\Cake\Event\Event $event)
+    /**
+     * BeforeFilter method
+     *
+     * @param Event $event A CakePHP event object
+     * @return Response|null|void
+     */
+    public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
 
@@ -48,15 +62,25 @@ class MembershipsController extends AppController
          * from AJAX request to completePurchase and causing errors
          * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
         if (Configure::read('forceSSL')) {
-            $this->Security->config('unlockedActions', ['completePurchase']);
+            $this->Security->getConfig('unlockedActions', ['completePurchase']);
         }
     }
 
+    /**
+     * Page displayed to users after purchasing a membership
+     *
+     * @return void
+     */
     public function purchaseComplete()
     {
         $this->set('pageTitle', 'Membership Purchased!');
     }
 
+    /**
+     * Page displaying information about the user's current membership
+     *
+     * @return void
+     */
     public function myMembership()
     {
         $userId = $this->Auth->user('id');
@@ -76,6 +100,12 @@ class MembershipsController extends AppController
         ]);
     }
 
+    /**
+     * Page for toggling automatic membership renewal on or off
+     *
+     * @param null|int $value Either 1 or 0 for toggling on or off
+     * @return void
+     */
     public function toggleAutoRenewal($value = null)
     {
         if (! $this->request->is('post')) {
@@ -98,50 +128,60 @@ class MembershipsController extends AppController
         }
 
         if ($value == 1 && ! $canBeAutoRenewed) {
-            throw new BadRequestException('Cannot turn on automatic renewal, since initial payment was not made online');
+            throw new BadRequestException(
+                'Cannot turn on automatic renewal, since initial payment was not made online'
+            );
         }
 
         $membership = $this->Memberships->patchEntity($membership, [
             'auto_renew' => $value
         ]);
         $this->Memberships->save($membership);
-        $msg = 'Membership auto-renewal turned '.($value ? 'on' : 'off').'.';
+        $msg = 'Membership auto-renewal turned ' . ($value ? 'on' : 'off') . '.';
         if ($value) {
             $timestamp = $membership->expires->format('U') - (60 * 60 * 24);
-            $msg .= ' Your membership will be automatically renewed on '.date('F j, Y', $timestamp).'.';
+            $msg .= ' Your membership will be automatically renewed on ' . date('F j, Y', $timestamp) . '.';
         }
         $this->Flash->success($msg);
         $this->redirect($this->referer());
     }
 
+    /**
+     * Page used as the postUrl for purchases, charges the customer or returns an error status code on error
+     *
+     * @return Response
+     */
     public function completePurchase()
     {
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->set('_serialize', ['retval']);
 
         // Verify user
-        $userId = $this->request->data('userId');
+        $userId = $this->request->getData('userId');
         $this->loadModel('Users');
         try {
+            /** @var User $user */
             $user = $this->Users->get($userId);
         } catch (\Cake\Datasource\Exception\InvalidPrimaryKeyException $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => "Error: No valid user ID"
             ]);
-            $this->response->statusCode('404');
-            return $this->render();
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->response = $this->response->withStatus('404');
+
+            return $this->response;
+        } catch (RecordNotFoundException $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => "Sorry, but that user account ('$userId') was not found."
             ]);
-            $this->response->statusCode('404');
-            return $this->render();
+            $this->response = $this->response->withStatus('404');
+
+            return $this->response;
         }
 
         // Verify membership level
-        $membershipLevelId = $this->request->data('membershipLevelId');
+        $membershipLevelId = $this->request->getData('membershipLevelId');
         $this->loadModel('MembershipLevels');
         try {
             $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
@@ -150,14 +190,15 @@ class MembershipsController extends AppController
                 'success' => false,
                 'message' => "Sorry, but that membership level ('$membershipLevelId') was not found."
             ]);
-            $this->response->statusCode('404');
-            return $this->render();
+            $this->response = $this->response->withStatus('404');
+
+            return $this->response;
         }
 
         // Create Stripe customer
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
-        $token = $this->request->data('stripeToken');
+        $token = $this->request->getData('stripeToken');
         $customer = $this->Users->createStripeCustomer($userId, $token);
         $user = $this->Users->patchEntity($user, [
             'stripe_customer_id' => $customer->id
@@ -181,8 +222,9 @@ class MembershipsController extends AppController
                 'success' => false,
                 'message' => 'Credit card was declined.'
             ]);
-            $this->response->statusCode('402');
-            return $this->render();
+            $this->response = $this->response->withStatus('402');
+
+            return $this->response;
         }
 
         // Save payment record in MACC's database
@@ -197,7 +239,7 @@ class MembershipsController extends AppController
             $paymentData['notes'] = 'Payment made in Stripe test mode';
         }
         $payment = $this->Payments->newEntity($paymentData);
-        $errors = $payment->errors();
+        $errors = $payment->getErrors();
         if (empty($errors)) {
             $payment = $this->Payments->save($payment);
 
@@ -207,10 +249,10 @@ class MembershipsController extends AppController
                 'user_id' => $userId,
                 'membership_level_id' => $membershipLevelId,
                 'payment_id' => $payment->id,
-                'auto_renew' => $this->request->data('autoRenew'),
+                'auto_renew' => $this->request->getData('autoRenew'),
                 'expires' => new Time(strtotime('+1 year'))
             ]);
-            $errors = $membership->errors();
+            $errors = $membership->getErrors();
             if (empty($errors)) {
                 $hadPreviousMembership = $this->Users->hasMembership($userId);
                 $membership = $this->Memberships->save($membership);
@@ -241,7 +283,9 @@ class MembershipsController extends AppController
             'success' => false,
             'message' => $msg
         ]);
-        $this->response->statusCode('500');
+        $this->response = $this->response->withStatus('500');
+
+        return $this->response;
     }
 
     /**
@@ -249,11 +293,13 @@ class MembershipsController extends AppController
      * memberships that will expire in the next 24 hours.
      *
      * Intended for a cron job, but can be run manually.
+     *
+     * @return void
      */
     public function processRecurring()
     {
         /** @var MembershipRenewalLogsTable $logsTable */
-        $logsTable = TableRegistry::get('MembershipRenewalLogs');
+        $logsTable = TableRegistry::getTableLocator()->get('MembershipRenewalLogs');
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
 
@@ -270,6 +316,7 @@ class MembershipsController extends AppController
 
         $chargedUsers = [];
         foreach ($memberships as $membership) {
+            /** @var Membership $membership */
             if (in_array($membership->user_id, $chargedUsers)) {
                 continue;
             }
@@ -320,7 +367,7 @@ class MembershipsController extends AppController
             ];
             $this->loadModel('Payments');
             $payment = $this->Payments->newEntity($paymentParams);
-            $errors = $payment->errors();
+            $errors = $payment->getErrors();
             if (! empty($errors)) {
                 $msg = 'Errors saving payment record: ' . json_encode($errors);
                 $details = "\n\$paymentParams:\n" . print_r($paymentParams, true);
@@ -335,7 +382,7 @@ class MembershipsController extends AppController
             $membership = $this->Memberships->patchEntity($membership, [
                 'auto_renew' => 0
             ]);
-            $errors = $membership->errors();
+            $errors = $membership->getErrors();
             if (! empty($errors)) {
                 $msg = 'Errors updating membership record: ' . json_encode($errors);
                 $logsTable->logAutoRenewal($msg, true);
@@ -353,7 +400,7 @@ class MembershipsController extends AppController
                 'expires' => new Time(strtotime('+1 year'))
             ];
             $newMembership = $this->Memberships->newEntity($membershipParams);
-            $errors = $newMembership->errors();
+            $errors = $newMembership->getErrors();
             if (! empty($errors)) {
                 $msg = 'Errors saving new membership record: '.json_encode($errors);
                 $details = "\n\$membershipParams:\n" . print_r($membershipParams, true);
@@ -385,6 +432,7 @@ class MembershipsController extends AppController
      *
      * @param array $params Passed to \Stripe\Charge::create()
      * @return \Stripe\Charge
+     * @throws InternalErrorException
      */
     private function createStripeCharge($params)
     {
@@ -410,6 +458,10 @@ class MembershipsController extends AppController
             $this->throwStripeException($e);
         }
 
+        if (!isset($charge)) {
+            throw new InternalErrorException('Cannot create Stripe charge: unknown error');
+        }
+
         return $charge;
     }
 
@@ -422,6 +474,7 @@ class MembershipsController extends AppController
      *
      * @param \Stripe\Error\Base $e
      * @throws InternalErrorException
+     * @return void
      */
     private function throwStripeException($e)
     {
@@ -435,6 +488,7 @@ class MembershipsController extends AppController
      *
      * @param Membership $membership
      * @throws NotFoundException
+     * @return void
      */
     private function validateMembership($membership)
     {
@@ -452,10 +506,15 @@ class MembershipsController extends AppController
         }
     }
 
+    /**
+     * Page that displays all current membership levels
+     *
+     * @return void
+     */
     public function levels()
     {
         // Notify user of their current membership status
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $userId = $this->Auth->user('id');
         if ($userId) {
             /** @var Membership $membership */
@@ -463,7 +522,7 @@ class MembershipsController extends AppController
                 ->select(['id', 'expires'])
                 ->where([
                     'Memberships.user_id' => $userId,
-                    function ($exp, $q) {
+                    function ($exp) {
                         /** @var QueryExpression $exp */
 
                         return $exp->isNull('canceled');
@@ -501,10 +560,19 @@ class MembershipsController extends AppController
         ]);
     }
 
+    /**
+     * Page that displays information about a specific membership level
+     *
+     * @param null $id
+     * @return Response|null
+     */
     public function level($id = null)
     {
         if (! $this->Auth->user()) {
-            $this->Flash->set('Thanks for your interest in becoming a member of MACC! Please register an account and log in, then proceed with your membership purchase.');
+            $this->Flash->set(
+                'Thanks for your interest in becoming a member of MACC! Please register an account and log in, ' .
+                'then proceed with your membership purchase.'
+            );
             return $this->redirect([
                 'controller' => 'Users',
                 'action' => 'register'
@@ -516,5 +584,7 @@ class MembershipsController extends AppController
             'membershipLevel' => $membershipLevel,
             'pageTitle' => 'Purchase "'.$membershipLevel->name.'" Membership'
         ]);
+        
+        return null;
     }
 }
