@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Event\EmailListener;
 use App\Model\Entity\Membership;
 use App\Model\Table\MembershipLevelsTable;
@@ -489,7 +488,6 @@ class MembershipsController extends AppController
                         ' expired on ' . $membership->expires->format('F jS, Y');
                     $this->Flash->set($msg);
                 }
-
             }
         }
 
