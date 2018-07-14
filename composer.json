@@ -25,7 +25,8 @@
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "~3.2",
         "cakephp/bake": "~1.1",
-        "cakephp/cakephp-codesniffer": "*"
+        "cakephp/cakephp-codesniffer": "*",
+        "dereuromark/cakephp-ide-helper": "^0.12.0"
     },
     "suggest": {
         "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
