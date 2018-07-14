@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <p>
     Your profile can be styled using <a href="https://daringfireball.net/projects/markdown/">Markdown</a>
     (specifically a subset of the <a href="http://spec.commonmark.org/">CommonMark spec</a>, if you're curious). Here's how!

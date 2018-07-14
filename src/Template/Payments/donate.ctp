@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);

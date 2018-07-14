@@ -21,6 +21,8 @@ use Cake\View\View;
  * Your application’s default view class
  *
  * @link http://book.cakephp.org/3.0/en/views.html#the-app-view
+ * @property \App\View\Helper\TagHelper $Tag
+ * @property \Recaptcha\View\Helper\RecaptchaHelper $Recaptcha
  */
 class AppView extends View
 {

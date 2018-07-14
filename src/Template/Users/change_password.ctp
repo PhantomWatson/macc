@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ */
     echo $this->Form->create($user);
     echo $this->Form->input(
         'new_password',

@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Model\Table\PicturesTable;
 use App\Model\Table\TagsTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -13,7 +14,7 @@ use Cake\Utility\Hash;
 /**
  * Users Controller
  *
- * @property \App\Model\Table\UsersTable $Users
+ * @property UsersTable $Users
  * @property TagsTable $Tags
  */
 class UsersController extends AppController

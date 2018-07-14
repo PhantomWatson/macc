@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\MembershipLevel[]|\Cake\Collection\CollectionInterface $membershipLevels
+ */
+?>
 <p>
     <?= $this->Html->link(
         'Add a New Membership Level',

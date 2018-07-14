@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?php if (empty($members)): ?>
     <p class="alert alert-info">
         No current or expired memberships were found.

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Tag $tag
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <p>
     <?= $this->Html->link(
         '<span class="glyphicon glyphicon-arrow-left"></span> Back to Tags',

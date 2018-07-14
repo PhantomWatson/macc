@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <p>
     Have you forgotten the password that you use to log in to your account?
     In the field below, enter the email address that is associated with your account,

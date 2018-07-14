@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
     if (! isset($class)) {
         $class = empty($params['class']) ? 'info' : $params['class'];
     }

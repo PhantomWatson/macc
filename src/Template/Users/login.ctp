@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <p class="alert alert-info">
     Don't have an account yet?
     You can <?= $this->Html->link(

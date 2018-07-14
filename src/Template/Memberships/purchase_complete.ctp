@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <p>
     Thank you for your purchase of a Muncie Arts and Culture Council membership.
     Now's a great time to

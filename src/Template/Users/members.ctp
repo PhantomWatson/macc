@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?php if (empty($members)): ?>
     <p class="alert alert-info">
         Sorry, but we couldn't find any current members to display.

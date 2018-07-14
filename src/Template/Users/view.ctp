@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ * @var \App\Model\Entity\Tag $tag
+ */
+?>
 <?php if ($ownProfile): ?>
     <p>
         <?= $this->Html->link(

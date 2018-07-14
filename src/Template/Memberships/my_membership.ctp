@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Membership $membership
+ */
+?>
 <?php if (empty($membership)): ?>
     <p>
         You have not yet

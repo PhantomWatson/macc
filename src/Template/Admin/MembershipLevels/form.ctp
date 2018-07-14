@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\MembershipLevel $membershipLevel
+ */
+?>
 <p>
     <?= $this->Html->link(
         '<span class="glyphicon glyphicon-arrow-left"></span> Back to Membership Levels',

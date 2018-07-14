@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\MembershipLevel $membershipLevel
  * @var \App\Model\Entity\User $user
  * @var string $profileUrl
+ * @var \App\View\AppView $this
  */
 ?>
 

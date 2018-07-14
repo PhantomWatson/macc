@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Payment[]|\Cake\Collection\CollectionInterface $payments
+ */
+?>
 <p>
     <?= $this->Html->link(
         'Add Payment Record',

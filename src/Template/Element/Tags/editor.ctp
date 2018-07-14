@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
 	$this->Html->script('tag_manager.js', ['block' => 'script']);
 ?>
 

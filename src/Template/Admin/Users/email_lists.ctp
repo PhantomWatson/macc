@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <p class="well">
     Need to email a whole category of users? Use the following automatically-compiled email lists.
 </p>

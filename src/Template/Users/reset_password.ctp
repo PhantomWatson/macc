@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <p>
     Please enter your new password below. Afterward, you will be able to log in
     using this password and the email address <strong><?= $email ?></strong>.

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\MembershipLevel $membershipLevel
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);

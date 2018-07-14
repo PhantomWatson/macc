@@ -1,11 +1,11 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\MailingList\MailingList;
 use App\Model\Table\PicturesTable;
 use App\Model\Table\TagsTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -17,7 +17,7 @@ use Recaptcha\Controller\Component\RecaptchaComponent;
 /**
  * Users Controller
  *
- * @property \App\Model\Table\UsersTable $Users
+ * @property UsersTable $Users
  * @property RecaptchaComponent $Recaptcha
  * @property TagsTable $Tags
  */

@@ -8,6 +8,7 @@ use App\Model\Table\MembershipsTable;
 use App\Model\Table\PaymentsTable;
 use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
@@ -17,6 +18,7 @@ use Cake\ORM\TableRegistry;
  * @property PaymentsTable $Payments
  * @property MembershipsTable $Memberships
  * @property UsersTable $Users
+ * @method Payment[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PaymentsController extends AppController
 {

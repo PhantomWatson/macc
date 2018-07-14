@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\MembershipLevel[]|\Cake\Collection\CollectionInterface $membershipLevels
+ */
     use League\CommonMark\CommonMarkConverter;
     $converter = new CommonMarkConverter();
 ?>

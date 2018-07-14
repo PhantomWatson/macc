@@ -1,5 +1,8 @@
 <?php
-    /** @var array $results */
+    /**
+     * @var \App\View\AppView $this
+     * @var array $results
+     */
 ?>
 <ul>
     <?php foreach ($results as $result): ?>
