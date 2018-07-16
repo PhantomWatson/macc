@@ -1,10 +1,22 @@
 # CakePHP
 /vendor/*
 /config/app.php
+/config/.env
 /config/recaptcha.php
 /tmp/*
 /logs/*
 /webroot/img/members/*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
 
 # Client-side libraries
 /webroot/bootstrap/*
@@ -25,8 +37,27 @@
 # Composer
 composer.phar
 
-# PhpStorm
+# Tool specific files #
+#######################
+# vim
+*~
+*.swp
+*.swo
+# sublime text & textmate
+*.sublime-*
+*.stTheme.cache
+*.tmlanguage.cache
+*.tmPreferences.cache
+# Eclipse
+.settings/*
+# JetBrains, aka PHPStorm, IntelliJ IDEA
 .idea/*
+# NetBeans
+nbproject/*
+# Visual Studio Code
+.vscode
+# Sass preprocessor
+.sass-cache/
 
 # Misc
 /webroot/coverage/*

@@ -6,20 +6,22 @@
  * Routes are very important mechanism that allows you to freely connect
  * different URLs to chosen controllers and their actions (functions).
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 use Cake\Core\Plugin;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
+use Cake\Routing\Route\DashedRoute;
 
 /**
  * The default class to use for all routes
@@ -38,23 +40,26 @@ use Cake\Routing\Router;
  * inconsistently cased URLs when used with `:plugin`, `:controller` and
  * `:action` markers.
  *
+ * Cache: Routes are cached to improve performance, check the RoutingMiddleware
+ * constructor in your `src/Application.php` file to change this behavior.
+ *
  */
-Router::defaultRouteClass('DashedRoute');
+Router::defaultRouteClass(DashedRoute::class);
 
-Router::scope('/', function ($routes) {
-    $routes->extensions(['json']);
+Router::scope('/', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
 
     $routes->connect('/styling', ['controller' => 'Pages', 'action' => 'styling']);
 
-    $routes->connect('/account',          ['controller' => 'Users', 'action' => 'account']);
-    $routes->connect('/change-password',  ['controller' => 'Users', 'action' => 'changePassword']);
-    $routes->connect('/forgot-password',  ['controller' => 'Users', 'action' => 'forgotPassword']);
-    $routes->connect('/login',            ['controller' => 'Users', 'action' => 'login']);
-    $routes->connect('/logout',           ['controller' => 'Users', 'action' => 'logout']);
-    $routes->connect('/members',          ['controller' => 'Users', 'action' => 'members']);
-    $routes->connect('/register',         ['controller' => 'Users', 'action' => 'register']);
+    $routes->connect('/account', ['controller' => 'Users', 'action' => 'account']);
+    $routes->connect('/change-password', ['controller' => 'Users', 'action' => 'changePassword']);
+    $routes->connect('/forgot-password', ['controller' => 'Users', 'action' => 'forgotPassword']);
+    $routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+    $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
+    $routes->connect('/members', ['controller' => 'Users', 'action' => 'members']);
+    $routes->connect('/register', ['controller' => 'Users', 'action' => 'register']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
-    $routes->connect('/u/:id/:slug',   ['controller' => 'Users', 'action' => 'view'], [
+    $routes->connect('/u/:id/:slug', ['controller' => 'Users', 'action' => 'view'], [
         'pass' => ['id', 'slug'],
         'id' => '[0-9]+'
     ]);
@@ -63,17 +68,16 @@ Router::scope('/', function ($routes) {
         'pass' => ['slug']
     ]);
 
-    $routes->connect('/donate',            ['controller' => 'Donations', 'action' => 'donate']);
+    $routes->connect('/donate', ['controller' => 'Donations', 'action' => 'donate']);
     $routes->connect('/donation-complete', ['controller' => 'Donations', 'action' => 'donationComplete']);
 
-    $routes->connect('/',                  ['controller' => 'Memberships', 'action' => 'levels']);
-    $routes->connect('/my-membership',     ['controller' => 'Memberships', 'action' => 'myMembership']);
+    $routes->connect('/', ['controller' => 'Memberships', 'action' => 'levels']);
+    $routes->connect('/my-membership', ['controller' => 'Memberships', 'action' => 'myMembership']);
     $routes->connect('/purchase-complete', ['controller' => 'Memberships', 'action' => 'purchaseComplete']);
 
-    $routes->fallbacks('DashedRoute');
+    $routes->fallbacks(DashedRoute::class);
 });
 
-Router::prefix('admin', function ($routes) {
-
-    $routes->fallbacks('DashedRoute');
+Router::prefix('admin', function (RouteBuilder $routes) {
+    $routes->fallbacks(DashedRoute::class);
 });
