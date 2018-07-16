@@ -59,7 +59,9 @@ class AppController extends Controller
             'encryption' => 'aes',
             'key' => Configure::read('cookie_key')
         ]);
-        $this->Cookie->httpOnly = true;
+        $this->Cookie->setConfig([
+            'httpOnly' => true
+        ]);
 
         $this->loadComponent('Auth', [
             'loginAction' => [
