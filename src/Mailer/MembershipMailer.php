@@ -17,9 +17,9 @@ class MembershipMailer extends Mailer
      */
     public function newMember($recipientEmail, $membership)
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->get($membership->user_id);
-        $membershipLevelTable = TableRegistry::get('MembershipLevels');
+        $membershipLevelTable = TableRegistry::getTableLocator()->get('MembershipLevels');
         $membershipLevel = $membershipLevelTable->get($membership->membership_level_id);
 
         return $this

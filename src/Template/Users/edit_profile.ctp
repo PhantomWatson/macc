@@ -35,7 +35,7 @@
 
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="editProfile">
-                    <?= $this->Form->input(
+                    <?= $this->Form->control(
                         'profile',
                         [
                             'class' => 'form-control',

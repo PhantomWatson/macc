@@ -31,11 +31,11 @@
 
 <?= $this->Form->create($payment) ?>
 
-<?= $this->Form->input('user_id') ?>
+<?= $this->Form->control('user_id') ?>
 
-<?= $this->Form->input('membership_level_id') ?>
+<?= $this->Form->control('membership_level_id') ?>
 
-<?= $this->Form->input('notes') ?>
+<?= $this->Form->control('notes') ?>
 
 <?= $this->Form->button(
     'Add Payment Record',

@@ -40,8 +40,7 @@ class MembershipsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Memberships') ? [] : ['className' => 'App\Model\Table\MembershipsTable'];
-        $this->Memberships = TableRegistry::get('Memberships', $config);
+        $this->Memberships = TableRegistry::getTableLocator()->get('Memberships');
     }
 
     /**

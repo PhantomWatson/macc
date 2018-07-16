@@ -31,9 +31,9 @@ class PicturesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('pictures');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('pictures');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Josegonzalez/Upload.Upload', [
@@ -72,7 +72,7 @@ class PicturesTable extends Table
             ->requirePresence('filename', 'create')
             ->notEmpty('filename');
 
-        $validator->provider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
+        $validator->setProvider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
         $fileUploaded = function ($context) {
             return !empty($context['data']['filename']) && $context['data']['filename']['error'] == UPLOAD_ERR_OK;
         };
@@ -159,7 +159,7 @@ class PicturesTable extends Table
         $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
         $file->delete();
 
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->get($entity->user_id);
         if ($user->main_picture_id == $entity->id) {
             $user->main_picture_id = null;
@@ -224,7 +224,7 @@ class PicturesTable extends Table
             ->count();
         if ($count === 1) {
             $pictureId = $entity->id;
-            $usersTable = TableRegistry::get('Users');
+            $usersTable = TableRegistry::getTableLocator()->get('Users');
             $user = $usersTable->get($userId);
             $user->main_picture_id = $pictureId;
             $usersTable->save($user);

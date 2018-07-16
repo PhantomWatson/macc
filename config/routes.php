@@ -77,5 +77,3 @@ Router::prefix('admin', function ($routes) {
 
     $routes->fallbacks('DashedRoute');
 });
-
-Plugin::routes();

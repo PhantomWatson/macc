@@ -30,7 +30,7 @@ class DonationsController extends AppController
          * from AJAX request to completeDonation and causing errors
          * http://book.cakephp.org/3.0/en/controllers/components/security.html#form-tampering-prevention */
         if (Configure::read('forceSSL')) {
-            $this->Security->config('unlockedActions', ['completeDonation']);
+            $this->Security->setConfig('unlockedActions', ['completeDonation']);
         }
     }
 
@@ -44,7 +44,7 @@ class DonationsController extends AppController
     public function completeDonation()
     {
         // Validate amount
-        $amount = $this->request->data('amount');
+        $amount = $this->request->getData('amount');
         if (! is_numeric($amount)) {
             throw new ForbiddenException('Donation amount must be numeric');
         } elseif ($amount < 1) {
@@ -57,7 +57,7 @@ class DonationsController extends AppController
         } else {
             $metadata['Donor name'] = '';
         }
-        $metadata['Donor email'] = $this->request->data('email');
+        $metadata['Donor email'] = $this->request->getData('email');
 
         // Create the charge on Stripe's servers - this will charge the user's card
         $apiKey = Configure::read('Stripe.Secret');
@@ -67,16 +67,16 @@ class DonationsController extends AppController
             $charge = \Stripe\Charge::create([
                 'amount' => $amount * 100, // amount in cents
                 'currency' => 'usd',
-                'source' => $this->request->data('stripeToken'),
+                'source' => $this->request->getData('stripeToken'),
                 'description' => $description,
                 'metadata' => $metadata,
-                'receipt_email' => $this->request->data('email')
+                'receipt_email' => $this->request->getData('email')
             ]);
         } catch (\Stripe\Error\Card $e) {
             throw new ForbiddenException('The provided credit card has been declined');
         }
 
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->set([
             '_serialize' => ['retval'],
             'retval' => ['success' => true]

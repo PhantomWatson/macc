@@ -46,19 +46,20 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             if ($this->Recaptcha->verify()) {
-                $email = $this->request->data('email');
+                $email = $this->request->getData('email');
                 $email = trim($email);
                 $email = strtolower($email);
-                $this->request->data['email'] = $email;
-                $this->request->data['password'] = $this->request->data('new_password');
-                $this->request->data['role'] = 'user';
-                $user = $this->Users->patchEntity($user, $this->request->data(), [
+                $data = $this->request->getData();
+                $data['email'] = $email;
+                $data['password'] = $data['new_password'];
+                $data['role'] = 'user';
+                $user = $this->Users->patchEntity($user, $data, [
                     'fieldList' => ['name', 'email', 'password', 'role']
                 ]);
-                $errors = $user->errors();
+                $errors = $user->getErrors();
                 if (empty($errors)) {
                     $user = $this->Users->save($user);
-                    if ($this->request->data('mailing_list')) {
+                    if ($this->request->getData('mailing_list')) {
                         MailingList::addToList($user);
                     }
                     $this->Flash->success('Your account has been registered. You may now log in.');
@@ -70,13 +71,13 @@ class UsersController extends AppController
                 $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
             }
         } else {
-            $this->request->data['mailing_list'] = true;
+            $user['mailing_list'] = true;
         }
 
         /* So the password fields aren't filled out automatically when the user
          * is bounced back to the page by a validation error */
-        $this->request->data['new_password'] = null;
-        $this->request->data['confirm_password'] = null;
+        $user['new_password'] = null;
+        $user['confirm_password'] = null;
 
         $this->set([
             'pageTitle' => 'Register an Account',
@@ -109,15 +110,15 @@ class UsersController extends AppController
             'contain' => ['Tags', 'Pictures']
         ]);
         /** @var PicturesTable $picturesTable */
-        $picturesTable = TableRegistry::get('Pictures');
+        $picturesTable = TableRegistry::getTableLocator()->get('Pictures');
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
                 'fieldList' => ['profile', 'tags'],
                 'associated' => ['Tags'],
                 'onlyIds' => true
             ]);
-            $errors = $user->errors();
+            $errors = $user->getErrors();
             if (empty($errors)) {
                 if ($this->Users->save($user)) {
                     $this->Flash->success('Profile updated');
@@ -146,14 +147,14 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
 
                 // Remember login information
-                if ($this->request->data('auto_login')) {
+                if ($this->request->getData('auto_login')) {
                     $this->Cookie->configKey('CookieAuth', [
                         'expires' => '+1 year',
                         'httpOnly' => true
                     ]);
                     $this->Cookie->write('CookieAuth', [
-                        'email' => $this->request->data('email'),
-                        'password' => $this->request->data('password')
+                        'email' => $this->request->getData('email'),
+                        'password' => $this->request->getData('password')
                     ]);
                 }
 
@@ -162,11 +163,12 @@ class UsersController extends AppController
                 $this->Flash->error('Email or password is incorrect');
             }
         } else {
-            $this->request->data['auto_login'] = true;
+            $user = $this->Users->newEntity();
+            $user['auto_login'] = true;
         }
         $this->set([
             'pageTitle' => 'Log in',
-            'user' => $this->Users->newEntity()
+            'user' => $user
         ]);
     }
 
@@ -180,7 +182,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
-            $email = $this->request->data('email');
+            $email = $this->request->getData('email');
             $email = strtolower(trim($email));
             $adminEmail = Configure::read('admin_email');
             if (empty($email)) {
@@ -192,7 +194,7 @@ class UsersController extends AppController
                 if ($userId) {
                     if (Mailer::sendPasswordResetEmail($userId)) {
                         $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
-                        $this->request->data = [];
+                        $user['email'] = '';
                     } else {
                         $msg = 'There was an error sending your password-resetting email. ';
                         $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
@@ -231,8 +233,9 @@ class UsersController extends AppController
         $email = $user->email;
 
         if ($this->request->is(['post', 'put'])) {
-            $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
+            $data = $this->request->getData();
+            $data['password'] = $data['new_password'];
+            $user = $this->Users->patchEntity($user, $data, [
                 'fieldList' => ['password']
             ]);
             if ($this->Users->save($user)) {
@@ -240,12 +243,14 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'login']);
             }
         }
-        $this->request->data = [];
+
+        $user['new_password'] = '';
+        $user['confirm_password'] = '';
 
         $this->set([
             'email' => $email,
             'pageTitle' => 'Reset Password',
-            'user' => $this->Users->newEntity()
+            'user' => $user
         ]);
     }
 
@@ -313,8 +318,9 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
+            $data = $this->request->getData();
+            $data['password'] = $data['new_password'];
+            $user = $this->Users->patchEntity($user, $data, [
                 'fieldList' => ['password']
             ]);
             if ($this->Users->save($user)) {
@@ -322,11 +328,14 @@ class UsersController extends AppController
 
                 // If user logs in via cookie, update cookie login credentials
                 if ($this->Cookie->read('CookieAuth')) {
-                    $this->Cookie->write('CookieAuth.password', $this->request->data('new_password'));
+                    $this->Cookie->write('CookieAuth.password', $this->request->getData('new_password'));
                 }
             }
         }
-        $this->request->data = [];
+
+        $user['new_password'] = '';
+        $user['confirm_password'] = '';
+
         $this->set([
             'pageTitle' => 'Change Password',
             'user' => $user
@@ -377,17 +386,17 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
                 'fieldList' => ['name', 'email']
             ]);
-            $errors = $user->errors();
+            $errors = $user->getErrors();
             if (empty($errors)) {
                 $this->Users->save($user);
                 $this->Flash->success('Account info updated');
 
                 // If user logs in via cookie, update cookie login credentials
                 if ($this->Cookie->read('CookieAuth')) {
-                    $this->Cookie->write('CookieAuth.email', $this->request->data('email'));
+                    $this->Cookie->write('CookieAuth.email', $this->request->getData('email'));
                 }
             }
         }

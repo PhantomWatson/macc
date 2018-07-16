@@ -19,8 +19,8 @@
 </p>
 
 <?= $this->Form->create($membershipLevel) ?>
-<?= $this->Form->input('name') ?>
-<?= $this->Form->input('cost', [
+<?= $this->Form->control('name') ?>
+<?= $this->Form->control('cost', [
     'label' => 'Cost, in whole dollars (e.g. 30)',
     'step' => '1'
 ]) ?>
@@ -41,7 +41,7 @@
     </ul>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="editDescription">
-            <?= $this->Form->input('description', [
+            <?= $this->Form->control('description', [
                 'label' => false
             ]) ?>
         </div>

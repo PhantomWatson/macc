@@ -7,8 +7,8 @@
 <div id="edit_account">
     <?= $this->Form->create($user) ?>
 
-    <?= $this->Form->input('name') ?>
-    <?= $this->Form->input('email') ?>
+    <?= $this->Form->control('name') ?>
+    <?= $this->Form->control('email') ?>
 
     <?= $this->Form->button(
         'Update',

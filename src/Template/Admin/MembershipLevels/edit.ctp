@@ -25,10 +25,10 @@
     <fieldset>
         <legend><?= __('Edit Membership Level') ?></legend>
         <?php
-            echo $this->Form->input('name');
-            echo $this->Form->input('cost');
-            echo $this->Form->input('description');
-            echo $this->Form->input('users._ids', ['options' => $users]);
+            echo $this->Form->control('name');
+            echo $this->Form->control('cost');
+            echo $this->Form->control('description');
+            echo $this->Form->control('users._ids', ['options' => $users]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

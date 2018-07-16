@@ -48,9 +48,10 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data());
-            $errors = $user->errors();
+            $data = $this->request->getData();
+            $data['password'] = $data['new_password'];
+            $user = $this->Users->patchEntity($user, $data);
+            $errors = $user->getErrors();
             if (empty($errors) && $this->Users->save($user)) {
                 $this->Flash->success('User account created');
                 return $this->redirect([
@@ -77,13 +78,14 @@ class UsersController extends AppController
         $user = $this->Users->get($id);
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->request->data('new_password') != '') {
-                $this->request->data['password'] = $this->request->data('new_password');
+            $data = $this->request->getData();
+            if ($data['new_password'] != '') {
+                $data['password'] = $data['new_password'];
             }
-            $user = $this->Users->patchEntity($user, $this->request->data());
-            $errors = $user->errors();
+            $user = $this->Users->patchEntity($user, $data);
+            $errors = $user->getErrors();
             if (empty($errors)) {
-                $roleChanged = $user->dirty('role');
+                $roleChanged = $user->isDirty('role');
                 if ($this->Users->save($user)) {
                     $msg = 'User info updated.';
                     if ($roleChanged) {
@@ -142,15 +144,15 @@ class UsersController extends AppController
             'contain' => ['Tags', 'Pictures']
         ]);
         /** @var PicturesTable $picturesTable */
-        $picturesTable = TableRegistry::get('Pictures');
+        $picturesTable = TableRegistry::getTableLocator()->get('Pictures');
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
                 'fieldList' => ['profile', 'tags'],
                 'associated' => ['Tags'],
                 'onlyIds' => true
             ]);
-            $errors = $user->errors();
+            $errors = $user->getErrors();
             if (empty($errors)) {
                 if ($this->Users->save($user)) {
                     $this->Flash->success('Profile updated');

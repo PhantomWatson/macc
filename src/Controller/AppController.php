@@ -84,12 +84,12 @@ class AppController extends Controller
         $errorMessage = $this->Auth->user() ?
             'Sorry, you are not authorized to access that page.'
             : 'Please log in before accessing that page.';
-        $this->Auth->config('authError', $errorMessage);
+        $this->Auth->setConfig('authError', $errorMessage);
 
         if (Configure::read('forceSSL')) {
             $this->loadComponent('Security', ['blackHoleCallback' => 'forceSSL']);
             $this->Security->requireSecure();
-            $this->Security->config('validatePost', false);
+            $this->Security->setConfig('validatePost', false);
         }
     }
 
@@ -102,7 +102,7 @@ class AppController extends Controller
     public function beforeRender(Event $event)
     {
         if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+            in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }
@@ -134,7 +134,7 @@ class AppController extends Controller
         }
 
         // Non-admin users can access any action not admin-prefixed
-        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+        $prefix = $this->request->getParam('prefix') ? $this->request->getParam('prefix') : null;
         return $prefix != 'admin';
     }
 
@@ -143,7 +143,7 @@ class AppController extends Controller
      */
     public function forceSSL()
     {
-        return $this->redirect('https://'.env('SERVER_NAME').$this->request->here);
+        return $this->redirect('https://'.env('SERVER_NAME').$this->request->getAttribute('here'));
     }
 
     /**

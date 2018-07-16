@@ -37,8 +37,7 @@ class MembershipLevelsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('MembershipLevels') ? [] : ['className' => 'App\Model\Table\MembershipLevelsTable'];
-        $this->MembershipLevels = TableRegistry::get('MembershipLevels', $config);
+        $this->MembershipLevels = TableRegistry::getTableLocator()->get('MembershipLevels');
     }
 
     /**

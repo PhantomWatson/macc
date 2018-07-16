@@ -35,8 +35,7 @@ class MembershipRenewalLogsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('MembershipRenewalLog') ? [] : ['className' => 'App\Model\Table\MembershipRenewalLogsTable'];
-        $this->MembershipRenewalLog = TableRegistry::get('MembershipRenewalLog', $config);
+        $this->MembershipRenewalLog = TableRegistry::getTableLocator()->get('MembershipRenewalLog');
     }
 
     /**

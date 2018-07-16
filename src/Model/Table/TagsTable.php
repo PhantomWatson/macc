@@ -28,9 +28,9 @@ class TagsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('tags');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('tags');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
@@ -142,7 +142,7 @@ class TagsTable extends Table
         /** @var Tag[] $tags */
         $tags = $this->find('all')->select(['id', 'name'])->where(['slug' => '']);
         foreach ($tags as $tag) {
-            $tag->dirty('name', true);
+            $tag->setDirty('name', true);
             $this->Tags->save($tag);
         }
     }

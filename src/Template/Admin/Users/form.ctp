@@ -23,15 +23,15 @@
         $user,
         ['id' => 'UserForm']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'name',
         ['class' => 'form-control']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'email',
         ['class' => 'form-control']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'role',
         [
             'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
@@ -39,7 +39,7 @@
             'options' => $roles
         ]
     );
-    $passwordFields = $this->Form->input(
+    $passwordFields = $this->Form->control(
         'new_password',
         [
             'autocomplete' => 'off',
@@ -48,7 +48,7 @@
             'type' => 'password'
         ]
     );
-    $passwordFields .= $this->Form->input(
+    $passwordFields .= $this->Form->control(
         'confirm_password',
         [
             'class' => 'form-control',

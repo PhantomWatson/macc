@@ -31,9 +31,9 @@ class UsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('users');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('users');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Xety/Cake3Sluggable.Sluggable', [
@@ -208,7 +208,7 @@ class UsersTable extends Table
      */
     public function isCurrentMember($userId)
     {
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $count = $membershipsTable->find('all')
             ->where([
                 'Memberships.user_id' => $userId,
@@ -231,7 +231,7 @@ class UsersTable extends Table
      */
     public function hasExpiredMembership($userId)
     {
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $count = $membershipsTable->find('all')
             ->where([
                 'Memberships.user_id' => $userId,
@@ -254,7 +254,7 @@ class UsersTable extends Table
      */
     public function hasMembership($userId)
     {
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $count = $membershipsTable->find('all')
             ->where(['Memberships.user_id' => $userId])
             ->count();

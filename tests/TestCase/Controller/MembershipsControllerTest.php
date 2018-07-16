@@ -148,7 +148,7 @@ class MembershipsControllerTest extends IntegrationTestCase
             'action' => 'toggleAutoRenewal',
             1
         ]);
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $result = $membershipsTable->get(1)->auto_renew;
         $this->assertEquals(true, $result);
 
@@ -157,7 +157,7 @@ class MembershipsControllerTest extends IntegrationTestCase
             'action' => 'toggleAutoRenewal',
             0
         ]);
-        $membershipsTable = TableRegistry::get('Memberships');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $result = $membershipsTable->get(1)->auto_renew;
         $this->assertEquals(false, $result);
     }

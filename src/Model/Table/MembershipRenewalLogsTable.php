@@ -24,9 +24,9 @@ class MembershipRenewalLogsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('membership_renewal_logs');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('membership_renewal_logs');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

@@ -26,9 +26,9 @@ class MembershipLevelsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('membership_levels');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('membership_levels');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

@@ -54,7 +54,7 @@ class PaymentsController extends AppController
 
     public function add()
     {
-        $membershipLevelsTable = TableRegistry::get('MembershipLevels');
+        $membershipLevelsTable = TableRegistry::getTableLocator()->get('MembershipLevels');
         $results = $membershipLevelsTable->find('all')
             ->select(['id', 'name', 'cost'])
             ->order(['cost' => 'ASC']);
@@ -67,20 +67,20 @@ class PaymentsController extends AppController
 
         $payment = $this->Payments->newEntity();
         if ($this->request->is('post')) {
-            $this->request->data['admin_adder_id'] = $this->Auth->user('id');
-            $this->request->data['postback'] = '';
-            $membershipLevelId = $this->request->data('membership_level_id');
-            $amount = isset($costs[$membershipLevel->id]) ? $costs[$membershipLevel->id] : 0;
-            $this->request->data['amount'] = $amount;
+            $data = $this->request->getData();
+            $data['admin_adder_id'] = $this->Auth->user('id');
+            $data['postback'] = '';
+            $membershipLevelId = $this->request->getData('membership_level_id');
+            $data['amount'] = isset($costs[$membershipLevel->id]) ? $costs[$membershipLevel->id] : 0;
             /** @var Payment $payment */
-            $payment = $this->Payments->patchEntity($payment, $this->request->data());
-            $errors = $payment->errors();
+            $payment = $this->Payments->patchEntity($payment, $data);
+            $errors = $payment->getErrors();
             if (empty($errors)) {
                 $payment = $this->Payments->save($payment);
                 $this->Flash->success('Payment record added');
 
                 // Add membership
-                $userId = $this->request->data('user_id');
+                $userId = $this->request->getData('user_id');
                 if ($membershipLevelId && $userId) {
                     $this->loadModel('Memberships');
                     /** @var Membership $membership */
@@ -91,7 +91,7 @@ class PaymentsController extends AppController
                         'auto_renew' => 0,
                         'user_id' => $userId
                     ]);
-                    $errors = $membership->errors();
+                    $errors = $membership->getErrors();
                     if (empty($errors)) {
                         $membership = $this->Memberships->save($membership);
                         $this->Flash->success('One year of membership added to that user\'s account');
@@ -107,7 +107,7 @@ class PaymentsController extends AppController
             $this->Flash->error('There was an error adding a new payment record');
         }
 
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $users = $usersTable->find('list')->order(['name' => 'ASC']);
 
         $this->set([

@@ -23,7 +23,7 @@ class PicturesController extends AppController
 
     public function add()
     {
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
 
         // Ensure user doesn't exceed picture limit
         $userId = $this->Auth->user('id');
@@ -36,14 +36,15 @@ class PicturesController extends AppController
 
         $picture = $this->Pictures->newEntity();
         if ($this->request->is('post')) {
-            $this->request->data['filename'] = $this->request->data('Filedata');
-            $this->request->data['is_primary'] = false;
-            $this->request->data['user_id'] = $userId;
-            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
-            if ($picture->errors()) {
+            $data = $this->request->getData();
+            $data['filename'] = $this->request->getData('Filedata');
+            $data['is_primary'] = false;
+            $data['user_id'] = $userId;
+            $picture = $this->Pictures->patchEntity($picture, $data);
+            if ($picture->getErrors()) {
                 $exceptionMsg = 'There was an error uploading that picture. Please try again.';
                 $exceptionMsg .= '<ul>';
-                foreach ($picture->errors() as $field => $errors) {
+                foreach ($picture->getErrors() as $field => $errors) {
                     foreach ($errors as $label => $message) {
                         $exceptionMsg .= '<li>'.$message.'</li>';
                     }
@@ -97,7 +98,7 @@ class PicturesController extends AppController
     public function makeMain($pictureId)
     {
         $userId = $this->Auth->user('id');
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->get($userId);
         $user = $usersTable->patchEntity($user, ['main_picture_id' => $pictureId]);
         $usersTable->save($user);

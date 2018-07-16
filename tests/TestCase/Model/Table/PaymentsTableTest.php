@@ -37,8 +37,7 @@ class PaymentsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Payments') ? [] : ['className' => 'App\Model\Table\PaymentsTable'];
-        $this->Payments = TableRegistry::get('Payments', $config);
+        $this->Payments = TableRegistry::getTableLocator()->get('Payments');
     }
 
     /**

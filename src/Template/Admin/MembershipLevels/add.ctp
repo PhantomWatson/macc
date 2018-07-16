@@ -19,9 +19,9 @@
 </p>
 
 <?= $this->Form->create($membershipLevel) ?>
-<?= $this->Form->input('name') ?>
-<?= $this->Form->input('cost', ['step' => '1']) ?>
-<?= $this->Form->input('description') ?>
+<?= $this->Form->control('name') ?>
+<?= $this->Form->control('cost', ['step' => '1']) ?>
+<?= $this->Form->control('description') ?>
 <?= $this->Form->button('Submit', [
     'class' => 'btn btn-primary'
 ]) ?>

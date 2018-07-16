@@ -47,7 +47,7 @@ class MembershipsController extends AppController
      */
     public function index()
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $query = $usersTable->find('members')
             ->select(['id', 'name', 'slug'])
             ->contain([
@@ -77,7 +77,7 @@ class MembershipsController extends AppController
 
     public function autoRenewalLogs()
     {
-        $logsTable = TableRegistry::get('MembershipRenewalLogs');
+        $logsTable = TableRegistry::getTableLocator()->get('MembershipRenewalLogs');
         $logs = $this->paginate($logsTable);
 
         $this->set([
