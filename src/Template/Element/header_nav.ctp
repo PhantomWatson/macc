@@ -6,9 +6,15 @@ use Cake\Routing\Router;
 use Cake\Core\Configure;
 
 if (! function_exists('navLink')) {
+    /**
+     * @param string $label Link label
+     * @param array $url Link URL
+     * @param \App\View\AppView $view
+     * @return mixed
+     */
     function navLink($label, $url, $view) {
         $url = Router::url($url);
-        $class = $view->request->here == $url ? 'current' : '';
+        $class = $view->request->getAttribute('here') == $url ? 'current' : '';
         return $view->Html->link(
             $label,
             $url,
