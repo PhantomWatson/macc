@@ -27,7 +27,7 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        if ($this->request->action === 'register') {
+        if ($this->request->getParam('action') === 'register') {
             $this->loadComponent('Recaptcha.Recaptcha');
         }
         $this->Auth->allow([
