@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "70c7a817e5e0a03011a6b8bef34010de",
+    "content-hash": "71b80f36166858c2a4f8ad2533fa2faa",
     "packages": [
         {
             "name": "aura/intl",
@@ -54,16 +54,16 @@
         },
         {
             "name": "cakephp-fr/recaptcha",
-            "version": "0.4.2",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp-fr/recaptcha.git",
-                "reference": "c02d5de4e505bec6b55b2989a601f03841c51f8e"
+                "reference": "5009d0b715f4406a8a0473f6e7034e2432cdc45e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp-fr/recaptcha/zipball/c02d5de4e505bec6b55b2989a601f03841c51f8e",
-                "reference": "c02d5de4e505bec6b55b2989a601f03841c51f8e",
+                "url": "https://api.github.com/repos/cakephp-fr/recaptcha/zipball/5009d0b715f4406a8a0473f6e7034e2432cdc45e",
+                "reference": "5009d0b715f4406a8a0473f6e7034e2432cdc45e",
                 "shasum": ""
             },
             "require": {
@@ -102,7 +102,7 @@
                 "google",
                 "recaptcha"
             ],
-            "time": "2016-06-13T11:07:45+00:00"
+            "time": "2018-04-28T12:11:47+00:00"
         },
         {
             "name": "cakephp/cakephp",
@@ -549,25 +549,25 @@
         },
         {
             "name": "josegonzalez/cakephp-upload",
-            "version": "3.8.1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfCake/cakephp-upload.git",
-                "reference": "d6401518d9c32a86db4fb5bf4b2a5b8df3a0811c"
+                "reference": "dd91ff86321e87d1fb5af9cd03d78022d214f319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfCake/cakephp-upload/zipball/d6401518d9c32a86db4fb5bf4b2a5b8df3a0811c",
-                "reference": "d6401518d9c32a86db4fb5bf4b2a5b8df3a0811c",
+                "url": "https://api.github.com/repos/FriendsOfCake/cakephp-upload/zipball/dd91ff86321e87d1fb5af9cd03d78022d214f319",
+                "reference": "dd91ff86321e87d1fb5af9cd03d78022d214f319",
                 "shasum": ""
             },
             "require": {
                 "cakephp/orm": "3.*",
                 "league/flysystem": "*",
-                "php": ">=5.5"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "cakephp/cakephp": "~3.0",
+                "cakephp/cakephp": "~3.4",
                 "cakephp/cakephp-codesniffer": "dev-master",
                 "league/flysystem-vfs": "*",
                 "phpunit/phpunit": "<6.0",
@@ -599,7 +599,7 @@
                 "orm",
                 "upload"
             ],
-            "time": "2018-03-18T18:09:41+00:00"
+            "time": "2018-04-26T21:49:45+00:00"
         },
         {
             "name": "josegonzalez/dotenv",

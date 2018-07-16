@@ -6,7 +6,7 @@
     "license": "proprietary",
     "require": {
         "php": ">=5.6.20",
-        "cakephp-fr/recaptcha": "~0.4",
+        "cakephp-fr/recaptcha": "^1.0",
         "cakephp/cakephp": "~3.1",
         "cakephp/migrations": "^2.0.0",
         "cakephp/plugin-installer": "^1.0",
@@ -19,7 +19,7 @@
         "xety/cake3-sluggable": "1.*",
         "drewm/mailchimp-api": "^2.1",
         "phpunit/phpunit": "*",
-        "josegonzalez/cakephp-upload": "~3.0",
+        "josegonzalez/cakephp-upload": "^4.0",
         "imagine/imagine": "^0.6.3"
     },
     "require-dev": {
