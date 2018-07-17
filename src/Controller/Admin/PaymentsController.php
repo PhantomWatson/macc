@@ -15,10 +15,10 @@ use Cake\ORM\TableRegistry;
 /**
  * Class PaymentsController
  * @package App\Controller\Admin
- * @property PaymentsTable $Payments
- * @property MembershipsTable $Memberships
- * @property UsersTable $Users
- * @method Payment[]|ResultSetInterface paginate($object = null, array $settings = [])
+ * @property \App\Model\Table\PaymentsTable $Payments
+ * @property \App\Model\Table\MembershipsTable $Memberships
+ * @property \App\Model\Table\UsersTable $Users
+ * @method \App\Model\Entity\Payment[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PaymentsController extends AppController
 {

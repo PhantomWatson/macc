@@ -27,10 +27,10 @@ use Cake\ORM\TableRegistry;
 /**
  * Memberships Controller
  *
- * @property MembershipsTable $Memberships
- * @property PaymentsTable $Payments
- * @property MembershipLevelsTable $MembershipLevels
- * @property UsersTable $Users
+ * @property \App\Model\Table\MembershipsTable $Memberships
+ * @property \App\Model\Table\PaymentsTable $Payments
+ * @property \App\Model\Table\MembershipLevelsTable $MembershipLevels
+ * @property \App\Model\Table\UsersTable $Users
  */
 class MembershipsController extends AppController
 {

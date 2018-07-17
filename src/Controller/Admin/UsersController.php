@@ -14,8 +14,8 @@ use Cake\Utility\Hash;
 /**
  * Users Controller
  *
- * @property UsersTable $Users
- * @property TagsTable $Tags
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\TagsTable $Tags
  */
 class UsersController extends AppController
 {
