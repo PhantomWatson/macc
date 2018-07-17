@@ -52,6 +52,11 @@ class PaymentsController extends AppController
         ]);
     }
 
+    /**
+     * Page for manually adding a payment record
+     *
+     * @return \Cake\Http\Response|null
+     */
     public function add()
     {
         $membershipLevelsTable = TableRegistry::getTableLocator()->get('MembershipLevels');
@@ -116,6 +121,8 @@ class PaymentsController extends AppController
             'payment' => $payment,
             'users' => $users
         ]);
+
+        return null;
     }
 
     public function refund($paymentId)

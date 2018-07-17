@@ -21,6 +21,12 @@ class PicturesController extends AppController
         $this->loadComponent('RequestHandler');
     }
 
+    /**
+     * Adds a picture to a user profile
+     *
+     * @throws \Aura\Intl\Exception
+     * @return void
+     */
     public function add()
     {
         $this->viewBuilder()->setLayout('json');
@@ -30,7 +36,11 @@ class PicturesController extends AppController
         $currentCount = $this->Pictures->getCountForUser($userId);
         $maxPicturesPerUser = Configure::read('maxPicturesPerUser');
         if ($currentCount >= $maxPicturesPerUser) {
-            $msg = 'Sorry, you\'ve reached your limit of '.$maxPicturesPerUser.__n(' picture', ' pictures', $maxPicturesPerUser);
+            $msg = sprintf(
+                'Sorry, you\'ve reached your limit of %s %s',
+                $maxPicturesPerUser,
+                __n(' picture', ' pictures', $maxPicturesPerUser)
+            );
             throw new ForbiddenException($msg);
         }
 
@@ -75,7 +85,7 @@ class PicturesController extends AppController
      * Delete method
      *
      * @param string|null $id Picture id.
-     * @return \Cake\Network\Response|null Redirects to index.
+     * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)

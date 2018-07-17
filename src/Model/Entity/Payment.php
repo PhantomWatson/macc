@@ -21,7 +21,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Membership[] $membership
- * @property \App\Model\Entity\MembershipLevel[] $membership_level
  */
 class Payment extends Entity
 {

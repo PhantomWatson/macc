@@ -43,7 +43,7 @@ class MembershipsController extends AppController
     /**
      * List of current and expired memberships
      *
-     * @return \Cake\Network\Response
+     * @return void
      */
     public function index()
     {
@@ -67,7 +67,6 @@ class MembershipsController extends AppController
                 }
             ]);
         $members = $this->paginate($query);
-            //->all();
 
         $this->set([
             'members' => $members,
