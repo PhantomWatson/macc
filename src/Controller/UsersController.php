@@ -4,9 +4,8 @@ namespace App\Controller;
 use App\Mailer\Mailer;
 use App\MailingList\MailingList;
 use App\Model\Table\PicturesTable;
-use App\Model\Table\TagsTable;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
@@ -41,6 +40,11 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Registers a user
+     *
+     * @return Response|null
+     */
     public function register()
     {
         $user = $this->Users->newEntity();
@@ -83,8 +87,15 @@ class UsersController extends AppController
             'pageTitle' => 'Register an Account',
             'user' => $user
         ]);
+
+        return null;
     }
 
+    /**
+     * Form for updating user profile information
+     *
+     * @return \Cake\Http\Response|null
+     */
     public function editProfile()
     {
         $userId = $this->Auth->user('id');
@@ -136,8 +147,15 @@ class UsersController extends AppController
             'user' => $user,
             'picLimit' => Configure::read('maxPicturesPerUser')
         ]);
+
+        return null;
     }
 
+    /**
+     * User login page
+     *
+     * @return \Cake\Http\Response|null
+     */
     public function login()
     {
         if ($this->request->is('post')) {
@@ -170,14 +188,27 @@ class UsersController extends AppController
             'pageTitle' => 'Log in',
             'user' => $user
         ]);
+
+        return null;
     }
 
+    /**
+     * Logout page and redirect
+     *
+     * @return \Cake\Http\Response
+     */
     public function logout()
     {
         $this->Cookie->delete('CookieAuth');
+
         return $this->redirect($this->Auth->logout());
     }
 
+    /**
+     * Page for entering an email address to have a password-resetting email sent to
+     *
+     * @return void
+     */
     public function forgotPassword()
     {
         $user = $this->Users->newEntity();
@@ -252,6 +283,8 @@ class UsersController extends AppController
             'pageTitle' => 'Reset Password',
             'user' => $user
         ]);
+
+        return null;
     }
 
     /**
@@ -311,6 +344,8 @@ class UsersController extends AppController
             ],
             'ownProfile' => $ownProfile
         ]);
+
+        return null;
     }
 
     public function changePassword()

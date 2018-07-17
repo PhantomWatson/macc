@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\TagsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -41,6 +40,7 @@ class TagsControllerTest extends IntegrationTestCase
      * Test index method
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testIndex()
     {
@@ -52,6 +52,7 @@ class TagsControllerTest extends IntegrationTestCase
      * Test view method
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testView()
     {

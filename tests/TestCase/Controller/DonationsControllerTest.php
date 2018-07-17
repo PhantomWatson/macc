@@ -14,7 +14,6 @@
  */
 namespace Cake\Test\TestCase\Controller;
 
-use App\Controller\DonationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**

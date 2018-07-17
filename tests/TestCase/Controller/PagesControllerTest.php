@@ -14,7 +14,6 @@
  */
 namespace Cake\Test\TestCase\Controller;
 
-use App\Controller\PagesController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -38,6 +37,10 @@ class PagesControllerTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testStyling()
     {
         $this->get('/pages/styling');

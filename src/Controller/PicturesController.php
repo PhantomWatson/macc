@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Model\Entity\Picture;
 use Cake\Core\Configure;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
@@ -44,6 +44,7 @@ class PicturesController extends AppController
             throw new ForbiddenException($msg);
         }
 
+        /** @var Picture $picture */
         $picture = $this->Pictures->newEntity();
         if ($this->request->is('post')) {
             $data = $this->request->getData();

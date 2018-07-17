@@ -4,7 +4,9 @@ namespace App\Media;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Imagine\Gd\Image;
+use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Josegonzalez\Upload\File\Transformer\TransformerInterface;
 
 class Transformer implements TransformerInterface
@@ -77,7 +79,7 @@ class Transformer implements TransformerInterface
     public function transform()
     {
         // Get uploaded image from tmp directory
-        $imagine = new \Imagine\Gd\Imagine();
+        $imagine = new Imagine();
         $image = $imagine->open($this->data['tmp_name']);
 
         // Get path to tmp directory
@@ -88,8 +90,8 @@ class Transformer implements TransformerInterface
         // Process fullsize image
         if ($this->isTooBig($image)) {
             // Shrink image to max dimensions and save in tmp dir
-            $size = new \Imagine\Image\Box(2000, 2000);
-            $mode = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
+            $size = new Box(2000, 2000);
+            $mode = ImageInterface::THUMBNAIL_INSET;
             $tmpFullsize = microtime().$this->data['name'];
             $image->thumbnail($size, $mode)->save($tmpPath.DS.$tmpFullsize);
             $retval[$tmpPath.DS.$tmpFullsize] = $this->data['name'];
@@ -98,8 +100,8 @@ class Transformer implements TransformerInterface
         }
 
         // Create thumbnail
-        $size = new \Imagine\Image\Box(200, 200);
-        $mode = \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
+        $size = new Box(200, 200);
+        $mode = ImageInterface::THUMBNAIL_OUTBOUND;
         $thumbFilename = $this->generateThumbnailFilename($this->data['name']);
         $image->thumbnail($size, $mode)->save($tmpPath.DS.$thumbFilename);
         $retval[$tmpPath.DS.$thumbFilename] = $thumbFilename;

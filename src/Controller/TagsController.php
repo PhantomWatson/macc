@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Model\Entity\Tag;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\NotFoundException;
@@ -28,7 +27,7 @@ class TagsController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
@@ -98,7 +97,7 @@ class TagsController extends AppController
      * View method
      *
      * @param string $slug
-     * @return \Cake\Network\Response
+     * @return void
      * @throws \Cake\Network\Exception\NotFoundException
      */
     public function view($slug = null)

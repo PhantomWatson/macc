@@ -12,6 +12,7 @@ class MembershipMailer extends Mailer
     /**
      * Defines an email informing an admin that a user has purchased their first membership
      *
+     * @param string $recipientEmail Email address of recipient
      * @param Membership $membership New membership entity
      * @return Email
      */

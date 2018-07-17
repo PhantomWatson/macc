@@ -1,9 +1,7 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\Admin\PaymentsController;
 use App\Test\Fixture\UsersFixture;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
@@ -59,6 +57,10 @@ class PaymentsControllerTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testIndex()
     {
         $url = [
@@ -86,6 +88,10 @@ class PaymentsControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testAdd()
     {
         $url = [
@@ -113,6 +119,10 @@ class PaymentsControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testRefund()
     {
         $url = [

@@ -4,11 +4,7 @@ namespace App\Controller;
 use App\Event\EmailListener;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
-use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\MembershipRenewalLogsTable;
-use App\Model\Table\MembershipsTable;
-use App\Model\Table\PaymentsTable;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -38,6 +34,7 @@ class MembershipsController extends AppController
      * Initialize method
      *
      * @return void
+     * @throws \Exception
      */
     public function initialize()
     {

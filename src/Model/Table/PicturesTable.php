@@ -4,10 +4,8 @@ namespace App\Model\Table;
 use App\Media\Transformer;
 use App\Model\Entity\Picture;
 use ArrayObject;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Filesystem\File;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -155,7 +153,7 @@ class PicturesTable extends Table
     public function afterDelete(Event $event, Picture $entity, ArrayObject $options)
     {
         $fullsizeFilename = $entity->filename;
-        $thumbFilename = \App\Media\Transformer::generateThumbnailFilename($fullsizeFilename);
+        $thumbFilename = Transformer::generateThumbnailFilename($fullsizeFilename);
         $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
         $file->delete();
 

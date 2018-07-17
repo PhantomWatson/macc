@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\UsersController;
 use App\Mailer\Mailer;
 use App\Test\Fixture\UsersFixture;
 use Cake\Routing\Router;
@@ -58,18 +57,30 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testForgotPassword()
     {
         $this->get('/users/forgot-password');
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testlogin()
     {
         $this->get('/users/login');
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testLogout()
     {
         $this->setNonMemberSession();
@@ -78,18 +89,30 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertRedirect('/');
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testMembers()
     {
         $this->get('/users/members');
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testRegister()
     {
         $this->get('/users/register');
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testResetPassword()
     {
         $userId = 1;
@@ -106,6 +129,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testViewMember()
     {
         $this->get([
@@ -117,6 +144,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testViewNonMember()
     {
         $this->get([
@@ -131,6 +162,10 @@ class UsersControllerTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testViewOwnMemberProfile()
     {
         $this->setMemberSession();
@@ -143,6 +178,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testViewOwnNonMemberProfile()
     {
         $this->setNonMemberSession();
@@ -158,6 +197,10 @@ class UsersControllerTest extends IntegrationTestCase
         ]));
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testAccountAuth()
     {
         $this->setNonMemberSession();
@@ -168,6 +211,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testAccountUnauth()
     {
         $this->get([
@@ -180,6 +227,10 @@ class UsersControllerTest extends IntegrationTestCase
         ]));
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testChangePasswordAuth()
     {
         $this->setNonMemberSession();
@@ -190,6 +241,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testChangePasswordUnauth()
     {
         $this->get([
@@ -202,6 +257,10 @@ class UsersControllerTest extends IntegrationTestCase
         ]));
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testEditProfileMember()
     {
         $this->setMemberSession();
@@ -212,6 +271,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testEditProfileNonMember()
     {
         $this->setNonMemberSession();
@@ -222,6 +285,10 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertRedirect();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testEditProfileUnauth()
     {
         $this->get([

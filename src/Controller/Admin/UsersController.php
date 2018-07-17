@@ -3,10 +3,9 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use App\Model\Table\PicturesTable;
-use App\Model\Table\TagsTable;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Http\Response;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -35,6 +34,11 @@ class UsersController extends AppController
         $this->loadComponent('Paginator');
     }
 
+    /**
+     * Page for listing user accounts
+     *
+     * @return void
+     */
     public function index()
     {
         $this->set([
@@ -43,6 +47,11 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Page for manually adding a new user
+     *
+     * @return \Cake\Http\Response
+     */
     public function add()
     {
         $user = $this->Users->newEntity();
@@ -70,7 +79,8 @@ class UsersController extends AppController
             ],
             'user' => $user
         ]);
-        $this->render('/Admin/Users/form');
+
+        return $this->render('/Admin/Users/form');
     }
 
     public function edit($id = null)
@@ -110,7 +120,8 @@ class UsersController extends AppController
             ],
             'user' => $user
         ]);
-        $this->render('/Admin/Users/form');
+
+        return $this->render('/Admin/Users/form');
     }
 
     public function delete($id = null)
@@ -137,6 +148,7 @@ class UsersController extends AppController
      * Allows admins to edit users' profiles
      *
      * @param int $userId
+     * @return Response|null
      */
     public function editProfile($userId)
     {
@@ -181,6 +193,8 @@ class UsersController extends AppController
             'user' => $user,
             'picLimit' => Configure::read('maxPicturesPerUser')
         ]);
+
+        return null;
     }
 
     public function emailLists()
@@ -196,7 +210,7 @@ class UsersController extends AppController
         $memberIds = Hash::extract($results, '{n}.id');
         $results = $this->Users->find('all')
             ->where([
-                function ($exp, $q) use ($memberIds) {
+                function ($exp) use ($memberIds) {
                     /** @var QueryExpression $exp */
 
                     return $exp->notIn('id', $memberIds);

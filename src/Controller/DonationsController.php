@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 
@@ -64,7 +63,7 @@ class DonationsController extends AppController
         \Stripe\Stripe::setApiKey($apiKey);
         try {
             $description = 'Donation to MACC of $'.number_format($amount, 2);
-            $charge = \Stripe\Charge::create([
+            \Stripe\Charge::create([
                 'amount' => $amount * 100, // amount in cents
                 'currency' => 'usd',
                 'source' => $this->request->getData('stripeToken'),

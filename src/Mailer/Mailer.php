@@ -13,7 +13,7 @@ class Mailer
      * 24 hours to give the user access to the password-reset page
      *
      * @param int $userId
-     * @return boolean
+     * @return array
      */
     public static function sendPasswordResetEmail($userId)
     {
@@ -37,6 +37,7 @@ class Mailer
                 'user',
                 'resetUrl'
             ));
+
         return $email->send();
     }
 

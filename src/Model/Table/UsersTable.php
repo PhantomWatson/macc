@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
@@ -102,7 +101,7 @@ class UsersTable extends Table
             ->requirePresence('role', 'create')
             ->notEmpty('role')
             ->add('role', 'valid', [
-                'rule' => function ($data, $provider) {
+                'rule' => function ($data) {
                     if (in_array($data, ['admin', 'user'])) {
                         return true;
                     }
@@ -167,9 +166,7 @@ class UsersTable extends Table
             /** @var Query $q */
 
             return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
-                function ($exp, $q) {
-                    /** @var QueryExpression $exp */
-
+                function (QueryExpression $exp) {
                     return $exp->isNull('canceled');
                 }
             ]);
@@ -181,16 +178,16 @@ class UsersTable extends Table
      *
      * @param int $userId
      * @param array $token
-     * @return \Stripe\Customer
+     * @return Customer
      */
     public function createStripeCustomer($userId, $token)
     {
         $apiKey = Configure::read('Stripe.Secret');
-        \Stripe\Stripe::setApiKey($apiKey);
+        Stripe::setApiKey($apiKey);
 
         $user = $this->get($userId);
 
-        return \Stripe\Customer::create([
+        return Customer::create([
             'source' => $token,
             'description' => $user->name,
             'email' => $user->email,
@@ -213,9 +210,7 @@ class UsersTable extends Table
             ->where([
                 'Memberships.user_id' => $userId,
                 'Memberships.expires >=' => date('Y-m-d H:i:s'),
-                function ($exp, $q) {
-                    /** @var QueryExpression $exp */
-
+                function (QueryExpression $exp) {
                     return $exp->isNull('canceled');
                 }
             ])
@@ -236,9 +231,7 @@ class UsersTable extends Table
             ->where([
                 'Memberships.user_id' => $userId,
                 'Memberships.expires <' => date('Y-m-d H:i:s'),
-                function ($exp, $q) {
-                    /** @var QueryExpression $exp */
-
+                function (QueryExpression $exp) {
                     return $exp->isNull('canceled');
                 }
             ])

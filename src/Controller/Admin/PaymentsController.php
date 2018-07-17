@@ -4,9 +4,6 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Model\Entity\Membership;
 use App\Model\Entity\Payment;
-use App\Model\Table\MembershipsTable;
-use App\Model\Table\PaymentsTable;
-use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\Time;
@@ -18,7 +15,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Table\PaymentsTable $Payments
  * @property \App\Model\Table\MembershipsTable $Memberships
  * @property \App\Model\Table\UsersTable $Users
- * @method \App\Model\Entity\Payment[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method Payment[]|ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PaymentsController extends AppController
 {
@@ -98,7 +95,7 @@ class PaymentsController extends AppController
                     ]);
                     $errors = $membership->getErrors();
                     if (empty($errors)) {
-                        $membership = $this->Memberships->save($membership);
+                        $this->Memberships->save($membership);
                         $this->Flash->success('One year of membership added to that user\'s account');
                     } else {
                         $this->Flash->error('There was an error adding one year of membership to that user\'s account.');

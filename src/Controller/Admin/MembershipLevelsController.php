@@ -28,10 +28,10 @@ class MembershipLevelsController extends AppController
         if ($this->request->is('post')) {
             $membershipLevel = $this->MembershipLevels->patchEntity($membershipLevel, $this->request->getData());
             if ($this->MembershipLevels->save($membershipLevel)) {
-                $this->Flash->success(__('The membership level has been saved.'));
+                $this->Flash->success('The membership level has been saved.');
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The membership level could not be saved. Please, try again.'));
+                $this->Flash->error('The membership level could not be saved. Please, try again.');
             }
         }
         $this->set([
@@ -68,9 +68,9 @@ class MembershipLevelsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $membershipLevel = $this->MembershipLevels->get($id);
         if ($this->MembershipLevels->delete($membershipLevel)) {
-            $this->Flash->success(__('The membership level has been deleted.'));
+            $this->Flash->success('The membership level has been deleted.');
         } else {
-            $this->Flash->error(__('The membership level could not be deleted. Please, try again.'));
+            $this->Flash->error('The membership level could not be deleted. Please, try again.');
         }
         return $this->redirect(['action' => 'index']);
     }

@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\MembershipsController;
 use App\Test\Fixture\UsersFixture;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -59,12 +58,20 @@ class MembershipsControllerTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testLevels()
     {
         $this->get('/memberships/levels');
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testLevelUnauth()
     {
         $this->get([
@@ -93,6 +100,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         $this->markTestIncomplete('Need to set up self-signed certificate on localhost');
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testMyMembershipAuth()
     {
         $this->setNonMemberSession();
@@ -104,6 +115,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testMyMembershipUnauth()
     {
         $this->get([
@@ -117,6 +132,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         ]));
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testPurchaseCompleteAuth()
     {
         $this->setNonMemberSession();
@@ -127,6 +146,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testPurchaseCompleteUnauth()
     {
         $this->get([
@@ -139,6 +162,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         ]));
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testToggleAutoRenewalAuth()
     {
         $this->setMemberSession();
@@ -162,6 +189,10 @@ class MembershipsControllerTest extends IntegrationTestCase
         $this->assertEquals(false, $result);
     }
 
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
     public function testToggleAutoRenewalUnauth()
     {
         $this->get([

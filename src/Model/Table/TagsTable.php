@@ -143,7 +143,7 @@ class TagsTable extends Table
         $tags = $this->find('all')->select(['id', 'name'])->where(['slug' => '']);
         foreach ($tags as $tag) {
             $tag->setDirty('name', true);
-            $this->Tags->save($tag);
+            $this->save($tag);
         }
     }
 

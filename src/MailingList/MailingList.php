@@ -1,14 +1,15 @@
 <?php
 namespace App\MailingList;
 
+use App\Model\Entity\User;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use DrewM\MailChimp\MailChimp;
 
 class MailingList
 {
     /**
      * @return \DrewM\MailChimp\MailChimp
+     * @throws \Exception
      */
     public static function getMailChimpObject()
     {
@@ -20,14 +21,15 @@ class MailingList
         return $MailChimp;
     }
 
-     /**
+    /**
      * Adds a user to the MailChimp mailing list if user has not
      * already been added. Returns TRUE if it's confirmed that the
      * user is on the mailing list, FALSE if an attempt to add the
      * user fails
      *
-     * @param string $email
+     * @param User $user
      * @return boolean
+     * @throws \Exception
      */
     public static function addToList($user)
     {

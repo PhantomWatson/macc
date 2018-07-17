@@ -71,6 +71,7 @@
                     </td>
 
                     <?php
+                        /** @var \Cake\I18n\Time $expires */
                         $expires = $member->memberships[0]['expires'];
                         $expired = date('Y-m-d') > $expires->format('Y-m-d');
                     ?>
