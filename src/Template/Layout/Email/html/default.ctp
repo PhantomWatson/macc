@@ -21,7 +21,10 @@
                                 <p>
                                     <br />
                                     <strong>
-                                        Muncie Arts and Culture Council
+                                        <img src="<?= $this->Url->image(
+                                                'macc-logo-200px.jpg',
+                                                ['fullBase' => true]
+                                        ) ?>" alt="Muncie Arts and Culture Council" />
                                     </strong>
                                     <br />
                                     <a href="http://MuncieArts.org">
