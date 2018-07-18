@@ -154,6 +154,11 @@ var TagManager = {
 		} else {
 			remove_link();
 		}
+
+        // Mark form as dirty
+        if (typeof $.fn.dirty !== 'undefined') {
+            link.closest('form').dirty('setAsDirty');
+        }
 	},
 
 	selectTag: function(tag_id, tag_name, available_tag_list_item) {
@@ -161,12 +166,12 @@ var TagManager = {
 		if (! selected_container.is(':visible')) {
 			selected_container.slideDown(200);
 		}
-		
+
 		// Do not add tag if it is already selected
 		if (this.tagIsSelected(tag_id)) {
 			return;
 		}
-		
+
 		// Add tag
 		var list_item = $('<a href="#" title="Click to remove" data-tag-id="'+tag_id+'" id="selected_tag_'+tag_id+'"></a>');
 		list_item.append(tag_name);
@@ -180,13 +185,13 @@ var TagManager = {
 		list_item.hide();
 		$('#selected_tags').append(list_item);
 		list_item.fadeIn(200);
-		
+
 		// If available tag has not yet been loaded, then return
 		var available_tag_list_item = $('#available_tag_li_'+tag_id);
 		if (available_tag_list_item.length == 0) {
 			return;
 		}
-		
+
 		// Hide/update link to add tag
 		var link = $('#available_tag_'+tag_id);
 		var options = {
@@ -201,7 +206,13 @@ var TagManager = {
 			}
 		};
 		link.effect('transfer', options, 200, callback);
-	},
+
+		// Mark form as dirty
+        if (typeof $.fn.dirty !== 'undefined') {
+        	link.closest('form').dirty('setAsDirty');
+		}
+
+    },
 
 	setupAutosuggest: function(selector) {
 		$(selector).bind('keydown', function (event) {

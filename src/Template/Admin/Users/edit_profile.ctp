@@ -5,6 +5,7 @@
  * @var \App\Model\Entity\Picture $picture
  */
     use Cake\Core\Configure;
+    $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
 <p>
@@ -194,4 +195,7 @@
 
 <?php $this->append('buffered'); ?>
     commonmarkPreviewer.init('previewProfileLink', 'profile', 'previewProfile');
+    $('#edit_profile > form').dirty({
+        preventLeaving: true
+    });
 <?php $this->end(); ?>

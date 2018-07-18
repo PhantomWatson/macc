@@ -19,5 +19,8 @@
     "type": "git",
     "url": ""
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jquery.dirty": "^0.7.2"
+  }
 }
