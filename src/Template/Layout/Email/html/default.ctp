@@ -22,18 +22,14 @@
                                     <br />
                                     <strong>
                                         <img src="<?= $this->Url->image(
-                                                'macc-logo-200px.jpg',
+                                                'macc-logo-email-signature.jpg',
                                                 ['fullBase' => true]
                                         ) ?>" alt="Muncie Arts and Culture Council" />
                                     </strong>
                                     <br />
-                                    <a href="http://MuncieArts.org">
-                                        http://MuncieArts.org
-                                    </a>
+                                    <a href="http://MuncieArts.org">http://MuncieArts.org</a>
                                     <br />
-                                    <a href="mailto:info@munciearts.org">
-                                        info@munciearts.org
-                                    </a>
+                                    <a href="mailto:info@munciearts.org">info@munciearts.org</a>
                                     &#149; 765-287-8139
                                 </p>
                             </td>
