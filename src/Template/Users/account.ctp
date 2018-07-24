@@ -9,6 +9,10 @@
 
     <?= $this->Form->control('name') ?>
     <?= $this->Form->control('email') ?>
+    <?= $this->Form->control('address', ['label' => 'Mailing address']) ?>
+    <?= $this->Form->control('city') ?>
+    <?= $this->Form->control('state', ['label' => 'State abbreviation']) ?>
+    <?= $this->Form->control('zipcode') ?>
 
     <?= $this->Form->button(
         'Update',

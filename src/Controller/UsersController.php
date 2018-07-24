@@ -422,7 +422,14 @@ class UsersController extends AppController
         $user = $this->Users->get($userId);
         if ($this->request->is('put')) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['name', 'email']
+                'fieldList' => [
+                    'name',
+                    'email',
+                    'address',
+                    'city',
+                    'state',
+                    'zipcode'
+                ]
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
