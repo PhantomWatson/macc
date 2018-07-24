@@ -12,6 +12,10 @@ use Cake\ORM\Entity;
  * @property string $email
  * @property string $password
  * @property string $role
+ * @property string $address
+ * @property string $city
+ * @property string $state
+ * @property string $zipcode
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Payment[] $payments

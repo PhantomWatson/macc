@@ -121,6 +121,22 @@ class UsersTable extends Table
             ->notEmpty('confirm_password', 'A password is required', 'create')
             ->allowEmpty('confirm_password', 'update');
 
+        $validator
+            ->maxLength('address', 255)
+            ->allowEmpty('address');
+
+        $validator
+            ->maxLength('city', 50)
+            ->allowEmpty('city');
+
+        $validator
+            ->maxLength('state', 2)
+            ->allowEmpty('state');
+
+        $validator
+            ->maxLength('zipcode', 15)
+            ->allowEmpty('zipcode');
+
         return $validator;
     }
 
