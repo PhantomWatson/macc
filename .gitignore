@@ -1,8 +1,5 @@
 # CakePHP
 /vendor/*
-/config/app.php
-/config/.env
-/config/recaptcha.php
 /tmp/*
 /logs/*
 /webroot/img/members/*
@@ -57,6 +54,12 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+# Env files
+.env
+.env.production
+.env.staging
+.env.development
 
 # Misc
 /webroot/coverage/*
