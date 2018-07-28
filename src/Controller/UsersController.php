@@ -44,6 +44,7 @@ class UsersController extends AppController
      * Registers a user
      *
      * @return Response|null
+     * @throws \Exception
      */
     public function register()
     {
