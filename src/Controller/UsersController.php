@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
-use App\MailingList\MailingList;
 use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
 use Cake\Http\Response;
@@ -26,9 +25,6 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        if ($this->request->getParam('action') === 'register') {
-            $this->loadComponent('Recaptcha.Recaptcha');
-        }
         $this->Auth->allow([
             'forgotPassword',
             'login',
@@ -50,30 +46,10 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
-            if ($this->Recaptcha->verify()) {
-                $email = $this->request->getData('email');
-                $email = trim($email);
-                $email = strtolower($email);
-                $data = $this->request->getData();
-                $data['email'] = $email;
-                $data['password'] = $data['new_password'];
-                $data['role'] = 'user';
-                $user = $this->Users->patchEntity($user, $data, [
-                    'fieldList' => ['name', 'email', 'password', 'role']
-                ]);
-                $errors = $user->getErrors();
-                if (empty($errors)) {
-                    $user = $this->Users->save($user);
-                    if ($this->request->getData('mailing_list')) {
-                        MailingList::addToList($user);
-                    }
-                    $this->Flash->success('Your account has been registered. You may now log in.');
-                    return $this->redirect(['action' => 'login']);
-                } else {
-                    $this->Flash->error('There was an error registering your account. Please try again.');
-                }
-            } else {
-                $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
+            if ($this->processRegister()) {
+                $this->Flash->success('Your account has been registered. You may now log in.');
+
+                return $this->redirect(['action' => 'login']);
             }
         } else {
             $user['mailing_list'] = true;

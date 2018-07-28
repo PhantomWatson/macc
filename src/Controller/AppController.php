@@ -14,9 +14,13 @@
  */
 namespace App\Controller;
 
+use App\MailingList\MailingList;
+use App\Model\Entity\User;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Recaptcha\Controller\Component\RecaptchaComponent;
 
 /**
  * Application Controller
@@ -25,6 +29,7 @@ use Cake\Event\Event;
  * will inherit them.
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
+ * @property RecaptchaComponent $Recaptcha
  */
 class AppController extends Controller
 {
@@ -62,6 +67,7 @@ class AppController extends Controller
         $this->Cookie->setConfig([
             'httpOnly' => true
         ]);
+        $this->loadComponent('Recaptcha.Recaptcha');
 
         $this->loadComponent('Auth', [
             'loginAction' => [
@@ -160,5 +166,54 @@ class AppController extends Controller
     {
         $whitelist = ['127.0.0.1', '::1'];
         return in_array(env('REMOTE_ADDR'), $whitelist);
+    }
+
+    /**
+     * Processes a form with user registration info, returning either the registered user entity or FALSE
+     *
+     * Shows flash messages for errors, but does not show any messages for success
+     *
+     * @throws \Exception
+     * @return bool|\Cake\Http\Response
+     */
+    protected function processRegister()
+    {
+        if (!$this->Recaptcha->verify()) {
+            $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
+
+            return false;
+        }
+
+        $email = $this->request->getData('email');
+        $email = trim($email);
+        $email = strtolower($email);
+        $data = $this->request->getData();
+        $data['email'] = $email;
+        $data['password'] = $data['new_password'];
+        $data['role'] = 'user';
+
+        /** @var User|bool $user */
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $user = $usersTable->newEntity();
+        $user = $usersTable->patchEntity($user, $data, [
+            'fieldList' => ['name', 'email', 'password', 'role']
+        ]);
+
+        if (!$usersTable->save($user)) {
+            $adminEmail = Configure::read('admin_email');
+            $this->Flash->error(
+                'There was an error registering your account. ' .
+                'Please correct any indicated errors and try again. ' .
+                'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.'
+            );
+
+            return false;
+        }
+
+        if ($this->request->getData('mailing_list')) {
+            MailingList::addToList($user);
+        }
+
+        return $user;
     }
 }
