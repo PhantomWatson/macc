@@ -46,7 +46,7 @@ echo $this->Form->control(
     'mailing_list',
     [
         'type' => 'checkbox',
-        'label' => 'Sign up for the MACC mailing list'
+        'label' => 'Email me about MACC news and upcoming events'
     ]
 );
 echo $this->Form->hidden('purchasingMemberLevel');
