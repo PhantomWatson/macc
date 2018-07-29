@@ -22,6 +22,23 @@ class PaymentsControllerTest extends IntegrationTestCase
         'app.users'
     ];
 
+    private $indexUrl = [
+        'prefix' => 'admin',
+        'controller' => 'Payments',
+        'action' => 'index'
+    ];
+    private $addUrl = [
+        'prefix' => 'admin',
+        'controller' => 'Payments',
+        'action' => 'add'
+    ];
+    private $refundUrl = [
+        'prefix' => 'admin',
+        'controller' => 'Payments',
+        'action' => 'refund',
+        1
+    ];
+
     /**
      * Sets up this set of tests
      *
@@ -58,33 +75,44 @@ class PaymentsControllerTest extends IntegrationTestCase
     }
 
     /**
+     * Tests that the index page cannot be viewed by an anonymous user
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testIndex()
+    public function testIndexFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'Payments',
-            'action' => 'index'
-        ];
-
-        // User not logged in
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * Tests that the index page cannot be viewed by a non-admin
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testIndexFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * Tests that the index page can be viewed by an admin
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testIndexSuccess()
+    {
         $this->setAdminSession();
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertResponseOk();
     }
 
@@ -92,30 +120,35 @@ class PaymentsControllerTest extends IntegrationTestCase
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testAdd()
+    public function testAddFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'Payments',
-            'action' => 'add'
-        ];
-
-        // User not logged in
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testAddFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testAddViewSuccess()
+    {
         $this->setAdminSession();
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertResponseOk();
     }
 
@@ -123,31 +156,38 @@ class PaymentsControllerTest extends IntegrationTestCase
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testRefund()
+    public function testRefundFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'Payments',
-            'action' => 'refund',
-            1
-        ];
-
-        // User not logged in
-        $this->post($url);
+        $this->post($this->refundUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testRefundFailNotAdmin()
+    {
+        $this->markTestIncomplete();
         /*$this->setUserSession();
-        $this->post($url);
-        $this->assertRedirect('/');
+        $this->post($this->refundUrl);
+        $this->assertRedirect('/');*/
+    }
 
-        // Admin
+    /**
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testRefundSuccess()
+    {
+        $this->markTestIncomplete();
+        /*
         $this->setAdminSession();
-        $this->post($url);
+        $this->post($this->refundUrl);
         $this->assertRedirect([
             'prefix' => 'admin',
             'controller' => 'Payments',

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\Fixture\UsersFixture;
@@ -20,6 +21,29 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
         'app.membership_levels',
         'app.memberships',
         'app.users'
+    ];
+
+    private $indexUrl = [
+        'prefix' => 'admin',
+        'controller' => 'MembershipLevels',
+        'action' => 'index'
+    ];
+    private $addUrl = [
+        'prefix' => 'admin',
+        'controller' => 'MembershipLevels',
+        'action' => 'add'
+    ];
+    private $editUrl = [
+        'prefix' => 'admin',
+        'controller' => 'MembershipLevels',
+        'action' => 'edit',
+        1
+    ];
+    private $deleteUrl = [
+        'prefix' => 'admin',
+        'controller' => 'MembershipLevels',
+        'action' => 'delete',
+        1
     ];
 
     /**
@@ -58,128 +82,170 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
     }
 
     /**
+     * Tests that the index page cannot be accessed by anonymous users
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testIndex()
+    public function testIndexFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'MembershipLevels',
-            'action' => 'index'
-        ];
-
-        // User not logged in
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * Tests that the index page cannot be accessed by non-admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testIndexFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * Tests that the index page can be accessed by admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testIndexSuccess()
+    {
         $this->setAdminSession();
-        $this->get($url);
+        $this->get($this->indexUrl);
         $this->assertResponseOk();
     }
 
     /**
+     * Tests that the add page cannot be accessed by anonymous users
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testAdd()
+    public function testAddFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'MembershipLevels',
-            'action' => 'add'
-        ];
-
-        // User not logged in
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * Tests that the add page cannot be accessed by non-admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testAddFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * Tests that the add page can be accessed by admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testAddViewSuccess()
+    {
         $this->setAdminSession();
-        $this->get($url);
+        $this->get($this->addUrl);
         $this->assertResponseOk();
     }
 
     /**
+     * Tests that the edit page cannot be accessed by anonymous users
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testEdit()
+    public function testEditFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'MembershipLevels',
-            'action' => 'edit',
-            1
-        ];
-
-        // User not logged in
-        $this->get($url);
+        $this->get($this->editUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * Tests that the edit page cannot be accessed by non-admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testEditFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->get($url);
+        $this->get($this->editUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * Tests that the edit page can be accessed by admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testEditViewSuccess()
+    {
         $this->setAdminSession();
-        $this->get($url);
+        $this->get($this->editUrl);
         $this->assertResponseOk();
     }
 
     /**
+     * Tests that the delete page cannot be accessed by anonymous users
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testDelete()
+    public function testDeleteFailNotLoggedIn()
     {
-        $url = [
-            'prefix' => 'admin',
-            'controller' => 'MembershipLevels',
-            'action' => 'delete',
-            1
-        ];
-
-        // User not logged in
-        $this->post($url);
+        $this->post($this->deleteUrl);
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
 
-        // Non-admin user
+    /**
+     * Tests that the delete page cannot be accessed by non-admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testDeleteFailNotAdmin()
+    {
         $this->setUserSession();
-        $this->post($url);
+        $this->post($this->deleteUrl);
         $this->assertRedirect('/');
+    }
 
-        // Admin
+    /**
+     * Tests that the delete page can be accessed by admin users
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testDeleteSuccess()
+    {
         $this->setAdminSession();
-        $this->post($url);
+        $this->post($this->deleteUrl);
         $this->assertRedirect([
             'prefix' => 'admin',
             'controller' => 'MembershipLevels',
