@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
+use App\Model\Entity\User;
 use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
 use Cake\Http\Response;
@@ -56,10 +57,36 @@ class UsersController extends AppController
                 return $this->redirectToLogin();
             }
 
-            if ($this->processRegister()) {
-                $this->Flash->success('Your account has been registered. You may now log in.');
+            /** @var User|bool $result */
+            $result = $this->processRegister();
+            if ($result) {
+                $password = $this->request->getData('new_password');
+                $this->request = $this->request->withData('password', $password);
 
-                return $this->redirect(['action' => 'login']);
+                // Log user in
+                if ($this->Auth->identify()) {
+                    $this->Auth->setUser($result->toArray());
+                    $this->Flash->success(
+                        'Your new website account has been created and you have been logged in.'
+                    );
+                    $userId = $result->id;
+                    if (!$this->Users->hasMembership($userId)) {
+                        $this->Flash->set(
+                            'Check out the MACC membership options available below ' .
+                            'and consider becoming a member today.'
+                        );
+                    }
+
+                    return $this->redirect('/');
+
+                // Prompt them to manually log in
+                } else {
+                    $this->Flash->error(
+                        'There was an error automatically logging you in. Please manually log in to proceed.'
+                    );
+
+                    return $this->redirectToLogin('/');
+                }
             }
         } else {
             $user['mailing_list'] = true;
