@@ -269,7 +269,7 @@ $config = [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => env('DATABASE_USERNAME', 'root'),
+            'username' => env('DATABASE_USERNAME'),
             'password' => env('DATABASE_PASSWORD'),
             'database' => env('DATABASE_NAME'),
             /*
@@ -312,7 +312,7 @@ $config = [
             'persistent' => false,
             'host' => 'localhost',
             //'port' => 'nonstandard_port_number',
-            'username' => env('TEST_DATABASE_USERNAME'),
+            'username' => env('TEST_DATABASE_USERNAME', 'root'),
             'password' => env('TEST_DATABASE_PASSWORD'),
             'database' => env('TEST_DATABASE_NAME'),
             'encoding' => 'utf8',
