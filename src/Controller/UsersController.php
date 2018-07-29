@@ -46,6 +46,16 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
+            $email = $this->request->getData('email');
+            $email = trim($email);
+            $email = strtolower($email);
+            if ($this->Users->exists(['email' => $email])) {
+                $this->Flash->set(
+                    'Your email address has already been used to register an account. Please log in.'
+                );
+                return $this->redirectToLogin();
+            }
+
             if ($this->processRegister()) {
                 $this->Flash->success('Your account has been registered. You may now log in.');
 

@@ -597,6 +597,17 @@ class MembershipsController extends AppController
                 return $redirectToPayment();
             }
 
+            // Redirect to login if email address found
+            $email = $this->request->getData('email');
+            $email = trim($email);
+            $email = strtolower($email);
+            if ($this->Users->exists(['email' => $email])) {
+                $this->Flash->set(
+                    'Your email address has already been used to register an account. Please log in before proceeding.'
+                );
+                return $this->redirectToLogin();
+            }
+
             // Register user and log them in
             /** @var User|bool $result */
             $result = $this->processRegister();
