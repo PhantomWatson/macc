@@ -147,10 +147,12 @@ class MembershipsControllerTest extends IntegrationTestCase
     }
 
     /**
+     * Tests that auto renewal can be toggled on
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testToggleAutoRenewalAuth()
+    public function testToggleAutoRenewalOnSuccess()
     {
         $this->setMemberSession();
 
@@ -162,6 +164,17 @@ class MembershipsControllerTest extends IntegrationTestCase
         $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $result = $membershipsTable->get(1)->auto_renew;
         $this->assertEquals(true, $result);
+    }
+
+    /**
+     * Tests that auto renewal can be toggled off
+     *
+     * @throws \PHPUnit\Exception
+     * @return void
+     */
+    public function testToggleAutoRenewalOffSuccess()
+    {
+        $this->setMemberSession();
 
         $this->post([
             'controller' => 'Memberships',
