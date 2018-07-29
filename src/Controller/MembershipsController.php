@@ -39,8 +39,12 @@ class MembershipsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['levels', 'level', 'processRecurring']);
-
+        $this->Auth->allow([
+            'enterPayment',
+            'level',
+            'levels',
+            'processRecurring'
+        ]);
         $emailListener = new EmailListener();
         EventManager::instance()->on($emailListener);
     }
@@ -273,9 +277,7 @@ class MembershipsController extends AppController
             }
         }
 
-        $adminEmail = Configure::read('admin_email');
-        $msg = 'There was an error processing your payment. ';
-        $msg .= 'For assistance, please contact <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a>. ';
+        $msg = 'There was an error processing your payment. ' . $this->getContactAdminMessage();
         $this->set('retval', [
             'success' => false,
             'message' => $msg
@@ -560,28 +562,115 @@ class MembershipsController extends AppController
     /**
      * Page that displays information about a specific membership level
      *
-     * @param null $id
+     * @param null $membershipLevelId
      * @return Response|null
+     * @throws \Exception
      */
-    public function level($id = null)
+    public function level($membershipLevelId)
     {
-        if (! $this->Auth->user()) {
-            $this->Flash->set(
-                'Thanks for your interest in becoming a member of MACC! Please register an account and log in, ' .
-                'then proceed with your membership purchase.'
-            );
+        // No membership level specified
+        if (!$membershipLevelId) {
             return $this->redirect([
-                'controller' => 'Users',
-                'action' => 'register'
+                'controller' => 'Memberships',
+                'action' => 'levels'
             ]);
         }
+
+        $this->loadModel('Users');
+        $user = $this->Users->newEntity();
+
+        if ($this->request->is('post')) {
+            $autoRenew = $this->request->getData('renewal') == 'automatic';
+            $redirectToPayment = function() use ($membershipLevelId, $autoRenew) {
+                return $this->redirect([
+                    'controller' => 'Memberships',
+                    'action' => 'enterPayment',
+                    '?' => [
+                        'memberLevelId' => $membershipLevelId,
+                        'autoRenew' => $autoRenew ? 1 : 0
+                    ]
+                ]);
+            };
+
+            // User is already logged in
+            if ($this->Auth->user()) {
+                return $redirectToPayment();
+            }
+
+            // Register user and log them in
+            /** @var User|bool $result */
+            $result = $this->processRegister();
+            if ($result) {
+                $password = $this->request->getData('new_password');
+                $this->request = $this->request->withData('password', $password);
+
+                // Redirect to payment page
+                if ($this->Auth->identify()) {
+                    $this->Auth->setUser($result->toArray());
+                    $this->Flash->success(
+                        'Your new website account has been created and you have been logged in.'
+                    );
+
+                    return $redirectToPayment();
+
+                // Redirect to login
+                } else {
+                    $this->Flash->error(
+                        'There was an error automatically logging you in. Please manually log in to proceed.'
+                    );
+
+                    return $this->redirectToLogin();
+                }
+            }
+        } else {
+            $user->mailing_list = true;
+        }
+
+        // Clear password fields
+        $this->request = $this->request->withData('new_password', null);
+        $this->request = $this->request->withData('confirm_password', null);
+
         $this->loadModel('MembershipLevels');
-        $membershipLevel = $this->MembershipLevels->get($id);
+        $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
         $this->set([
             'membershipLevel' => $membershipLevel,
-            'pageTitle' => 'Purchase "'.$membershipLevel->name.'" Membership'
+            'pageTitle' => "Become a Member of MACC ($membershipLevel->name level)",
+            'user' => $user
         ]);
-        
+
+        return null;
+    }
+
+    /**
+     * Page for displaying the Stripe payment prompt
+     *
+     * @return Response|null
+     */
+    public function enterPayment()
+    {
+        $memberLevelId = $this->request->getQuery('memberLevelId');
+        $autoRenew = (bool)$this->request->getQuery('autoRenew');
+        $this->loadModel('MembershipLevels');
+        if (!$memberLevelId || !$this->MembershipLevels->exists(['id' => $memberLevelId])) {
+            $this->Flash->error(
+                'Sorry, there was an error loading the payment method form. ' . $this->getContactAdminMessage()
+            );
+
+            return $this->redirect('/');
+        }
+
+        if (!$this->Auth->user()) {
+            $this->Flash->error('Please log in before proceeding with purchase.');
+
+            return $this->redirectToLogin();
+        }
+
+        $this->set([
+            'autoRenew' => $autoRenew,
+            'membershipLevel' => $this->MembershipLevels->get($memberLevelId),
+            'pageTitle' => "Payment Information"
+        ]);
+
         return null;
     }
 }

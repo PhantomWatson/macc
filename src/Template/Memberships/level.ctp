@@ -2,67 +2,63 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\MembershipLevel $membershipLevel
+ * @var array $authUser
+ * @var App\Model\Entity\User $user
  */
-    use Cake\Core\Configure;
-    use Cake\Routing\Router;
-    $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
 ?>
 
-<form>
+<p>
     <strong>
-        Membership Benefits:
+        Annual Cost:
     </strong>
-    <div class="well">
-        <?= $this->element('commonmark_parsed', ['input' => $membershipLevel->description]) ?>
-    </div>
+    $<?= $membershipLevel->cost ?>
+</p>
 
+<strong>
+    Membership Benefits at the <?= $membershipLevel->name ?> level:
+</strong>
+<div class="well">
+    <?= $this->element('commonmark_parsed', ['input' => $membershipLevel->description]) ?>
+</div>
+
+<?= $this->Form->create($user) ?>
+<?php if (!$authUser): ?>
+    <h2>
+        Create Your MACC Website Account
+    </h2>
     <p>
-        <strong>
-            Membership Level:
-        </strong>
-        <?= $membershipLevel->name ?>
+        Already have an account?
+        <?= $this->Html->link(
+            'Log in',
+            [
+                'controller' => 'Users',
+                'action' => 'login',
+                '?' => [
+                    'redirect' => $this->request->getRequestTarget()
+                ]
+            ]
+        ) ?>
     </p>
+    <?= $this->element('register_fields') ?>
+<?php endif; ?>
 
-    <p>
-        <strong>
-            Annual Cost:
-        </strong>
-        $<?= $membershipLevel->cost ?>
-    </p>
-
-    <div class="radio">
-        <label>
-            <input type="radio" name="renewal" value="automatic" checked>
-            Automatically renew my membership every year
-        </label>
-    </div>
-    <div class="radio">
-        <label>
-            <input type="radio" name="renewal" value="manual">
-            Only purchase one year of membership
-        </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary" id="payment-button">
-        Enter payment information
-    </button>
-</form>
-
-<?php $this->append('buffered'); ?>
-    membershipPurchase.init(<?= json_encode([
-        'costDollars' => $membershipLevel->cost,
-        'email' => isset($authUser['email']) ? $authUser['email'] : null,
-        'key' => Configure::read('Stripe.Public'),
-        'membershipLevelId' => $membershipLevel->id,
-        'membershipLevelName' => $membershipLevel->name,
-        'postUrl' => Router::url([
-            'controller' => 'Memberships',
-            'action' => 'completePurchase'
-        ], true),
-        'redirectUrl' => Router::url([
-            'controller' => 'Memberships',
-            'action' => 'purchaseComplete'
-        ], true),
-        'userId' => isset($authUser['id']) ? $authUser['id'] : null
-    ]) ?>);
-<?php $this->end(); ?>
+<h2>
+    Automatic Renewal
+</h2>
+<div class="radio">
+    <label>
+        <input type="radio" name="renewal" value="automatic" checked>
+        Automatically renew my membership every year
+    </label>
+</div>
+<div class="radio">
+    <label>
+        <input type="radio" name="renewal" value="manual">
+        Only purchase one year of membership
+    </label>
+</div>
+<?= $this->Form->submit(
+    'Next',
+    ['class' => 'btn btn-primary']
+) ?>
+<?= $this->Form->end() ?>
