@@ -69,35 +69,19 @@ class MembershipsControllerTest extends IntegrationTestCase
     }
 
     /**
+     * Tests that a membership level page can be viewed
+     *
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testLevelUnauth()
+    public function testLevelViewSuccess()
     {
         $this->get([
             'controller' => 'Memberships',
             'action' => 'level',
             1
         ]);
-        $this->assertRedirectContains(Router::url([
-            'controller' => 'Users',
-            'action' => 'register'
-        ]));
-    }
-
-    public function testLevelAuth()
-    {
-        /*
-        $this->setNonMemberSession();
-        $this->get([
-            'controller' => 'Memberships',
-            'action' => 'level',
-            1,
-            '_ssl' => true
-        ]);
         $this->assertResponseOk();
-        */
-        $this->markTestIncomplete('Need to set up self-signed certificate on localhost');
     }
 
     /**
