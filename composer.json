@@ -47,8 +47,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "App\\Console\\Installer::postInstall",
-            "bin/cake code_completion generate"
+            "App\\Console\\Installer::postInstall"
         ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
