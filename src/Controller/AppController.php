@@ -216,4 +216,16 @@ class AppController extends Controller
 
         return $user;
     }
+
+    /**
+     * Returns a "for assistance..." string with a link to email the site administrator
+     *
+     * @return string
+     */
+    protected function getContactAdminMessage()
+    {
+        $adminEmail = Configure::read('admin_email');
+
+        return 'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.';
+    }
 }
