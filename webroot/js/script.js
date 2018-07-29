@@ -18,6 +18,7 @@ var paymentProcessor = {
     postUrl: null,
     redirectUrl: null,
     beforePurchase: null,
+    autoRenew: false,
     
     getStripeHandler: function () {
         var configuration = this.getStripeConfig();
@@ -156,14 +157,20 @@ var membershipPurchase = {
         paymentProcessor.description = params.membershipLevelName+' ($'+params.costDollars+')';
         paymentProcessor.postData = {
             membershipLevelId: params.membershipLevelId,
-            userId: params.userId
+            userId: params.userId,
+            autoRenew: params.autoRenew ? 1 : 0
         };
         paymentProcessor.beforePurchase = function () {
-            var renewal = $('input[name=renewal]:checked').val();
-            paymentProcessor.postData.autoRenew = (renewal == 'automatic') ? 1 : 0;
-            
-            paymentProcessor.confirmationMessage = 'Confirm payment of $'+params.costDollars+' to purchase one year of membership?';
-            if (renewal == 'automatic') {
+            // Only check auto-renewal form field if it is found on the page
+            var autoRenew = params.autoRenew;
+            var renewalField = $('input[name=renewal]:checked');
+            if (renewalField.length) {
+              autoRenew = renewalField.val() === 'automatic';
+              paymentProcessor.postData.autoRenew = autoRenew ? 1 : 0;
+            }
+
+            paymentProcessor.confirmationMessage = 'Confirm payment of $' + params.costDollars + ' to purchase one year of membership?';
+            if (autoRenew) {
                 paymentProcessor.confirmationMessage += ' You will be automatically charged to renew your membership every year and can cancel automatic renewal at any time.';
             }
             return true;
