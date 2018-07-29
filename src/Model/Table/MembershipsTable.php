@@ -148,7 +148,7 @@ class MembershipsTable extends Table
      * Returns the most recently-purchased membership for the selected user
      *
      * @param int $userId
-     * @return Membership|EntityInterface
+     * @return Membership|null
      */
     public function getCurrentMembership($userId)
     {
