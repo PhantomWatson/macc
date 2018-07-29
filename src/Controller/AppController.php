@@ -228,4 +228,23 @@ class AppController extends Controller
 
         return 'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.';
     }
+
+    /**
+     * Returns a redirect response to the login page, which will itself redirect to the current page by default
+     *
+     * @param string|null $redirect
+     * @return \Cake\Http\Response
+     */
+    protected function redirectToLogin($redirect = null)
+    {
+        if (!$redirect) {
+            $redirect = $this->request->getRequestTarget();
+        }
+
+        return $this->redirect([
+            'controller' => 'Users',
+            'action' => 'login',
+            '?' => ['redirect' => $redirect]
+        ]);
+    }
 }
