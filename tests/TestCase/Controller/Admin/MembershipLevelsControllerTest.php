@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\Fixture\UsersFixture;
 use Cake\Routing\Router;
