@@ -408,8 +408,8 @@ $config = [
         // Register API keys at https://www.google.com/recaptcha/admin
 
         // MuncieArts.org
-        'sitekey' => env('RECAPTCHA_SITEKEY'),
-        'secret' => env('RECAPTCHA_SECRET'),
+        'sitekey' => env('RECAPTCHA_SITEKEY', 'recaptcha_sitekey'),
+        'secret' => env('RECAPTCHA_SECRET', 'recaptcha_secret'),
 
         // reCAPTCHA supported 40+ languages listed
         // here: https://developers.google.com/recaptcha/docs/language
