@@ -19,7 +19,7 @@
         "xety/cake3-cookieauth": "1.*",
         "xety/cake3-sluggable": "1.*",
         "drewm/mailchimp-api": "^2.1",
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "^6.0",
         "josegonzalez/cakephp-upload": "^4.0",
         "imagine/imagine": "^0.6.3"
     },
