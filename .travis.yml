@@ -1,16 +1,36 @@
-language: php
+dist: trusty
 
 sudo: false
 
-php:
-  - 7.0
+services:
+- mysql
+
+matrix:
+  fast_finish: true
+
+  include:
+    - language: php
+      php: 7.1
+      env: PHPUNIT=1 DB_USERNAME=root
+    - language: php
+      php: 7.1
+      env: PHPCS=1
+    - language: php
+      php: 7.2
+      env: PHPUNIT=1 DB_USERNAME=root
+
+install:
+- if [[ $PHPUNIT = 1 ]]; then composer install; fi
+- if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:*; fi
 
 before_script:
-  - sh -c "composer require 'cakephp/cakephp-codesniffer:dev-master'"
-  - phpenv rehash
+- if [[ $PHPUNIT = 1 ]]; then sh -c "mysql -e 'CREATE DATABASE IF NOT EXISTS test_school_rankings;'"; fi
+- if [[ $PHPUNIT = 1 ]]; then composer run-script post-install-cmd --no-interaction; fi
 
 script:
-  - sh -c "vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot"
+- if [[ $PHPUNIT = 1 ]]; then vendor/bin/phpunit --coverage-clover build/logs/clover.xml; fi
+- if [[ $PHPUNIT = 1 ]]; then mkdir -p build/logs; fi
+- if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --error-severity=1 --warning-severity=0 --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot; fi
 
 notifications:
   email: false
