@@ -13,6 +13,8 @@
 <div id="edit_profile">
     <?= $this->Form->create($user) ?>
 
+    <?= $this->Form->control('name') ?>
+
     <p>
         Tell about your past and present role in the community,
         the groups you associate with, and the work that you do.

@@ -138,7 +138,7 @@ class UsersController extends AppController
         $user = $this->Users->get($userId);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['profile'],
+                'fieldList' => ['name', 'profile'],
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
@@ -493,7 +493,6 @@ class UsersController extends AppController
         if ($this->request->is('put')) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
                 'fieldList' => [
-                    'name',
                     'email',
                     'address',
                     'city',

@@ -10,7 +10,6 @@
 <div id="edit_account">
     <?= $this->Form->create($user) ?>
 
-    <?= $this->Form->control('name') ?>
     <?= $this->Form->control('email') ?>
     <?= $this->Form->control('address', ['label' => 'Mailing address']) ?>
     <?= $this->Form->control('city') ?>
