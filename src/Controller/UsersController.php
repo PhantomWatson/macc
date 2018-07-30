@@ -110,7 +110,7 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null
      */
-    public function editProfile()
+    public function myProfile()
     {
         $userId = $this->Auth->user('id');
         $isCurrentMember = $this->Users->isCurrentMember($userId);

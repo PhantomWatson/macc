@@ -11,7 +11,7 @@
         [
             'prefix' => false,
             'controller' => 'Users',
-            'action' => 'editProfile'
+            'action' => 'myProfile'
         ]
     ) ?>, or update it if you've just renewed an existing membership.
 </p>

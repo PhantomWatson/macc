@@ -261,12 +261,12 @@ class UsersControllerTest extends IntegrationTestCase
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testEditProfileMember()
+    public function testMyProfileMember()
     {
         $this->setMemberSession();
         $this->get([
             'controller' => 'Users',
-            'action' => 'editProfile'
+            'action' => 'myProfile'
         ]);
         $this->assertResponseOk();
     }
@@ -275,25 +275,11 @@ class UsersControllerTest extends IntegrationTestCase
      * @throws \PHPUnit\Exception
      * @return void
      */
-    public function testEditProfileNonMember()
-    {
-        $this->setNonMemberSession();
-        $this->get([
-            'controller' => 'Users',
-            'action' => 'editProfile'
-        ]);
-        $this->assertRedirect();
-    }
-
-    /**
-     * @throws \PHPUnit\Exception
-     * @return void
-     */
-    public function testEditProfileUnauth()
+    public function testMyProfileUnauth()
     {
         $this->get([
             'controller' => 'Users',
-            'action' => 'editProfile'
+            'action' => 'myProfile'
         ]);
         $this->assertRedirectContains(Router::url([
             'controller' => 'Users',

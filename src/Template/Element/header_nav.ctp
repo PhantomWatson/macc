@@ -112,7 +112,7 @@ if (! function_exists('navLink')) {
                         [
                             'prefix' => false,
                             'controller' => 'Users',
-                            'action' => 'editProfile'
+                            'action' => 'myProfile'
                         ],
                         $this
                     ) ?>
