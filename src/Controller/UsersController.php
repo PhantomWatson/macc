@@ -130,7 +130,7 @@ class UsersController extends AppController
      *
      * @return void
      */
-    public function myProfile()
+    public function myBio()
     {
         $this->showNonMemberAlert();
         $userId = $this->Auth->user('id');

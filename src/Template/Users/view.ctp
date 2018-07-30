@@ -11,7 +11,7 @@
             'Edit Profile',
             [
                 'controller' => 'Users',
-                'action' => 'myProfile'
+                'action' => 'myBio'
             ],
             [
                 'class' => 'btn btn-default'

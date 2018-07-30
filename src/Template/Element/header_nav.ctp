@@ -88,7 +88,7 @@ if (! function_exists('navLink')) {
                         [
                             'prefix' => false,
                             'controller' => 'Users',
-                            'action' => 'myProfile'
+                            'action' => 'myBio'
                         ],
                         $this
                     ) ?>

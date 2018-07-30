@@ -6,7 +6,7 @@
     $tabs = [
         'Bio' => Router::url([
             'controller' => 'Users',
-            'action' => 'myProfile'
+            'action' => 'myBio'
         ]),
         'Tags' => Router::url([
             'controller' => 'Users',

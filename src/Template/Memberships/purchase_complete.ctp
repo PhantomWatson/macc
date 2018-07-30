@@ -11,7 +11,7 @@
         [
             'prefix' => false,
             'controller' => 'Users',
-            'action' => 'myProfile'
+            'action' => 'myBio'
         ]
     ) ?>, or update it if you've just renewed an existing membership.
 </p>
