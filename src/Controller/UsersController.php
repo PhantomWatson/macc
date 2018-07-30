@@ -481,7 +481,12 @@ class UsersController extends AppController
         ]);
     }
 
-    public function account()
+    /**
+     * Page for updating one's own contact info
+     *
+     * @return void
+     */
+    public function myContact()
     {
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
@@ -498,8 +503,8 @@ class UsersController extends AppController
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
-                $this->Users->save($user);
-                $this->Flash->success('Account info updated');
+                print_r($this->Users->save($user));
+                $this->Flash->success('Contact info updated');
 
                 // If user logs in via cookie, update cookie login credentials
                 if ($this->Cookie->read('CookieAuth')) {
@@ -509,7 +514,7 @@ class UsersController extends AppController
         }
         $this->set([
             'user' => $user,
-            'pageTitle' => 'Edit Account Info'
+            'pageTitle' => 'My Contact Info'
         ]);
     }
 }

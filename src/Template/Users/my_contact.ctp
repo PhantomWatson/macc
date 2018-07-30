@@ -4,6 +4,9 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
+
+<?= $this->element('account_info_tabs') ?>
+
 <div id="edit_account">
     <?= $this->Form->create($user) ?>
 
@@ -15,7 +18,7 @@
     <?= $this->Form->control('zipcode') ?>
 
     <?= $this->Form->button(
-        'Update',
+        'Submit',
         ['class' => 'btn btn-primary']
     ) ?>
 

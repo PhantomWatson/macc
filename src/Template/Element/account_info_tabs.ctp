@@ -15,6 +15,10 @@
         'Pictures' => Router::url([
             'controller' => 'Users',
             'action' => 'myPictures'
+        ]),
+        'Contact' => Router::url([
+            'controller' => 'Users',
+            'action' => 'myContact'
         ])
     ];
 ?>

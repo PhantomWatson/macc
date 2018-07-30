@@ -206,7 +206,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->setNonMemberSession();
         $this->get([
             'controller' => 'Users',
-            'action' => 'account'
+            'action' => 'myContact'
         ]);
         $this->assertResponseOk();
     }
@@ -219,7 +219,7 @@ class UsersControllerTest extends IntegrationTestCase
     {
         $this->get([
             'controller' => 'Users',
-            'action' => 'account'
+            'action' => 'myContact'
         ]);
         $this->assertRedirectContains(Router::url([
             'controller' => 'Users',
