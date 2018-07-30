@@ -84,6 +84,17 @@ if (! function_exists('navLink')) {
             <ul class="dropdown-menu">
                 <li>
                     <?= navLink(
+                        'My account',
+                        [
+                            'prefix' => false,
+                            'controller' => 'Users',
+                            'action' => 'myProfile'
+                        ],
+                        $this
+                    ) ?>
+                </li>
+                <li>
+                    <?= navLink(
                         'My membership',
                         [
                             'prefix' => false,
@@ -102,17 +113,6 @@ if (! function_exists('navLink')) {
                             'action' => 'view',
                             $authUser['id'],
                             $authUser['slug']
-                        ],
-                        $this
-                    ) ?>
-                </li>
-                <li>
-                    <?= navLink(
-                        'Edit member profile',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Users',
-                            'action' => 'myProfile'
                         ],
                         $this
                     ) ?>
