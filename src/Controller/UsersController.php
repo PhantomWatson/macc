@@ -106,33 +106,39 @@ class UsersController extends AppController
     }
 
     /**
-     * Form for updating user profile information
+     * Shows a "your profile will not be available to view" flash message if appropriate
      *
-     * @return \Cake\Http\Response|null
+     * @return void
      */
-    public function myProfile()
+    private function showNonMemberAlert()
     {
         $userId = $this->Auth->user('id');
         $isCurrentMember = $this->Users->isCurrentMember($userId);
-        if (!$isCurrentMember) {
-            $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
-            $action = $hasExpiredMembership ? 'renew your membership' : 'purchase a membership';
-            $this->Flash->error(
-                'Your profile will not be available to view on the MACC website until you ' . $action
-            );
+        if ($isCurrentMember) {
+            return;
         }
 
-        $user = $this->Users->get($userId, [
-            'contain' => ['Tags', 'Pictures']
-        ]);
-        /** @var PicturesTable $picturesTable */
-        $picturesTable = TableRegistry::getTableLocator()->get('Pictures');
-        $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
+        $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
+        $action = $hasExpiredMembership ? 'renew your membership' : 'purchase a membership';
+        $this->Flash->error(
+            'Your profile will not be available to view on the MACC website until you ' . $action
+        );
+    }
+
+    /**
+     * Form for updating user profile blurb
+     *
+     * @return void
+     */
+    public function myProfile()
+    {
+        $this->showNonMemberAlert();
+        $userId = $this->Auth->user('id');
+
+        $user = $this->Users->get($userId);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['profile', 'tags'],
-                'associated' => ['Tags'],
-                'onlyIds' => true
+                'fieldList' => ['profile'],
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
@@ -145,15 +151,69 @@ class UsersController extends AppController
                 $this->Flash->error('Please correct the indicated error(s) before proceeding');
             }
         }
+        $this->set([
+            'pageTitle' => 'My Bio',
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Form for updating user tags
+     *
+     * @return void
+     */
+    public function myTags()
+    {
+        $this->showNonMemberAlert();
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId, [
+            'contain' => ['Tags']
+        ]);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'fieldList' => ['tags'],
+                'associated' => ['Tags'],
+                'onlyIds' => true
+            ]);
+            $errors = $user->getErrors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Tags updated');
+                } else {
+                    $this->Flash->error('There was an error saving your tags');
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s) before proceeding');
+            }
+        }
         $this->loadModel('Tags');
         $this->set([
-            'pageTitle' => 'Update Profile',
+            'pageTitle' => 'My Tags',
             'tags' => $this->Tags->getThreaded(),
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Form for updating user pictures
+     *
+     * @return void
+     */
+    public function myPictures()
+    {
+        $this->showNonMemberAlert();
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId, [
+            'contain' => ['Pictures']
+        ]);
+        /** @var PicturesTable $picturesTable */
+        $picturesTable = TableRegistry::getTableLocator()->get('Pictures');
+        $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
+        $this->set([
+            'pageTitle' => 'My Pictures',
             'user' => $user,
             'picLimit' => Configure::read('maxPicturesPerUser')
         ]);
-
-        return null;
     }
 
     /**
