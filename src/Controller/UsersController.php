@@ -114,21 +114,12 @@ class UsersController extends AppController
     {
         $userId = $this->Auth->user('id');
         $isCurrentMember = $this->Users->isCurrentMember($userId);
-        if (! $isCurrentMember) {
+        if (!$isCurrentMember) {
             $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
-            if ($hasExpiredMembership) {
-                $this->Flash->error('Please renew your MACC membership before updating your member profile');
-                return $this->redirect([
-                    'controller' => 'Memberships',
-                    'action' => 'myMembership'
-                ]);
-            } else {
-                $this->Flash->error('Please purchase a MACC membership to start building your member profile');
-                return $this->redirect([
-                    'controller' => 'Memberships',
-                    'action' => 'levels'
-                ]);
-            }
+            $action = $hasExpiredMembership ? 'renew your membership' : 'purchase a membership';
+            $this->Flash->error(
+                'Your profile will not be available to view on the MACC website until you ' . $action
+            );
         }
 
         $user = $this->Users->get($userId, [
