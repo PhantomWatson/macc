@@ -24,7 +24,12 @@ class UsersController extends AppController
             'Users.created' => 'desc'
         ],
         'sortWhitelist' => [
-            'name', 'role', 'created'
+            'created',
+            'name',
+            'role',
+            'Users.name',
+            'Users.role',
+            'Users.created'
         ]
     ];
 
