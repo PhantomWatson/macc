@@ -8,7 +8,7 @@
     $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
-<?= $this->element('account_info_tabs') ?>
+<?= $this->element('account_info_header') ?>
 
 <div id="edit_profile">
     <?= $this->Form->create($user) ?>

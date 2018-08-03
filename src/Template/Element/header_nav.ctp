@@ -106,19 +106,6 @@ if (! function_exists('navLink')) {
                 </li>
                 <li>
                     <?= navLink(
-                        'View member profile',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Users',
-                            'action' => 'view',
-                            $authUser['id'],
-                            $authUser['slug']
-                        ],
-                        $this
-                    ) ?>
-                </li>
-                <li>
-                    <?= navLink(
                         'Change password',
                         [
                             'prefix' => false,

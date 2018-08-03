@@ -110,17 +110,20 @@ class UsersController extends AppController
      *
      * @return void
      */
-    private function showNonMemberAlert()
+    private function setNonMemberAlert()
     {
         $userId = $this->Auth->user('id');
         $isCurrentMember = $this->Users->isCurrentMember($userId);
         if ($isCurrentMember) {
+            $this->set('profileUnavailableMsg', null);
+
             return;
         }
 
         $hasExpiredMembership = $this->Users->hasExpiredMembership($userId);
         $action = $hasExpiredMembership ? 'renew your membership' : 'purchase a membership';
-        $this->Flash->error(
+        $this->set(
+            'profileUnavailableMsg',
             'Your profile will not be available to view on the MACC website until you ' . $action
         );
     }
@@ -132,7 +135,7 @@ class UsersController extends AppController
      */
     public function myBio()
     {
-        $this->showNonMemberAlert();
+        $this->setNonMemberAlert();
         $userId = $this->Auth->user('id');
 
         $user = $this->Users->get($userId);
@@ -164,7 +167,7 @@ class UsersController extends AppController
      */
     public function myTags()
     {
-        $this->showNonMemberAlert();
+        $this->setNonMemberAlert();
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId, [
             'contain' => ['Tags']
@@ -201,7 +204,7 @@ class UsersController extends AppController
      */
     public function myPictures()
     {
-        $this->showNonMemberAlert();
+        $this->setNonMemberAlert();
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId, [
             'contain' => ['Pictures']
@@ -488,6 +491,7 @@ class UsersController extends AppController
      */
     public function myContact()
     {
+        $this->setNonMemberAlert();
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('put')) {

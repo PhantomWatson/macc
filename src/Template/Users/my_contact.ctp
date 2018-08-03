@@ -5,7 +5,7 @@
  */
 ?>
 
-<?= $this->element('account_info_tabs') ?>
+<?= $this->element('account_info_header') ?>
 
 <div id="edit_account">
     <?= $this->Form->create($user) ?>
