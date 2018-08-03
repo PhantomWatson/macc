@@ -74,7 +74,16 @@ class MembershipsController extends AppController
      */
     public function purchaseComplete()
     {
-        $this->set('pageTitle', 'Membership Purchased!');
+        $userId = $this->Auth->user('id');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        $membershipCount = $membershipsTable->find()
+            ->where(['user_id' => $userId])
+            ->count();
+
+        $this->set([
+            'pageTitle' => 'Membership Purchased!',
+            'isFirstMembershipPurchase' => $membershipCount == 1
+        ]);
     }
 
     /**

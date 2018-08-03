@@ -97,6 +97,20 @@
         echo $this->Form->end();
         echo $this->element('jquery_ui');
     ?>
+
+    <?php if ($this->request->getQuery('flow')): ?>
+        <p class="text-right">
+            <?= $this->Html->link(
+                'Next',
+                [
+                    'controller' => 'Users',
+                    'action' => 'myContact',
+                    '?' => ['flow' => 1]
+                ],
+                ['class' => 'btn btn-primary']
+            ) ?>
+        </p>
+    <?php endif; ?>
 </div>
 
 <?php

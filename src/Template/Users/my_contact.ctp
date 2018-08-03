@@ -16,10 +16,12 @@
     <?= $this->Form->control('state', ['label' => 'State abbreviation']) ?>
     <?= $this->Form->control('zipcode') ?>
 
-    <?= $this->Form->button(
-        'Submit',
-        ['class' => 'btn btn-primary']
-    ) ?>
+    <p class="text-right">
+        <?= $this->Form->button(
+            $this->request->getQuery('flow') ? 'Finish' : 'Submit',
+            ['class' => 'btn btn-primary']
+        ) ?>
+    </p>
 
     <?= $this->Form->end() ?>
 </div>

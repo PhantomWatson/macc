@@ -5,22 +5,28 @@
  * @var string $profileUnavailableMsg
  */
     use Cake\Routing\Router;
+
+    $queryStrings = $this->request->getQuery('flow') ? ['flow' => 1] : [];
     $tabs = [
         'Bio' => Router::url([
             'controller' => 'Users',
-            'action' => 'myBio'
+            'action' => 'myBio',
+            '?' => $queryStrings
         ]),
         'Tags' => Router::url([
             'controller' => 'Users',
-            'action' => 'myTags'
+            'action' => 'myTags',
+            '?' => $queryStrings
         ]),
         'Pictures' => Router::url([
             'controller' => 'Users',
-            'action' => 'myPictures'
+            'action' => 'myPictures',
+            '?' => $queryStrings
         ]),
         'Contact' => Router::url([
             'controller' => 'Users',
-            'action' => 'myContact'
+            'action' => 'myContact',
+            '?' => $queryStrings
         ])
     ];
 ?>
@@ -45,7 +51,7 @@
 
 <ul class="nav nav-tabs" id="profile-tabs">
     <?php foreach ($tabs as $label => $url): ?>
-        <?php $active = $url == $this->request->getRequestTarget(); ?>
+        <?php $active = explode('?', $url)[0] == explode('?', $this->request->getRequestTarget())[0]; ?>
         <li role="presentation" <?= $active ? 'class="active"' : '' ?>>
             <a href="<?= $url ?>" aria-controls="home">
                 <?= $label ?>

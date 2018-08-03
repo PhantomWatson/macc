@@ -65,10 +65,12 @@
         ) ?>, as HTML is not allowed.
     </p>
 
-    <?= $this->Form->button(
-        'Submit',
-        ['class' => 'btn btn-primary']
-    ) ?>
+    <p class="text-right">
+        <?= $this->Form->button(
+            $this->request->getQuery('flow') ? 'Next' : 'Submit',
+            ['class' => 'btn btn-primary']
+        ) ?>
+    </p>
 
     <?= $this->Form->end() ?>
 </div>

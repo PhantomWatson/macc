@@ -131,7 +131,7 @@ class UsersController extends AppController
     /**
      * Form for updating user profile blurb
      *
-     * @return void
+     * @return Response|null
      */
     public function myBio()
     {
@@ -147,6 +147,12 @@ class UsersController extends AppController
             if (empty($errors)) {
                 if ($this->Users->save($user)) {
                     $this->Flash->success('Profile updated');
+                    if ($this->request->getQuery('flow')) {
+                        return $this->redirect([
+                            'action' => 'myTags',
+                            '?' => ['flow' => 1]
+                        ]);
+                    }
                 } else {
                     $this->Flash->error('There was an error saving your profile');
                 }
@@ -158,12 +164,14 @@ class UsersController extends AppController
             'pageTitle' => 'My Bio',
             'user' => $user,
         ]);
+
+        return null;
     }
 
     /**
      * Form for updating user tags
      *
-     * @return void
+     * @return Response|null
      */
     public function myTags()
     {
@@ -182,6 +190,12 @@ class UsersController extends AppController
             if (empty($errors)) {
                 if ($this->Users->save($user)) {
                     $this->Flash->success('Tags updated');
+                    if ($this->request->getQuery('flow')) {
+                        return $this->redirect([
+                            'action' => 'myPictures',
+                            '?' => ['flow' => 1]
+                        ]);
+                    }
                 } else {
                     $this->Flash->error('There was an error saving your tags');
                 }
@@ -195,6 +209,8 @@ class UsersController extends AppController
             'tags' => $this->Tags->getThreaded(),
             'user' => $user,
         ]);
+
+        return null;
     }
 
     /**
@@ -487,7 +503,7 @@ class UsersController extends AppController
     /**
      * Page for updating one's own contact info
      *
-     * @return void
+     * @return Response|null
      */
     public function myContact()
     {
@@ -506,12 +522,24 @@ class UsersController extends AppController
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
-                print_r($this->Users->save($user));
-                $this->Flash->success('Contact info updated');
+                if ($this->Users->save($user)) {
+                    // If user logs in via cookie, update cookie login credentials
+                    if ($this->Cookie->read('CookieAuth')) {
+                        $this->Cookie->write('CookieAuth.email', $this->request->getData('email'));
+                    }
 
-                // If user logs in via cookie, update cookie login credentials
-                if ($this->Cookie->read('CookieAuth')) {
-                    $this->Cookie->write('CookieAuth.email', $this->request->getData('email'));
+                    $this->Flash->success('Contact info updated');
+                    $this->Flash->set(
+                        'Please review your member profile to make sure your information is complete and accurate'
+                    );
+                    if ($this->request->getQuery('flow')) {
+                        return $this->redirect([
+                            'controller' => 'Users',
+                            'action' => 'view',
+                            $this->Auth->user('id'),
+                            $this->Auth->user('slug')
+                        ]);
+                    }
                 }
             }
         }
@@ -519,5 +547,7 @@ class UsersController extends AppController
             'user' => $user,
             'pageTitle' => 'My Contact Info'
         ]);
+
+        return null;
     }
 }
