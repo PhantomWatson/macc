@@ -21,7 +21,7 @@ class UsersController extends AppController
     public $paginate = [
         'limit' => 25,
         'order' => [
-            'Users.created' => 'desc'
+            'Users.name' => 'asc'
         ],
         'sortWhitelist' => [
             'created',
