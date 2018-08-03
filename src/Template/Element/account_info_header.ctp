@@ -35,7 +35,7 @@
     <p class="alert alert-warning">
         <?= $profileUnavailableMsg ?>
     </p>
-<?php else: ?>
+<?php elseif (!$this->request->getQuery('flow')): ?>
     <p class="alert alert-info">
         <?php
             $url = Router::url([
