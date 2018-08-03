@@ -68,7 +68,7 @@ $config = [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => env('SECURITY_SALT'),
+        'salt' => env('SECURITY_SALT', '12345678901234567890123456789012'),
     ],
 
     /**
@@ -269,9 +269,9 @@ $config = [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => env('DATABASE_USERNAME'),
+            'username' => env('DATABASE_USERNAME', 'root'),
             'password' => env('DATABASE_PASSWORD'),
-            'database' => env('DATABASE_NAME'),
+            'database' => env('DATABASE_NAME', 'macc'),
             /*
              * You do not need to set this flag to use full utf-8 encoding (internal default since CakePHP 3.6).
              */
@@ -445,7 +445,7 @@ if ($config['debug']) {
 }
 
 // Stripe
-$stripeMode = env('STRIPE_MODE'); // Test or Live
+$stripeMode = env('STRIPE_MODE', 'Live'); // Test or Live
 $config['Stripe.mode'] = $stripeMode;
 $config['Stripe.TestSecret'] = env('STRIPE_TEST_SECRET');
 $config['Stripe.TestPublic'] = env('STRIPE_TEST_PUBLIC');
