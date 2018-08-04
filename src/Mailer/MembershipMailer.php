@@ -2,6 +2,7 @@
 namespace App\Mailer;
 
 use App\Model\Entity\Membership;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
@@ -68,10 +69,10 @@ class MembershipMailer extends Mailer
     /**
      * Returns a string describing when the user's membership expires
      *
-     * @param Time $expires Time that the user's membership expires
+     * @param Time|FrozenTime $expires Time that the user's membership expires
      * @return string
      */
-    private function getExpirationString(Time $expires)
+    private function getExpirationString($expires)
     {
         $nextWeek = new Time('+1 week');
         if ($expires->format('F j, Y') == $nextWeek->format('F j, Y')) {
