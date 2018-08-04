@@ -14,6 +14,7 @@
  */
 namespace App;
 
+use App\Command\AlertUpcomingExpirationsCommand;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -83,5 +84,20 @@ class Application extends BaseApplication
             ->add(new RoutingMiddleware($this, '_cake_routes_'));
 
         return $middlewareQueue;
+    }
+
+    /**
+     * Defines the commands and subcommands in this application
+     *
+     * @param \Cake\Console\CommandCollection $commands Collection of commands
+     * @return \Cake\Console\CommandCollection
+     */
+    public function console($commands)
+    {
+        $commands->autoDiscover();
+
+        $commands->add('alert-upcoming-expirations', AlertUpcomingExpirationsCommand::class);
+
+        return $commands;
     }
 }
