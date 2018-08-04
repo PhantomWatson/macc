@@ -2,6 +2,7 @@
 namespace App\Mailer;
 
 use App\Model\Entity\Membership;
+use Cake\I18n\Time;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
@@ -38,5 +39,50 @@ class MembershipMailer extends Mailer
                 ], true)
             ])
             ->setTemplate('new_member');
+    }
+
+    /**
+     * Defines an email informing a user that their membership is about to expire
+     *
+     * @param Membership $membership Membership entity
+     * @return Email
+     */
+    public function expiringMembership($membership)
+    {
+        $expirationString = $this->getExpirationString($membership->expires);
+
+        return $this
+            ->setTo($membership->user->email)
+            ->setSubject('Muncie Arts and Culture Council - Membership expiring ' . $expirationString)
+            ->setViewVars([
+                'membership' => $membership,
+                'renewUrl' => Router::url([
+                    'controller' => 'Memberships',
+                    'action' => 'level',
+                    $membership->membership_level_id
+                ], true)
+            ])
+            ->setTemplate('expiring_membership');
+    }
+
+    /**
+     * Returns a string describing when the user's membership expires
+     *
+     * @param Time $expires Time that the user's membership expires
+     * @return string
+     */
+    private function getExpirationString(Time $expires)
+    {
+        $nextWeek = new Time('+1 week');
+        if ($expires->format('F j, Y') == $nextWeek->format('F j, Y')) {
+            return 'in one week';
+        }
+
+        $tomorrow = new Time('+1 day');
+        if ($expires->format('F j, Y') == $tomorrow->format('F j, Y')) {
+            return 'tomorrow';
+        }
+
+        return 'soon';
     }
 }
