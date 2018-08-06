@@ -24,4 +24,10 @@
     </p>
 
     <?= $this->Form->end() ?>
+
+    <p class="alert alert-info">
+        <strong>Why do we collect mailing addresses?</strong>
+        <br />
+        We collect mailing addresses from our members because we want to stay in touch. Every now and then, we host special events and programs such as the Mayor's Arts Awards and our annual reception. We'll always send digital communications, but we like the opportunity to send snail mail announcements as well.
+    </p>
 </div>
