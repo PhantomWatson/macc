@@ -24,6 +24,7 @@ class MembershipsFixture extends TestFixture
         'auto_renew' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'renewed' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'expires' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'canceled' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -37,12 +38,10 @@ class MembershipsFixture extends TestFixture
     // @codingStandardsIgnoreEnd
 
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [];
-
     public function init()
     {
         $this->records[] = [
@@ -53,10 +52,10 @@ class MembershipsFixture extends TestFixture
             'auto_renew' => 1,
             'created' => '2016-02-11 05:09:41',
             'modified' => '2016-02-11 05:09:41',
+            'renewed' => '2018-08-08 01:44:55',
             'expires' => date('Y-m-d H:i:s', strtotime('+6 month')),
             'canceled' => null
         ];
-
         parent::init();
     }
 }
