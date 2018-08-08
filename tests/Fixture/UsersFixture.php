@@ -43,70 +43,47 @@ class UsersFixture extends TestFixture
     ];
     // @codingStandardsIgnoreEnd
 
-    /**
-     * Records
-     *
-     * @var array
-     */
-    public $records = [];
+    private $defaultData = [
+        'role' => 'user',
+        'address' => '123 Address Street',
+        'city' => 'Muncie',
+        'state' => 'IN',
+        'zipcode' => '47308',
+        'profile' => 'User\'s profile blurb',
+        'stripe_customer_id' => null,
+        'main_picture_id' => null,
+        'created' => '2016-02-07 00:14:55',
+        'modified' => '2016-02-07 00:14:55'
+    ];
+
+    public $records = [
+        [
+            'id' => 1,
+            'name' => 'Member User',
+            'main_picture_id' => 1,
+        ],
+        [
+            'id' => 2,
+            'name' => 'Non-Member User',
+        ],
+        [
+            'id' => 3,
+            'name' => 'Admin User',
+            'role' => 'admin',
+            'main_picture_id' => 1,
+        ]
+    ];
 
     public function init()
     {
-        $password = (new DefaultPasswordHasher)->hash('testpassword');
+        foreach ($this->records as &$record) {
+            $record += $this->defaultData;
+            $record['password'] = (new DefaultPasswordHasher)->hash('testpassword');
+            $record['email'] = 'testuser' . $record['id'] . '@example.com';
+            $record['slug'] = 'test-user-' . $record['id'];
+        }
 
-        $this->records[] = [
-            'id' => 1,
-            'name' => 'Member User',
-            'email' => 'testuser1@phantomwatson.com',
-            'password' => $password,
-            'role' => 'user',
-            'profile' => '**Test User 1\'s** profile',
-            'address' => '123 Address Street',
-            'city' => 'Muncie',
-            'state' => 'IN',
-            'zipcode' => '47308',
-            'main_picture_id' => 1,
-            'slug' => 'test-user-1',
-            'stripe_customer_id' => null,
-            'created' => '2016-02-07 00:14:55',
-            'modified' => '2016-02-07 00:14:55'
-        ];
 
-        $this->records[] = [
-            'id' => 2,
-            'name' => 'Non-Member User',
-            'email' => 'testuser2@phantomwatson.com',
-            'password' => $password,
-            'role' => 'user',
-            'profile' => '**Test User 2\'s** profile',
-            'address' => '123 Address Street',
-            'city' => 'Muncie',
-            'state' => 'IN',
-            'zipcode' => '47308',
-            'main_picture_id' => null,
-            'slug' => 'test-user-2',
-            'stripe_customer_id' => null,
-            'created' => '2016-02-07 00:14:55',
-            'modified' => '2016-02-07 00:14:55'
-        ];
-
-        $this->records[] = [
-            'id' => 3,
-            'name' => 'Admin User',
-            'email' => 'testuser3@phantomwatson.com',
-            'password' => $password,
-            'role' => 'admin',
-            'profile' => '**Admin User\'s** profile',
-            'address' => '123 Address Street',
-            'city' => 'Muncie',
-            'state' => 'IN',
-            'zipcode' => '47308',
-            'main_picture_id' => 1,
-            'slug' => 'admin-user',
-            'stripe_customer_id' => null,
-            'created' => '2016-02-07 00:14:55',
-            'modified' => '2016-02-07 00:14:55'
-        ];
 
         parent::init();
     }
