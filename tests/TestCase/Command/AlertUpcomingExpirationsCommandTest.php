@@ -25,7 +25,7 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
     }
 
     /**
-     *
+     * Tests that the command resports that it has sent an email to the appropriate user
      *
      * @return void
      */
@@ -34,5 +34,8 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
         $this->exec('alert-upcoming-expirations');
         $this->assertOutputContains('Expiring memberships found:');
         $this->assertOutputContains('User with membership expiring tomorrow');
+        $this->assertOutputContains('Sent');
+        $this->assertOutputNotContains('Exception');
+        $this->assertErrorEmpty();
     }
 }
