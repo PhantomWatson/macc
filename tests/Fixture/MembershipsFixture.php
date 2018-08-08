@@ -37,6 +37,19 @@ class MembershipsFixture extends TestFixture
     ];
     // @codingStandardsIgnoreEnd
 
+    private $defaultData = [
+        'created' => '2016-02-11 05:09:41',
+        'modified' => '2016-02-11 05:09:41',
+        'renewed' => null,
+        'user_id' => 1,
+        'membership_level_id' => 1,
+        'payment_id' => 1,
+        'auto_renew' => 1,
+        'canceled' => null
+    ];
+
+    public $records = [];
+
     /**
      * Init method
      *
@@ -46,16 +59,20 @@ class MembershipsFixture extends TestFixture
     {
         $this->records[] = [
             'id' => 1,
-            'user_id' => 1,
-            'membership_level_id' => 1,
-            'payment_id' => 1,
-            'auto_renew' => 1,
-            'created' => '2016-02-11 05:09:41',
-            'modified' => '2016-02-11 05:09:41',
-            'renewed' => '2018-08-08 01:44:55',
             'expires' => date('Y-m-d H:i:s', strtotime('+6 month')),
-            'canceled' => null
+
         ];
+        $this->records[] = [
+            'id' => 2,
+            'user_id' => 4,
+            'expires' => date('Y-m-d H:i:s', strtotime('+1 day')),
+            'auto_renew' => 0
+        ];
+
+        foreach ($this->records as &$record) {
+            $record += $this->defaultData;
+        }
+
         parent::init();
     }
 }

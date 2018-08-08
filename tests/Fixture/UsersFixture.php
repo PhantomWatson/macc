@@ -71,6 +71,10 @@ class UsersFixture extends TestFixture
             'name' => 'Admin User',
             'role' => 'admin',
             'main_picture_id' => 1,
+        ],
+        [
+            'id' => 4,
+            'name' => 'User with membership expiring tomorrow',
         ]
     ];
 
