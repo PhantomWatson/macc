@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\MembershipLevel $membershipLevel
  * @var array $authUser
  * @var App\Model\Entity\User $user
+ * @var bool $renewing
  */
 ?>
 

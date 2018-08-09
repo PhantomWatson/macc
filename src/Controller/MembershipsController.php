@@ -585,6 +585,12 @@ class MembershipsController extends AppController
             ]);
         }
 
+        $renewing = (bool)$this->request->getQuery('renewing');
+        if ($renewing && !$this->Auth->user()) {
+            $this->Flash->set('Please log in before continuing');
+            return $this->redirectToLogin();
+        }
+
         $this->loadModel('Users');
         $user = $this->Users->newEntity();
 
@@ -652,9 +658,11 @@ class MembershipsController extends AppController
 
         $this->loadModel('MembershipLevels');
         $membershipLevel = $this->MembershipLevels->get($membershipLevelId);
+        $pageTitle = ($renewing ? 'Renew Membership' : 'Become a Member of MACC') . " ($membershipLevel->name level)";
         $this->set([
             'membershipLevel' => $membershipLevel,
-            'pageTitle' => "Become a Member of MACC ($membershipLevel->name level)",
+            'pageTitle' => $pageTitle,
+            'renewing' => $renewing,
             'user' => $user
         ]);
 

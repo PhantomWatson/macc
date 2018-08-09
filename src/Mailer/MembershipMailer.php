@@ -62,7 +62,8 @@ class MembershipMailer extends Mailer
                 'renewUrl' => Router::url([
                     'controller' => 'Memberships',
                     'action' => 'level',
-                    $membership->membership_level_id
+                    $membership->membership_level_id,
+                    '?' => ['renewing' => 1]
                 ], true)
             ])
             ->setTemplate('expiring_membership');
