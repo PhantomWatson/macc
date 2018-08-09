@@ -56,7 +56,9 @@ class MembershipMailer extends Mailer
             ->setTo($membership->user->email)
             ->setSubject('Muncie Arts and Culture Council - Membership expiring ' . $expirationString)
             ->setViewVars([
-                'membership' => $membership,
+                'userName' => $membership->user->name,
+                'autoRenew' => (bool)$membership->auto_renew,
+                'expires' => $membership->expires->format('F jS'),
                 'renewUrl' => Router::url([
                     'controller' => 'Memberships',
                     'action' => 'level',

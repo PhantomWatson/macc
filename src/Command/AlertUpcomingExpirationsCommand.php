@@ -109,8 +109,7 @@ class AlertUpcomingExpirationsCommand extends Command
                     },
                     function (QueryExpression $exp) {
                         return $exp->isNull('renewed');
-                    },
-                    'auto_renew' => 0
+                    }
                 ])
                 ->contain(['Users'])
                 ->all();
