@@ -30,7 +30,6 @@
                                     <a href="http://MuncieArts.org">http://MuncieArts.org</a>
                                     <br />
                                     <a href="mailto:info@munciearts.org">info@munciearts.org</a>
-                                    &#149; 765-287-8139
                                 </p>
                             </td>
                         </tr>
