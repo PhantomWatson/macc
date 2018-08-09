@@ -34,6 +34,7 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
         $this->exec('alert-upcoming-expirations');
         $this->assertOutputContains('Expiring memberships found:');
         $this->assertOutputContains('User with membership expiring tomorrow');
+        $this->assertOutputContains('User with membership auto-renewing tomorrow');
         $this->assertOutputContains('Sent');
         $this->assertOutputNotContains('Exception');
         $this->assertOutputNotContains('Member User');

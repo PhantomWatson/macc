@@ -75,6 +75,10 @@ class UsersFixture extends TestFixture
         [
             'id' => 4,
             'name' => 'User with membership expiring tomorrow',
+        ],
+        [
+            'id' => 5,
+            'name' => 'User with membership auto-renewing tomorrow',
         ]
     ];
 

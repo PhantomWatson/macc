@@ -68,6 +68,12 @@ class MembershipsFixture extends TestFixture
             'expires' => date('Y-m-d H:i:s', strtotime('+1 day')),
             'auto_renew' => 0
         ];
+        $this->records[] = [
+            'id' => 3,
+            'user_id' => 5,
+            'expires' => date('Y-m-d H:i:s', strtotime('+1 day')),
+            'auto_renew' => 1
+        ];
 
         foreach ($this->records as &$record) {
             $record += $this->defaultData;
