@@ -106,7 +106,7 @@ class MembershipsTable extends Table
     }
 
     /**
-     * Finds all memberships that will expire in the next 24 hours, are marked
+     * Finds all memberships that expire today, are marked
      * for automatic renewal, and have not been renewed or canceled.
      *
      * @param Query $query
@@ -136,7 +136,12 @@ class MembershipsTable extends Table
             ->where(function ($exp, $q) {
                 /** @var QueryExpression $exp */
 
-                return $exp->lte('expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+                return $exp->gte('expires', date('Y-m-d') . ' 00:00:00');
+            })
+            ->where(function ($exp, $q) {
+                /** @var QueryExpression $exp */
+
+                return $exp->lte('expires', date('Y-m-d') . ' 23:59:59');
             })
             ->where([
                 'auto_renew' => 1,
