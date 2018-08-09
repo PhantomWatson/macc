@@ -441,7 +441,10 @@ $config = [
 if ($config['debug']) {
     $config['forceSSL'] = false;
     $config['EmailTransport']['default']['className'] = 'Debug';
-    $config['Email']['default']['log'] = true;
+    $config['Email']['default']['log'] = [
+        'level' => 'info',
+        'scope' => 'email'
+    ];
 }
 
 // Stripe
