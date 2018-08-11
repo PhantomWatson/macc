@@ -346,23 +346,34 @@ class MembershipsController extends AppController
                 'receipt_email' => $membership->user['email'],
                 'statement_descriptor' => 'MACC member renewal' // 22 characters max
             ];
+
+            $errorMsg = null;
             try {
                 $charge = $this->createStripeCharge($chargeParams);
+
+            // 'Card declined' exception
+            } catch (\Stripe\Error\Card $e) {
+                $errorMsg = sprintf(
+                    'Card was declined when attempting to automatically renew %s\'s %s membership. ' .
+                    '(user ID: %s; email: %s)',
+                    $membership->user['name'],
+                    $membership->membership_level['name'],
+                    $membership->user_id,
+                    $membership->user['email']
+                );
+
+            // Other exceptions
             } catch (\Exception $e) {
-                $msg = 'Charge did not complete successfully: ' . $e->getMessage();
-                $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
-                $logsTable->logAutoRenewal($msg . $details, true);
-                Log::write('error', $msg . $details);
-                $results[] = $msg . '<br />' . $details;
-                continue;
+                $errorMsg = $this->getChargeErrorMsg($membership, $e);
             }
 
-            if (! $charge->paid) {
-                $msg = 'Charge did not complete successfully';
-                $details = "\n\$chargeParams:\n" . print_r($chargeParams, true);
-                $logsTable->logAutoRenewal($msg . $details, true);
-                Log::write('error', $msg . $details);
-                $results[] = $msg . '<br />' . $details;
+            if (!isset($charge) || !$charge->paid) {
+                if (!$errorMsg) {
+                    $errorMsg = $this->getChargeErrorMsg($membership);
+                }
+                $logsTable->logAutoRenewal($errorMsg, true);
+                Log::write('error', $errorMsg);
+                $results[] = $errorMsg;
                 continue;
             }
 
@@ -436,7 +447,27 @@ class MembershipsController extends AppController
     }
 
     /**
-     * Creates a Stripe charge object (charges the user) and handles various exceptions.
+     * Returns an error message indicating that a charge failed
+     *
+     * @param Membership $membership Membership entity
+     * @param null|\Exception $exception Optional exception
+     * @return string
+     */
+    private function getChargeErrorMsg($membership, $exception = null)
+    {
+        return sprintf(
+            'Charge did not complete successfully when attempting to automatically renew ' .
+            '%s\'s %s membership.%s (user ID: %s; email: %s)',
+            $membership->user['name'],
+            $membership->membership_level['name'],
+            $exception ? ': ' . $exception->getMessage() : '',
+            $membership->user_id,
+            $membership->user['email']
+        );
+    }
+
+    /**
+     * Creates a Stripe charge object (charges the user) and handles various exceptions other than 'card declined'
      *
      * @param array $params Passed to \Stripe\Charge::create()
      * @return \Stripe\Charge
@@ -446,9 +477,6 @@ class MembershipsController extends AppController
     {
         try {
             $charge = \Stripe\Charge::create($params);
-        } catch (\Stripe\Error\Card $e) {
-            // Since it's a decline, \Stripe\Error\Card will be caught
-            $this->throwStripeException($e);
         } catch (\Stripe\Error\RateLimit $e) {
             // Too many requests made to the API too quickly
             $this->throwStripeException($e);
