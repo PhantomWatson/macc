@@ -197,7 +197,7 @@ Type::build('timestamp')
 //Inflector::rules('transliteration', ['/å/' => 'aa']);
 
 Plugin::load('Migrations');
-Plugin::load('Xety/Cake3CookieAuth');
+Plugin::load('CakeDC/Auth');
 Plugin::load('Xety/Cake3Sluggable');
 Plugin::load('Josegonzalez/Upload');
 Plugin::load('Recaptcha', ['bootstrap' => true]);

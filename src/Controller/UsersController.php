@@ -255,8 +255,8 @@ class UsersController extends AppController
                         'httpOnly' => true
                     ]);
                     $this->Cookie->write('CookieAuth', [
-                        'email' => $this->request->getData('email'),
-                        'password' => $this->request->getData('password')
+                        'id' => $user['id'],
+                        'user_agent' => $this->request->getHeaderLine('User-Agent')
                     ]);
                 }
 

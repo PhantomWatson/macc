@@ -7,21 +7,21 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
+        "cakedc/auth": "3.0",
         "cakephp-fr/recaptcha": "^1.0",
         "cakephp/cakephp": "~3.1",
         "cakephp/migrations": "^2.0.0",
         "cakephp/plugin-installer": "^1.0",
+        "drewm/mailchimp-api": "^2.1",
         "gourmet/common-mark": "~1.0",
+        "imagine/imagine": "^0.6.3",
+        "josegonzalez/cakephp-upload": "^4.0",
         "josegonzalez/dotenv": "3.*",
         "mobiledetect/mobiledetectlib": "2.*",
+        "phpunit/phpunit": "^6.0",
         "stripe/stripe-php": "3.*",
         "twbs/bootstrap": "~3.0",
-        "xety/cake3-cookieauth": "1.*",
-        "xety/cake3-sluggable": "1.*",
-        "drewm/mailchimp-api": "^2.1",
-        "phpunit/phpunit": "^6.0",
-        "josegonzalez/cakephp-upload": "^4.0",
-        "imagine/imagine": "^0.6.3"
+        "xety/cake3-sluggable": "1.*"
     },
     "require-dev": {
         "psy/psysh": "@stable",

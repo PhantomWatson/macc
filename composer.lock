@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed31ac22023b48661b546151521b0b61",
+    "content-hash": "dba4b2ed3d8cd454fa76646ed514cc30",
     "packages": [
         {
             "name": "aura/intl",
@@ -51,6 +51,57 @@
                 "localization"
             ],
             "time": "2017-01-20T05:00:11+00:00"
+        },
+        {
+            "name": "cakedc/auth",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CakeDC/auth.git",
+                "reference": "b5f1c906b5b5fc1518882272b0f9bceca0808833"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CakeDC/auth/zipball/b5f1c906b5b5fc1518882272b0f9bceca0808833",
+                "reference": "b5f1c906b5b5fc1518882272b0f9bceca0808833",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "CakeDC\\Auth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CakeDC",
+                    "homepage": "https://www.cakedc.com",
+                    "role": "Author"
+                },
+                {
+                    "name": "Others",
+                    "homepage": "https://github.com/CakeDC/auth/graphs/contributors"
+                }
+            ],
+            "description": "Auth objects for CakePHP",
+            "homepage": "https://github.com/CakeDC/auth",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "cakedc",
+                "cakephp"
+            ],
+            "time": "2018-04-26T11:58:06+00:00"
         },
         {
             "name": "cakephp-fr/recaptcha",
@@ -2953,58 +3004,6 @@
                 "validate"
             ],
             "time": "2018-01-29T19:49:41+00:00"
-        },
-        {
-            "name": "xety/cake3-cookieauth",
-            "version": "v1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Xety/Cake3-CookieAuth.git",
-                "reference": "3fb54c89759dbfbc53c1f921d86855f85befcfc1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Xety/Cake3-CookieAuth/zipball/3fb54c89759dbfbc53c1f921d86855f85befcfc1",
-                "reference": "3fb54c89759dbfbc53c1f921d86855f85befcfc1",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "~3.0",
-                "php": ">=5.4.16"
-            },
-            "require-dev": {
-                "cakephp/cakephp-codesniffer": "master-dev",
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Xety\\Cake3CookieAuth\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Xety",
-                    "email": "zoro.fmt@gmail.com",
-                    "homepage": "https://github.com/Xety"
-                }
-            ],
-            "description": "A simple Cake3 plugin to authenticate users with Cookies.",
-            "homepage": "https://github.com/Xety/Cake3-CookieAuth",
-            "keywords": [
-                "auth",
-                "authenticate",
-                "cake3",
-                "cakephp",
-                "cookie",
-                "login",
-                "plugin"
-            ],
-            "time": "2016-10-25T06:10:13+00:00"
         },
         {
             "name": "xety/cake3-sluggable",

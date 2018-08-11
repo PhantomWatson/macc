@@ -80,8 +80,9 @@ class AppController extends Controller
                 'Form' => [
                     'fields' => ['username' => 'email']
                 ],
-                'Xety/Cake3CookieAuth.Cookie' => [
-                    'fields' => ['username' => 'email']
+                'CakeDC/Auth.RememberMe' => [
+                    'fields' => ['username' => 'email'],
+                    'Cookie' => ['name' => 'CookieAuth']
                 ]
             ],
             'authorize' => ['Controller'],
