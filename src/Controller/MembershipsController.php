@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Event\EmailListener;
 use App\Model\Entity\Membership;
+use App\Model\Entity\Payment;
 use App\Model\Entity\User;
 use App\Model\Table\MembershipRenewalLogsTable;
 use Cake\Core\Configure;
@@ -330,47 +331,19 @@ class MembershipsController extends AppController
             }
 
             $this->validateMembership($membership);
-            $amount = $membership->membership_level['cost'].'00'; // Cost is stored as dollars
-            $userName = $membership->user['name'];
-            $membershipLevelName = $membership->membership_level['name'];
-
-            $chargeParams = [
-                'amount'   => $amount,
-                'currency' => 'usd',
-                'customer' => $membership->user['stripe_customer_id'],
-                'description' => "Automatically renewing $userName's \"$membershipLevelName\" membership",
-                'metadata' => [
-                    'macc_user_id' => $membership->user_id,
-                    'membership_level_id' => $membership->membership_level_id
-                ],
-                'receipt_email' => $membership->user['email'],
-                'statement_descriptor' => 'MACC member renewal' // 22 characters max
-            ];
-
+            $chargeParams = $this->getAutoRenewalChargeParams($membership);
             $errorMsg = null;
+
             try {
                 $charge = $this->createStripeCharge($chargeParams);
-
-            // 'Card declined' exception
             } catch (\Stripe\Error\Card $e) {
-                $errorMsg = sprintf(
-                    'Card was declined when attempting to automatically renew %s\'s %s membership. ' .
-                    '(user ID: %s; email: %s)',
-                    $membership->user['name'],
-                    $membership->membership_level['name'],
-                    $membership->user_id,
-                    $membership->user['email']
-                );
-
-            // Other exceptions
+                $errorMsg = $this->getCardDeclinedErrorMsg($membership);
             } catch (\Exception $e) {
                 $errorMsg = $this->getChargeErrorMsg($membership, $e);
             }
 
             if (!isset($charge) || !$charge->paid) {
-                if (!$errorMsg) {
-                    $errorMsg = $this->getChargeErrorMsg($membership);
-                }
+                $errorMsg = $errorMsg ?? $this->getChargeErrorMsg($membership);
                 $logsTable->logAutoRenewal($errorMsg, true);
                 Log::write('error', $errorMsg);
                 $results[] = $errorMsg;
@@ -378,56 +351,38 @@ class MembershipsController extends AppController
             }
 
             // Save payment
-            $paymentParams = [
-                'user_id' => $membership->user_id,
-                'membership_level_id' => $membership->membership_level_id,
-                'amount' => $membership->membership_level['cost'],
-                'stripe_charge_id' => $charge->id
-            ];
-            $this->loadModel('Payments');
-            $payment = $this->Payments->newEntity($paymentParams);
+            $payment = $this->createAutoRenewPayment($membership, $charge->id);
             $errors = $payment->getErrors();
-            if (! empty($errors)) {
-                $msg = 'Errors saving payment record: ' . json_encode($errors);
-                $details = "\n\$paymentParams:\n" . print_r($paymentParams, true);
-                Log::write('error', $msg . $details);
-                $logsTable->logAutoRenewal($msg . $details, true);
-                $results[] = $msg . '<br />' . $details;
-                continue;
-            }
-            $payment = $this->Payments->save($payment);
-
-            // Turn off previous membership's auto_renew flag
-            $membership = $this->Memberships->patchEntity($membership, [
-                'auto_renew' => 0
-            ]);
-            $errors = $membership->getErrors();
-            if (! empty($errors)) {
-                $msg = 'Errors updating membership record: ' . json_encode($errors);
+            if (!empty($errors)) {
+                $msg = $this->getPaymentRecordErrorMsg($membership, $errors, $charge->id);
+                Log::write('error', $msg);
                 $logsTable->logAutoRenewal($msg, true);
                 $results[] = $msg;
                 continue;
             }
-            $membership = $this->Memberships->save($membership);
+            $this->Payments->save($payment);
 
-            // Save new membership
-            $membershipParams = [
-                'user_id' => $membership->user_id,
-                'membership_level_id' => $membership->membership_level_id,
-                'payment_id' => $payment->id,
-                'auto_renew' => 1,
-                'expires' => new Time(strtotime('+1 year'))
-            ];
-            $newMembership = $this->Memberships->newEntity($membershipParams);
-            $errors = $newMembership->getErrors();
-            if (! empty($errors)) {
-                $msg = 'Errors saving new membership record: '.json_encode($errors);
-                $details = "\n\$membershipParams:\n" . print_r($membershipParams, true);
-                $logsTable->logAutoRenewal($msg . $details, true);
-                $results[] = $msg . '<br />' . $details;
+            // Turn off previous membership's auto_renew flag
+            $membership = $this->Memberships->patchEntity($membership, ['auto_renew' => 0]);
+            $errors = $membership->getErrors();
+            if (!empty($errors)) {
+                $msg = $this->getMembershipSavingErrorMsg($membership);
+                $logsTable->logAutoRenewal($msg, true);
+                $results[] = $msg;
                 continue;
             }
-            $newMembership = $this->Memberships->save($newMembership);
+            $this->Memberships->save($membership);
+
+            // Save new membership
+            $newMembership = $this->createAutoRenewMembership($membership, $payment);
+            $errors = $newMembership->getErrors();
+            if (!empty($errors)) {
+                $msg = $this->getMembershipSavingErrorMsg($membership);
+                $logsTable->logAutoRenewal($msg, true);
+                $results[] = $msg;
+                continue;
+            }
+            $this->Memberships->save($newMembership);
 
             // Turn off any previous membership's auto_renew flag
             $this->Memberships->disablePreviousAutoRenewal($membership->user_id, $newMembership->id);
@@ -435,7 +390,7 @@ class MembershipsController extends AppController
             // Prevent this user from being charged again in this loop
             $chargedUsers[] = $membership->user_id;
 
-            $msg = 'Membership renewed for '.$membership->user['name'];
+            $msg = 'Membership renewed for ' . $membership->user['name'];
             $logsTable->logAutoRenewal($msg);
             $results[] = $msg;
         }
@@ -728,5 +683,130 @@ class MembershipsController extends AppController
         ]);
 
         return null;
+    }
+
+    /**
+     * Returns an array of parameters for a Stripe charge for renewing a membership
+     *
+     * @param Membership $membership
+     * @return array
+     */
+    private function getAutoRenewalChargeParams(Membership $membership)
+    {
+        $amount = $membership->membership_level['cost'].'00'; // Cost is stored as dollars
+        $userName = $membership->user['name'];
+        $membershipLevelName = $membership->membership_level['name'];
+
+        return [
+            'amount'   => $amount,
+            'currency' => 'usd',
+            'customer' => $membership->user['stripe_customer_id'],
+            'description' => "Automatically renewing $userName's \"$membershipLevelName\" membership",
+            'metadata' => [
+                'macc_user_id' => $membership->user_id,
+                'membership_level_id' => $membership->membership_level_id
+            ],
+            'receipt_email' => $membership->user['email'],
+            'statement_descriptor' => 'MACC member renewal' // 22 characters max
+        ];
+    }
+
+    /**
+     * Creates a new payment entity for the current auto-renewal process
+     *
+     * @param Membership $membership Membership entity
+     * @param string $chargeId ID for a successful Stripe charge
+     * @return Payment
+     */
+    private function createAutoRenewPayment(Membership $membership, string $chargeId)
+    {
+        $paymentParams = [
+            'user_id' => $membership->user_id,
+            'membership_level_id' => $membership->membership_level_id,
+            'amount' => $membership->membership_level['cost'],
+            'stripe_charge_id' => $chargeId
+        ];
+        $this->loadModel('Payments');
+
+        return $this->Payments->newEntity($paymentParams);
+    }
+
+    /**
+     * Returns a 'card declined' error message
+     *
+     * @param Membership $membership Membership entity
+     * @return string
+     */
+    private function getCardDeclinedErrorMsg(Membership $membership)
+    {
+        return sprintf(
+            'Card was declined when attempting to automatically renew %s\'s %s membership. ' .
+            '(user ID: %s; email: %s)',
+            $membership->user['name'],
+            $membership->membership_level['name'],
+            $membership->user_id,
+            $membership->user['email']
+        );
+    }
+
+    /**
+     * Returns a 'payment record could not be saved' error message
+     *
+     * @param Membership $membership Membership entity
+     * @param array $errors Payment record errors
+     * @param string $chargeId Stripe charge ID
+     * @return string
+     */
+    private function getPaymentRecordErrorMsg(Membership $membership, array $errors, string $chargeId)
+    {
+        return sprintf(
+            'Error saving payment record when attempting to automatically renew %s\'s %s membership: ' .
+            '%s (user ID: %s; email: %s; Stripe charge ID: %s)',
+            $membership->user['name'],
+            $membership->membership_level['name'],
+            json_encode($errors),
+            $membership->user_id,
+            $membership->user['email'],
+            $chargeId
+        );
+    }
+
+    /**
+     * Returns a 'could not save/update membership record' error message
+     *
+     * @param Membership $membership Membership entity
+     * @return string
+     */
+    private function getMembershipSavingErrorMsg(Membership $membership)
+    {
+        return sprintf(
+            'Error saving membership record when attempting to automatically renew %s\'s %s membership: ' .
+            '%s (user ID: %s; email: %s; Stripe charge ID: %s)',
+            $membership->user['name'],
+            $membership->membership_level['name'],
+            json_encode($membership->getErrors()),
+            $membership->user_id,
+            $membership->user['email']
+        );
+    }
+
+    /**
+     * Creates a new membership entity for the one currently being auto-renewed
+     *
+     * @param Membership $existingMembership Membership entity
+     * @param Payment $payment Payment entity
+     * @return Membership
+     */
+    private function createAutoRenewMembership(Membership $existingMembership, Payment $payment)
+    {
+        $membershipParams = [
+            'user_id' => $existingMembership->user_id,
+            'membership_level_id' => $existingMembership->membership_level_id,
+            'payment_id' => $payment->id,
+            'auto_renew' => 1,
+            'expires' => new Time(strtotime('+1 year'))
+        ];
+
+        return $this->Memberships->newEntity($membershipParams);
     }
 }
