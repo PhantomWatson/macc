@@ -184,4 +184,47 @@ class MembershipsTable extends Table
             $this->save($membership);
         }
     }
+
+    /**
+     * Returns a string warning the user about when their membership will/did expire, or null if not applicable
+     *
+     * @param int $userId User ID
+     * @return null|string
+     */
+    public function getMembershipExpirationWarning($userId)
+    {
+        if (!$userId) {
+            return null;
+        }
+
+        /** @var Membership $membership */
+        $membership = $this->find('all')
+            ->select(['id', 'expires'])
+            ->where([
+                'Memberships.user_id' => $userId,
+                function (QueryExpression $exp) {
+                    return $exp->isNull('canceled');
+                }
+            ])
+            ->contain([
+                'MembershipLevels' => function (Query $q) {
+                    return $q->select(['id', 'name']);
+                }
+            ])
+            ->order(['Memberships.created' => 'DESC'])
+            ->first();
+
+        if (!$membership) {
+            return null;
+        }
+
+        $hasExpired = $membership->expires->format('Y-m-d H:i:s') < date('Y-m-d H:i:s');
+        $msg = $hasExpired ? 'Your "%s" membership expired on %s' : 'Your "%s" membership will expire on %s';
+
+        return sprintf(
+            $msg,
+            $membership->membership_level->name,
+            $membership->expires->format('F jS, Y')
+        );
+    }
 }

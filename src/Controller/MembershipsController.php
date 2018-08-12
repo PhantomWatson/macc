@@ -520,40 +520,11 @@ class MembershipsController extends AppController
     public function levels()
     {
         // Notify user of their current membership status
-        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        $this->loadModel('Memberships');
         $userId = $this->Auth->user('id');
-        if ($userId) {
-            /** @var Membership $membership */
-            $membership = $membershipsTable->find('all')
-                ->select(['id', 'expires'])
-                ->where([
-                    'Memberships.user_id' => $userId,
-                    function ($exp) {
-                        /** @var QueryExpression $exp */
-
-                        return $exp->isNull('canceled');
-                    }
-                ])
-                ->contain([
-                    'MembershipLevels' => function ($q) {
-                        /** @var Query $q */
-
-                        return $q->select(['id', 'name']);
-                    }
-                ])
-                ->order(['Memberships.created' => 'DESC'])
-                ->first();
-            if ($membership) {
-                if ($membership->expires->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s')) {
-                    $msg = 'You have an "' . $membership->membership_level->name . '" membership' .
-                        ' that will expire on ' . $membership->expires->format('F jS, Y');
-                    $this->Flash->set($msg);
-                } else {
-                    $msg = 'Your "' . $membership->membership_level->name . '" membership' .
-                        ' expired on ' . $membership->expires->format('F jS, Y');
-                    $this->Flash->set($msg);
-                }
-            }
+        $expirationWarning = $this->Memberships->getMembershipExpirationWarning($userId);
+        if ($expirationWarning) {
+            $this->Flash->set($expirationWarning);
         }
 
         $this->loadModel('MembershipLevels');
