@@ -414,9 +414,12 @@ class MembershipsController extends AppController
             // Prevent this user from being charged again in this loop
             $chargedUsers[] = $membership->user_id;
 
-            $errorMsg = 'Membership renewed for ' . $membership->user['name'];
-            $logsTable->logAutoRenewal($errorMsg);
-            $results[] = $errorMsg;
+            // Email user
+            $this->getMailer('Membership')->send('membershipAutoRenewed', [$membership]);
+
+            $msg = 'Membership renewed for ' . $membership->user['name'];
+            $logsTable->logAutoRenewal($msg);
+            $results[] = $msg;
         }
 
         $this->set([

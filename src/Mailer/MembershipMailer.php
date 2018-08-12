@@ -136,4 +136,26 @@ class MembershipMailer extends Mailer
             ])
             ->setTemplate('error_renewing');
     }
+
+    /**
+     * Defines an email that informs a user that their membership was just auto-renewed
+     *
+     * @param Membership $membership Membership entity
+     * @return Email
+     */
+    public function membershipAutoRenewed(Membership $membership)
+    {
+        return $this
+            ->setTo($membership->user->email)
+            ->setSubject('Muncie Arts and Culture Council - Membership automatically renewed')
+            ->setViewVars([
+                'userName' => $membership->user->name,
+                'profileUrl' => Router::url([
+                    'controller' => 'Users',
+                    'action' => 'myBio',
+                    '?' => ['flow' => 1]
+                ], true)
+            ])
+            ->setTemplate('membership_auto_renewed');
+    }
 }

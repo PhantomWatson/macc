@@ -54,6 +54,21 @@ class MembershipMailPreview extends MailPreview
     }
 
     /**
+     * Previews the 'your membership was automatically renewed' email
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function membershipAutoRenewed()
+    {
+        $membership = $this->getArbitraryMembership();
+
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+
+        return $mailer->membershipAutoRenewed($membership);
+    }
+
+    /**
      * Returns an arbitrarily chosen membership record for email-previewing
      *
      * @return Membership
