@@ -2,6 +2,7 @@
 namespace App\Mailer;
 
 use App\Model\Entity\Membership;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\Mailer\Email;
@@ -111,5 +112,28 @@ class MembershipMailer extends Mailer
                 ], true)
             ])
             ->setTemplate('card_declined');
+    }
+
+    /**
+     * Defines an email that informs an admin that there was an error automatically renewing a membership
+     * (other than a declined card)
+     *
+     * @param Membership $membership Membership entity
+     * @param string $errorMsg Error message
+     * @return Email
+     */
+    public function errorRenewingMembership(Membership $membership, $errorMsg)
+    {
+        return $this
+            ->setTo(Configure::read('admin_email'))
+            ->setSubject(sprintf(
+                'Muncie Arts and Culture Council - Error renewing %s\'s membership',
+                $membership->user->name
+            ))
+            ->setViewVars([
+                'userName' => $membership->user->name,
+                'errorMsg' => $errorMsg
+            ])
+            ->setTemplate('error_renewing');
     }
 }

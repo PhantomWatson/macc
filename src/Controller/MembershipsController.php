@@ -321,9 +321,9 @@ class MembershipsController extends AppController
         $results = [];
 
         if ($memberships->isEmpty()) {
-            $msg = 'No memberships need to be renewed at this time.';
-            $logsTable->logAutoRenewal($msg);
-            $results[] = $msg;
+            $errorMsg = 'No memberships need to be renewed at this time.';
+            $logsTable->logAutoRenewal($errorMsg);
+            $results[] = $errorMsg;
         }
 
         $chargedUsers = [];
@@ -341,13 +341,18 @@ class MembershipsController extends AppController
                 $charge = $this->createStripeCharge($chargeParams);
             } catch (\Stripe\Error\Card $e) {
                 $errorMsg = $this->getCardDeclinedErrorMsg($membership);
-                $this->getMailer('Membership')->send('autoRenewFailedCardDeclined', [$membership]);
+                $this->getMailer('Membership')
+                    ->send('autoRenewFailedCardDeclined', [$membership]);
             } catch (\Exception $e) {
                 $errorMsg = $this->getChargeErrorMsg($membership, $e);
+                $this->getMailer('Membership')
+                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
             }
 
             if (!isset($charge) || !$charge->paid) {
                 $errorMsg = $errorMsg ?? $this->getChargeErrorMsg($membership);
+                $this->getMailer('Membership')
+                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
                 $logsTable->logAutoRenewal($errorMsg, true);
                 Log::write('error', $errorMsg);
                 $results[] = $errorMsg;
@@ -358,10 +363,12 @@ class MembershipsController extends AppController
             $payment = $this->createAutoRenewPayment($membership, $charge->id);
             $errors = $payment->getErrors();
             if (!empty($errors)) {
-                $msg = $this->getPaymentRecordErrorMsg($membership, $errors, $charge->id);
-                Log::write('error', $msg);
-                $logsTable->logAutoRenewal($msg, true);
-                $results[] = $msg;
+                $errorMsg = $this->getPaymentRecordErrorMsg($membership, $errors, $charge->id);
+                $this->getMailer('Membership')
+                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
+                Log::write('error', $errorMsg);
+                $logsTable->logAutoRenewal($errorMsg, true);
+                $results[] = $errorMsg;
                 continue;
             }
             $this->Payments->save($payment);
@@ -370,9 +377,11 @@ class MembershipsController extends AppController
             $membership = $this->Memberships->patchEntity($membership, ['auto_renew' => 0]);
             $errors = $membership->getErrors();
             if (!empty($errors)) {
-                $msg = $this->getMembershipSavingErrorMsg($membership);
-                $logsTable->logAutoRenewal($msg, true);
-                $results[] = $msg;
+                $errorMsg = $this->getMembershipSavingErrorMsg($membership);
+                $this->getMailer('Membership')
+                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
+                $logsTable->logAutoRenewal($errorMsg, true);
+                $results[] = $errorMsg;
                 continue;
             }
             $this->Memberships->save($membership);
@@ -381,9 +390,11 @@ class MembershipsController extends AppController
             $newMembership = $this->createAutoRenewMembership($membership, $payment);
             $errors = $newMembership->getErrors();
             if (!empty($errors)) {
-                $msg = $this->getMembershipSavingErrorMsg($membership);
-                $logsTable->logAutoRenewal($msg, true);
-                $results[] = $msg;
+                $errorMsg = $this->getMembershipSavingErrorMsg($membership);
+                $this->getMailer('Membership')
+                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
+                $logsTable->logAutoRenewal($errorMsg, true);
+                $results[] = $errorMsg;
                 continue;
             }
             $this->Memberships->save($newMembership);
@@ -394,9 +405,9 @@ class MembershipsController extends AppController
             // Prevent this user from being charged again in this loop
             $chargedUsers[] = $membership->user_id;
 
-            $msg = 'Membership renewed for ' . $membership->user['name'];
-            $logsTable->logAutoRenewal($msg);
-            $results[] = $msg;
+            $errorMsg = 'Membership renewed for ' . $membership->user['name'];
+            $logsTable->logAutoRenewal($errorMsg);
+            $results[] = $errorMsg;
         }
 
         $this->set([

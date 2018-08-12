@@ -9,7 +9,7 @@ use DebugKit\Mailer\MailPreview;
 class MembershipMailPreview extends MailPreview
 {
     /**
-     * Previews the 'expiring membership' email with an arbitrary membership
+     * Previews the 'expiring membership' email
      *
      * @return \Cake\Mailer\Email
      */
@@ -23,6 +23,11 @@ class MembershipMailPreview extends MailPreview
         return $mailer->expiringMembership($membership);
     }
 
+    /**
+     * Previews the 'your card was declined' email
+     *
+     * @return \Cake\Mailer\Email
+     */
     public function autoRenewFailedCardDeclined()
     {
         $membership = $this->getArbitraryMembership();
@@ -31,6 +36,21 @@ class MembershipMailPreview extends MailPreview
         $mailer = $this->getMailer('Membership');
 
         return $mailer->autoRenewFailedCardDeclined($membership);
+    }
+
+    /**
+     * Previews the 'a membership could not be automatically renewed' email
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function errorRenewingMembership()
+    {
+        $membership = $this->getArbitraryMembership();
+
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+
+        return $mailer->errorRenewingMembership($membership, 'Error details go here');
     }
 
     /**
