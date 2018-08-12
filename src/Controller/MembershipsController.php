@@ -339,10 +339,19 @@ class MembershipsController extends AppController
 
             try {
                 $charge = $this->createStripeCharge($chargeParams);
+
+            // User's card was declined
             } catch (\Stripe\Error\Card $e) {
-                $errorMsg = $this->getCardDeclinedErrorMsg($membership);
+                // Email user
                 $this->getMailer('Membership')
                     ->send('autoRenewFailedCardDeclined', [$membership]);
+
+                // Turn off auto-renewal
+                $membership = $this->Memberships->patchEntity($membership, ['auto_renew' => 0]);
+                $this->Memberships->save($membership);
+
+                $errorMsg = $this->getCardDeclinedErrorMsg($membership);
+
             } catch (\Exception $e) {
                 $errorMsg = $this->getChargeErrorMsg($membership, $e);
                 $this->getMailer('Membership')
