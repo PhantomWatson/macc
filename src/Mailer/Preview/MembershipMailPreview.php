@@ -15,14 +15,37 @@ class MembershipMailPreview extends MailPreview
      */
     public function expiringMembership()
     {
-        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
-
-        /** @var Membership $membership */
-        $membership = $membershipsTable->find()->contain(['Users'])->orderDesc('expires')->first();
+        $membership = $this->getArbitraryMembership();
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
 
         return $mailer->expiringMembership($membership);
+    }
+
+    public function autoRenewFailedCardDeclined()
+    {
+        $membership = $this->getArbitraryMembership();
+
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+
+        return $mailer->autoRenewFailedCardDeclined($membership);
+    }
+
+    /**
+     * Returns an arbitrarily chosen membership record for email-previewing
+     *
+     * @return Membership
+     */
+    private function getArbitraryMembership()
+    {
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+
+        return $membershipsTable
+            ->find()
+            ->contain(['Users'])
+            ->orderDesc('expires')
+            ->first();
     }
 }

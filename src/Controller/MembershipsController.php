@@ -14,6 +14,7 @@ use Cake\Event\EventManager;
 use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\Log\Log;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -31,6 +32,8 @@ use Cake\ORM\TableRegistry;
  */
 class MembershipsController extends AppController
 {
+    use MailerAwareTrait;
+
     /**
      * Initialize method
      *
@@ -338,6 +341,7 @@ class MembershipsController extends AppController
                 $charge = $this->createStripeCharge($chargeParams);
             } catch (\Stripe\Error\Card $e) {
                 $errorMsg = $this->getCardDeclinedErrorMsg($membership);
+                $this->getMailer('Membership')->send('autoRenewFailedCardDeclined', [$membership]);
             } catch (\Exception $e) {
                 $errorMsg = $this->getChargeErrorMsg($membership, $e);
             }

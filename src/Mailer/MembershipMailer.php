@@ -89,4 +89,27 @@ class MembershipMailer extends Mailer
 
         return 'soon';
     }
+
+    /**
+     * Defines an email that informs a user that their membership could not be renewed because of a declined payment
+     *
+     * @param Membership $membership Membership entity
+     * @return Email
+     */
+    public function autoRenewFailedCardDeclined(Membership $membership)
+    {
+        return $this
+            ->setTo($membership->user->email)
+            ->setSubject('Muncie Arts and Culture Council - Error renewing membership')
+            ->setViewVars([
+                'userName' => $membership->user->name,
+                'renewUrl' => Router::url([
+                    'controller' => 'Memberships',
+                    'action' => 'level',
+                    $membership->membership_level_id,
+                    '?' => ['renewing' => 1]
+                ], true)
+            ])
+            ->setTemplate('card_declined');
+    }
 }
