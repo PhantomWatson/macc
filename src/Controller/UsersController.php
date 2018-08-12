@@ -312,17 +312,20 @@ class UsersController extends AppController
                 $userId = $this->Users->getIdWithEmail($email);
                 if ($userId) {
                     if (Mailer::sendPasswordResetEmail($userId)) {
-                        $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
+                        $this->Flash->success(
+                            'Success! You should be shortly receiving an email ' .
+                            'with a link to reset your password.'
+                        );
                         $user['email'] = '';
                     } else {
-                        $msg = 'There was an error sending your password-resetting email. ';
-                        $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                        $msg = 'There was an error sending your password-resetting email. Please try again, or email ' .
+                            '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
                         $this->Flash->error($msg);
                     }
                 } else {
-                    $msg = 'We couldn\'t find an account registered with the email address <strong>'.$email.'</strong>. ';
-                    $msg .= 'Please make sure you spelled it correctly, and email ';
-                    $msg .= '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> if you need assistance.';
+                    $msg = 'We couldn\'t find an account registered with the email address ' .
+                        '<strong>'.$email.'</strong>. Please make sure you spelled it correctly, and email ' .
+                        '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> if you need assistance.';
                     $this->Flash->error($msg);
                 }
             }
@@ -336,7 +339,10 @@ class UsersController extends AppController
     public function resetPassword($userId = null, $timestamp = null, $hash = null)
     {
         if (! $userId || ! $timestamp && ! $hash) {
-            throw new NotFoundException('Incomplete URL for password-resetting. Did you leave out part of the URL when you copied and pasted it?');
+            throw new NotFoundException(
+                'Incomplete URL for password-resetting. ' .
+                'Did you leave out part of the URL when you copied and pasted it?'
+            );
         }
 
         if (time() - $timestamp > 60 * 60 * 24) {
@@ -388,7 +394,10 @@ class UsersController extends AppController
         $ownProfile = $this->Auth->user('id') == $userId;
         $isCurrentMember = $this->Users->isCurrentMember($userId);
         if (! ($isCurrentMember || $ownProfile)) {
-            $this->Flash->error('Sorry, no current member of the Muncie Arts and Culture Council was found matching your request.');
+            $this->Flash->error(
+                'Sorry, no current member of the Muncie Arts and Culture Council ' .
+                'was found matching your request.'
+            );
             return $this->redirect(['action' => 'members']);
         }
 
