@@ -3,6 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  * @var \App\Model\Entity\Picture $picture
+ * @var bool $qualifiesForLogo
+ * @var int $picLimit
  */
     use Cake\Core\Configure;
 ?>
@@ -104,7 +106,7 @@
                 'Next',
                 [
                     'controller' => 'Users',
-                    'action' => 'myContact',
+                    'action' => $qualifiesForLogo ? 'myLogo' : 'myContact',
                     '?' => ['flow' => 1]
                 ],
                 ['class' => 'btn btn-primary']

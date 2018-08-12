@@ -1,7 +1,9 @@
 <?php
 /**
+ * @var \App\Model\Entity\Membership $authUserMembership
  * @var \App\View\AppView $this
  * @var array $authUser
+ * @var bool $qualifiesForLogo
  * @var string $profileUnavailableMsg
  */
     use Cake\Routing\Router;
@@ -22,13 +24,22 @@
             'controller' => 'Users',
             'action' => 'myPictures',
             '?' => $queryStrings
-        ]),
-        'Contact' => Router::url([
-            'controller' => 'Users',
-            'action' => 'myContact',
-            '?' => $queryStrings
         ])
     ];
+
+    if ($qualifiesForLogo) {
+        $tabs['Logo'] = Router::url([
+            'controller' => 'Users',
+            'action' => 'myLogo',
+            '?' => $queryStrings
+        ]);
+    }
+
+    $tabs['Contact'] = Router::url([
+        'controller' => 'Users',
+        'action' => 'myContact',
+        '?' => $queryStrings
+    ]);
 ?>
 
 <?php if (isset($profileUnavailableMsg)): ?>

@@ -21,6 +21,8 @@ use Cake\ORM\Entity;
  */
 class Membership extends Entity
 {
+    const AMBASSADOR_LEVEL = 3;
+    const ARTS_HERO_LEVEL = 4;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -35,4 +37,14 @@ class Membership extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    public static function qualifiesForLogo($membershipLevelId)
+    {
+        $qualifyingLevels = [
+            self::AMBASSADOR_LEVEL,
+            self::ARTS_HERO_LEVEL
+        ];
+
+        return in_array($membershipLevelId, $qualifyingLevels);
+    }
 }

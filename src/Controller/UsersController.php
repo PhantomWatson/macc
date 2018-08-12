@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
+use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
@@ -162,6 +163,7 @@ class UsersController extends AppController
         }
         $this->set([
             'pageTitle' => 'My Bio',
+            'qualifiesForLogo' => $this->qualifiesForLogo(),
             'user' => $user,
         ]);
 
@@ -206,6 +208,7 @@ class UsersController extends AppController
         $this->loadModel('Tags');
         $this->set([
             'pageTitle' => 'My Tags',
+            'qualifiesForLogo' => $this->qualifiesForLogo(),
             'tags' => $this->Tags->getThreaded(),
             'user' => $user,
         ]);
@@ -230,8 +233,9 @@ class UsersController extends AppController
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         $this->set([
             'pageTitle' => 'My Pictures',
-            'user' => $user,
-            'picLimit' => Configure::read('maxPicturesPerUser')
+            'picLimit' => Configure::read('maxPicturesPerUser'),
+            'qualifiesForLogo' => $this->qualifiesForLogo(),
+            'user' => $user
         ]);
     }
 
@@ -544,10 +548,61 @@ class UsersController extends AppController
             }
         }
         $this->set([
-            'user' => $user,
-            'pageTitle' => 'My Contact Info'
+            'pageTitle' => 'My Contact Info',
+            'qualifiesForLogo' => $this->qualifiesForLogo(),
+            'user' => $user
         ]);
 
         return null;
+    }
+
+    public function myLogo()
+    {
+        $qualifies = $this->qualifiesForLogo();
+        if (!$qualifies) {
+            $this->Flash->error(
+                'Sorry, you\'ll need to purchase a membership at the Ambassador or Arts Hero level in order ' .
+                'to upload a logo to be displayed on the MACC website.'
+            );
+            return $this->redirect('/');
+        }
+
+        $this->setNonMemberAlert();
+        $user = $this->Users->get($this->Auth->user('id'), [
+            'contain' => []
+        ]);
+
+        $this->set([
+            'pageTitle' => 'My Logo',
+            'qualifiesForLogo' => $qualifies,
+            'user' => $user
+        ]);
+
+        return null;
+    }
+
+    /**
+     * Returns TRUE if the current user qualifies for uploading a logo
+     *
+     * @return bool
+     */
+    private function qualifiesForLogo()
+    {
+        $userId = $this->Auth->user('id');
+
+        if (!$userId) {
+            return false;
+        }
+
+        /** @var Membership $membership */
+        $membership = TableRegistry::getTableLocator()
+            ->get('Memberships')
+            ->getCurrentMembership($userId);
+
+        if (!$membership) {
+            return false;
+        }
+
+        return Membership::qualifiesForLogo($membership->membership_level_id);
     }
 }
