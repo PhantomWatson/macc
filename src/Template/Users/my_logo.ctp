@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  * @var \App\Model\Entity\Picture $picture
+ * @var string|null $logoPath
  */
     use Cake\Core\Configure;
 ?>
@@ -18,6 +19,12 @@
     </p>
 
     <?= $this->element('img_upload_notes') ?>
+
+    <div id="my-logo">
+        <?php if ($logoPath): ?>
+            <img src="<?= $logoPath ?>" alt="Logo" />
+        <?php endif; ?>
+    </div>
 
     <div id="picture-upload-container">
         <button id="picture-upload">
@@ -48,6 +55,15 @@
 </div>
 
 <?php
+    $this->Html->script('logo-uploader.js', ['block' => 'script']);
     $this->Html->script('/uploadifive/jquery.uploadifive.min.js', ['block' => 'script']);
     $this->Html->css('/uploadifive/uploadifive.css', ['block' => 'css']);
 ?>
+<?php $this->append('buffered'); ?>
+    logoUploader.init(<?= json_encode([
+        'filesizeLimit' => $manualFilesizeLimit . 'B',
+        'timestamp' => time(),
+        'token' => md5(Configure::read('upload_verify_token') . time()),
+        'userId' => $user['id']
+    ]) ?>);
+<?php $this->end(); ?>

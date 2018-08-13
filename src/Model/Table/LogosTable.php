@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -40,6 +39,14 @@ class LogosTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Josegonzalez/Upload.Upload', [
+            'filename' => [
+                'pathProcessor' => 'App\Media\PathProcessor',
+                'transformer' => 'App\Media\Transformer',
+                'path' => 'webroot{DS}img{DS}logos{DS}{user_id}{DS}',
+                'keepFilesOnDelete' => false
+            ]
+        ]);
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
@@ -60,10 +67,50 @@ class LogosTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('filename')
-            ->maxLength('filename', 255)
             ->requirePresence('filename', 'create')
             ->notEmpty('filename');
+
+        $validator->setProvider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
+        $validator
+            ->add('filename', 'isValidExtension', [
+                'rule' => ['extension', ['jpg', 'jpeg', 'gif', 'png']],
+                'message' => 'Sorry, your images need to have a filetype of .jpg, .png, or .gif',
+                'last' => true
+            ])
+            ->add('filename', 'fileUnderPhpSizeLimit', [
+                'rule' => 'isUnderPhpSizeLimit',
+                'message' => 'Sorry, this image exceeds the maximum filesize',
+                'provider' => 'upload',
+                'last' => true
+            ])
+            ->add('filename', 'fileCompletedUpload', [
+                'rule' => 'isCompletedUpload',
+                'message' => 'This file could not be uploaded completely',
+                'provider' => 'upload',
+                'last' => true
+            ])
+            ->add('filename', 'fileFileUpload', [
+                'rule' => 'isFileUpload',
+                'message' => 'No file was uploaded',
+                'provider' => 'upload',
+                'last' => true
+            ])
+            ->add('filename', 'fileSuccessfulWrite', [
+                'rule' => 'isSuccessfulWrite',
+                'message' => 'There was an error saving the uploaded file',
+                'provider' => 'upload',
+                'last' => true
+            ])
+            ->add('filename', 'fileAboveMinHeight', [
+                'rule' => ['isAboveMinHeight', 200],
+                'message' => 'This image should at least be 200px high',
+                'provider' => 'upload'
+            ])
+            ->add('filename', 'fileAboveMinWidth', [
+                'rule' => ['isAboveMinWidth', 200],
+                'message' => 'This image should at least be 200px wide',
+                'provider' => 'upload'
+            ]);
 
         return $validator;
     }

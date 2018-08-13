@@ -3,6 +3,7 @@
 /tmp/*
 /logs/*
 /webroot/img/members/*
+/webroot/img/logos/*
 
 # OS generated files #
 ######################

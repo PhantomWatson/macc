@@ -2,10 +2,13 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
+use App\Media\Transformer;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
+use App\Model\Table\LogosTable;
 use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -20,6 +23,7 @@ use Recaptcha\Controller\Component\RecaptchaComponent;
  * @property \App\Model\Table\UsersTable $Users
  * @property RecaptchaComponent $Recaptcha
  * @property \App\Model\Table\TagsTable $Tags
+ * @property LogosTable $Logos
  */
 class UsersController extends AppController
 {
@@ -237,6 +241,7 @@ class UsersController extends AppController
             'qualifiesForLogo' => $this->qualifiesForLogo(),
             'user' => $user
         ]);
+        $this->setUploadFilesizeLimit();
     }
 
     /**
@@ -581,11 +586,25 @@ class UsersController extends AppController
             'contain' => []
         ]);
 
+        $this->loadModel('Logos');
+        $logo = $this->Logos
+            ->find()
+            ->where(['user_id' => $this->Auth->user('id')])
+            ->first();
+        $logoPath = $logo
+            ? sprintf(
+                '/img/logos/%s/%s',
+                $logo->user_id,
+                Transformer::generateThumbnailFilename($logo->filename)
+            )
+            : null;
         $this->set([
+            'logoPath' => $logoPath,
             'pageTitle' => 'My Logo',
             'qualifiesForLogo' => $qualifies,
             'user' => $user
         ]);
+        $this->setUploadFilesizeLimit();
 
         return null;
     }
@@ -613,5 +632,69 @@ class UsersController extends AppController
         }
 
         return Membership::qualifiesForLogo($membership->membership_level_id);
+    }
+
+    /**
+     * Uploads a logo
+     *
+     * @return void
+     */
+    public function uploadLogo()
+    {
+        $this->viewBuilder()->setLayout('json');
+        $this->set('_serialize', ['message', 'filepath']);
+
+        if ($this->request->is('post')) {
+            $userId = $this->Auth->user('id');
+            $filename = $this->request->getData('Filedata');
+            $this->loadModel('Logos');
+
+            // Create new logo record
+            $logo = $this->Logos->newEntity([
+                'user_id' => $userId,
+                'filename' => $filename
+            ]);
+
+            if ($this->Logos->save($logo)) {
+                // Delete any previous records
+                $this->Logos->deleteAll([
+                    'user_id' => $userId,
+                    'id !=' => $logo->id
+                ]);
+
+                $this->set([
+                    'message' => 'Logo uploaded',
+                    'filepath' => sprintf(
+                        '/img/logos/%s/%s',
+                        $userId,
+                        Transformer::generateThumbnailFilename($logo->filename)
+                    )
+                ]);
+                return;
+            }
+
+            // Error
+            $errorDetails = print_r(array_values($logo->getErrors()), true);
+            $this->set([
+                'message' => 'Error uploading logo. Details: ' . $errorDetails
+            ]);
+            $this->response = $this->response->withStatus(500);
+
+        } else {
+            throw new BadRequestException('No picture was uploaded');
+        }
+    }
+
+    /**
+     * Sets the $manualFilesizeLimit view variable
+     *
+     * @return void
+     */
+    private function setUploadFilesizeLimit()
+    {
+        $uploadMax = ini_get('upload_max_filesize');
+        $postMax = ini_get('post_max_size');
+        $serverFilesizeLimit = min($uploadMax, $postMax);
+        $this->set('manualFilesizeLimit', min('10M', $serverFilesizeLimit));
     }
 }
