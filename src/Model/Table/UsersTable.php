@@ -56,6 +56,9 @@ class UsersTable extends Table
             'targetForeignKey' => 'tag_id',
             'joinTable' => 'tags_users'
         ]);
+        $this->hasOne('Logos', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     /**
