@@ -1,8 +1,7 @@
 <?php
-$uploadMax = ini_get('upload_max_filesize');
-$postMax = ini_get('post_max_size');
-$serverFilesizeLimit = min($uploadMax, $postMax);
-$manualFilesizeLimit = min('10M', $serverFilesizeLimit);
+/**
+ * @var int $manualFilesizeLimit
+ */
 ?>
 <ul class="footnote">
     <li>
