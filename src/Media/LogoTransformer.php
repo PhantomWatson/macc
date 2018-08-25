@@ -3,13 +3,12 @@ namespace App\Media;
 
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
-use Imagine\Gd\Image;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Josegonzalez\Upload\File\Transformer\TransformerInterface;
 
-class Transformer implements TransformerInterface
+class LogoTransformer implements TransformerInterface
 {
     /**
      * Table instance.
@@ -87,55 +86,13 @@ class Transformer implements TransformerInterface
         array_pop($tmpPathParts); // remove filename from path
         $tmpPath = implode(DS, $tmpPathParts);
 
-        // Process fullsize image
-        if ($this->isTooBig($image)) {
-            // Shrink image to max dimensions and save in tmp dir
-            $size = new Box(2000, 2000);
-            $mode = ImageInterface::THUMBNAIL_INSET;
-            $tmpFullsize = microtime().$this->data['name'];
-            $image->thumbnail($size, $mode)->save($tmpPath.DS.$tmpFullsize);
-            $retval[$tmpPath.DS.$tmpFullsize] = $this->data['name'];
-        } else {
-            $retval[$this->data['tmp_name']] = $this->data['name'];
-        }
-
         // Create thumbnail
         $size = new Box(200, 200);
-        $mode = ImageInterface::THUMBNAIL_OUTBOUND;
-        $thumbFilename = $this->generateThumbnailFilename($this->data['name']);
-        $image->thumbnail($size, $mode)->save($tmpPath.DS.$thumbFilename);
-        $retval[$tmpPath.DS.$thumbFilename] = $thumbFilename;
+        $mode = ImageInterface::THUMBNAIL_INSET;
+        $tmpFullsize = microtime().$this->data['name'];
+        $image->thumbnail($size, $mode)->save($tmpPath.DS.$tmpFullsize);
+        $retval[$tmpPath.DS.$tmpFullsize] = $this->data['name'];
 
         return $retval;
-    }
-
-    /**
-     * Returns boolean indicating whether or not the image exceeds maximum dimensions
-     *
-     * @param Image $image
-     * @return bool
-     */
-    private function isTooBig(Image $image)
-    {
-        $maxDimension = 2000;
-        $width = $image->getSize()->getWidth();
-        $height = $image->getSize()->getHeight();
-        return $width > $maxDimension || $height > $maxDimension;
-    }
-
-    /**
-     * Returns a filename with ".thumb" inserted before the extension,
-     * e.g. "picture.jpg" => "picture.thumb.jpg"
-     *
-     * @param string $fullsizeFilename
-     * @return string
-     */
-    public static function generateThumbnailFilename($fullsizeFilename)
-    {
-        $thumbFilenameParts = explode('.', $fullsizeFilename);
-        $extension = array_pop($thumbFilenameParts);
-        $thumbFilenameParts[] = 'thumb';
-        $thumbFilenameParts[] = $extension;
-        return implode('.', $thumbFilenameParts);
     }
 }

@@ -42,7 +42,7 @@ class LogosTable extends Table
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'filename' => [
                 'pathProcessor' => 'App\Media\PathProcessor',
-                'transformer' => 'App\Media\Transformer',
+                'transformer' => 'App\Media\LogoTransformer',
                 'path' => 'webroot{DS}img{DS}logos{DS}{user_id}{DS}',
                 'keepFilesOnDelete' => false
             ]

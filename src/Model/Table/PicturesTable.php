@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use App\Media\Transformer;
+use App\Media\ProfileImgTransformer;
 use App\Model\Entity\Picture;
 use ArrayObject;
 use Cake\Event\Event;
@@ -37,7 +37,7 @@ class PicturesTable extends Table
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'filename' => [
                 'pathProcessor' => 'App\Media\PathProcessor',
-                'transformer' => 'App\Media\Transformer',
+                'transformer' => 'App\Media\ProfileImgTransformer',
                 'path' => 'webroot{DS}img{DS}members{DS}{user_id}{DS}',
                 'keepFilesOnDelete' => false
             ]
@@ -153,7 +153,7 @@ class PicturesTable extends Table
     public function afterDelete(Event $event, Picture $entity, ArrayObject $options)
     {
         $fullsizeFilename = $entity->filename;
-        $thumbFilename = Transformer::generateThumbnailFilename($fullsizeFilename);
+        $thumbFilename = ProfileImgTransformer::generateThumbnailFilename($fullsizeFilename);
         $file = new File(WWW_ROOT.'img'.DS.'members'.DS.$entity->user_id.DS.$thumbFilename);
         $file->delete();
 

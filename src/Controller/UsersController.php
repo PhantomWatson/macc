@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
-use App\Media\Transformer;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use App\Model\Table\LogosTable;
@@ -595,7 +594,7 @@ class UsersController extends AppController
             ? sprintf(
                 '/img/logos/%s/%s',
                 $logo->user_id,
-                Transformer::generateThumbnailFilename($logo->filename)
+                $logo->filename
             )
             : null;
         $this->set([
@@ -667,7 +666,7 @@ class UsersController extends AppController
                     'filepath' => sprintf(
                         '/img/logos/%s/%s',
                         $userId,
-                        Transformer::generateThumbnailFilename($logo->filename)
+                        $logo->filename
                     )
                 ]);
                 return;
