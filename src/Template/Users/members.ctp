@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User[] $members
  */
 ?>
 <?php if (empty($members)): ?>
@@ -34,6 +35,13 @@
                                 $member->slug
                             ]
                         ) ?>
+                        <p class="tag-list">
+                            <?php if ($member->more_tags): ?>
+                                <?= $member->tag_list ?>, and <?= $member->more_tags ?> more
+                            <?php else: ?>
+                                <?= $member->tag_list ?>
+                            <?php endif; ?>
+                        </p>
                     </td>
 
                     <?php if ($member->main_picture_thumbnail): ?>

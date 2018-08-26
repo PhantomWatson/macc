@@ -16,6 +16,7 @@ use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 use Recaptcha\Controller\Component\RecaptchaComponent;
 
 /**
@@ -487,6 +488,7 @@ class UsersController extends AppController
      */
     public function members()
     {
+        $displayedTagLimit = 10;
         $members = $this->Users->find('members')
             ->select(['id', 'name', 'slug', 'main_picture_id'])
             ->contain([
@@ -513,6 +515,12 @@ class UsersController extends AppController
                 $member->main_picture_fullsize = $picture->filename;
                 $member->main_picture_thumbnail = $picture->thumbnail_filename;
             }
+            $member->tag_list = Hash::extract($member->tags, '{n}.name');
+            shuffle($member->tag_list);
+            $member->tag_list = array_slice($member->tag_list, 0, $displayedTagLimit);
+            $member->tag_list = implode(', ', $member->tag_list);
+            $totalTagCount = count($member->tags);
+            $member->more_tags = ($totalTagCount > $displayedTagLimit) ? ($totalTagCount - $displayedTagLimit) : null;
         }
 
         $this->set([
