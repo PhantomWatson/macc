@@ -573,6 +573,7 @@ class UsersController extends AppController
 
     public function myLogo()
     {
+        // Users can see this page if their most recent membership (expired or not) is at a high enough level
         $qualifies = $this->qualifiesForLogo();
         if (!$qualifies) {
             $this->Flash->error(
@@ -583,14 +584,15 @@ class UsersController extends AppController
         }
 
         $this->setNonMemberAlert();
-        $user = $this->Users->get($this->Auth->user('id'), [
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId, [
             'contain' => []
         ]);
 
         $this->loadModel('Logos');
         $logo = $this->Logos
             ->find()
-            ->where(['user_id' => $this->Auth->user('id')])
+            ->where(['user_id' => $userId])
             ->first();
         $logoPath = $logo
             ? sprintf(
@@ -599,8 +601,16 @@ class UsersController extends AppController
                 $logo->filename
             )
             : null;
+
+        // Get name of most recently purchased member level
+        $membership = TableRegistry::getTableLocator()
+            ->get('Memberships')
+            ->getCurrentMembership($userId);
+        $memberLevelName = $membership ? $membership->membership_level->name : null;
+
         $this->set([
             'logoPath' => $logoPath,
+            'memberLevelName' => $memberLevelName,
             'pageTitle' => 'My Logo',
             'qualifiesForLogo' => $qualifies,
             'user' => $user

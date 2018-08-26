@@ -1,8 +1,9 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
  * @var \App\Model\Entity\Picture $picture
+ * @var \App\Model\Entity\User $user
+ * @var \App\View\AppView $this
+ * @var string $memberLevelName
  * @var string|null $logoPath
  */
     use Cake\Core\Configure;
@@ -15,7 +16,8 @@
 
     <p>
         If you or your organization has a logo, you are invited to upload it so that we can display it in the footer
-        of our website to recognize your contribution.
+        of our website to recognize your
+        membership<?php if ($memberLevelName): ?> at the <?= $memberLevelName ?> level<?php endif; ?>.
     </p>
 
     <?= $this->element('img_upload_notes') ?>
