@@ -20,41 +20,43 @@
 
     <?= $this->element('img_upload_notes') ?>
 
-    <div id="my-logo">
-        <?php if ($logoPath): ?>
-            <img src="<?= $logoPath ?>" alt="Logo" />
-        <?php endif; ?>
-    </div>
+    <div style="text-align: center;">
+        <div id="my-logo">
+            <?php if ($logoPath): ?>
+                <img src="<?= $logoPath ?>" alt="Logo" />
+            <?php endif; ?>
+        </div>
 
-    <div id="picture-upload-container">
-        <button id="picture-upload">
-            Select image
-        </button>
-    </div>
+        <div id="picture-upload-container">
+            <button id="picture-upload">
+                Select image
+            </button>
+        </div>
 
-    <p id="upload-status"></p>
+        <p id="upload-status"></p>
+    </div>
 
     <?php
         echo $this->Form->end();
         echo $this->element('jquery_ui');
     ?>
 
-    <?php if ($logoPath): ?>
-        <?= $this->Form->postLink(
-            'Remove logo',
-            [
-                'prefix' => false,
-                'action' => 'removeLogo'
-            ],
-            [
-                'class' => 'btn btn-danger',
-                'confirm' => "Are you sure you want to remove this logo?"
-            ]
-        ) ?>
-    <?php endif; ?>
+    <div class="text-right">
+        <?php if ($logoPath): ?>
+            <?= $this->Form->postLink(
+                'Remove logo',
+                [
+                    'prefix' => false,
+                    'action' => 'removeLogo'
+                ],
+                [
+                    'class' => 'btn btn-danger',
+                    'confirm' => "Are you sure you want to remove this logo?"
+                ]
+            ) ?>
+        <?php endif; ?>
 
-    <?php if ($this->request->getQuery('flow')): ?>
-        <p class="text-right">
+        <?php if ($this->request->getQuery('flow')): ?>
             <?= $this->Html->link(
                 'Next',
                 [
@@ -64,8 +66,8 @@
                 ],
                 ['class' => 'btn btn-primary']
             ) ?>
-        </p>
-    <?php endif; ?>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php
