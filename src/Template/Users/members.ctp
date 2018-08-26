@@ -21,10 +21,35 @@
         ) ?>
     </p>
 
+    <div id="filter-members-container" class="input-group">
+        <label class="sr-only" for="filter-members">Filter members</label>
+        <div class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span>
+        </div>
+        <input type="text" class="form-control" id="filter-members" placeholder="Filter members by name">
+    </div>
+
+    <?php $this->append('members-pagination'); ?>
+        <nav aria-label="Members pagination" class="members-pagination input-group">
+            <div class="pagination input-group-btn">
+                <button aria-label="Previous" class="btn btn-default">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+                <button class="btn btn-link pagination-loading" disabled="disabled">
+                    <img src="/img/loading_small.gif" alt="Loading..." />
+                </button>
+                <button aria-label="Next" class="btn btn-default">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </div>
+        </nav>
+    <?php $this->end(); ?>
+    <?= $this->fetch('members-pagination') ?>
+
     <table id="members-table" class="table">
         <tbody>
             <?php foreach ($members as $member): ?>
-                <tr>
+                <tr data-member-name="<?= strtolower($member->name) ?>">
                     <td class="member-name">
                         <?= $this->Html->link(
                             $member->name,
@@ -58,6 +83,7 @@
         </tbody>
     </table>
 
+    <?= $this->fetch('members-pagination') ?>
 <?php endif; ?>
 
 <?php
