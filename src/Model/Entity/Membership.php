@@ -38,13 +38,27 @@ class Membership extends Entity
         'id' => false,
     ];
 
+    /**
+     * Returns TRUE if the provided membership level qualifies for a footer logo
+     *
+     * @param int $membershipLevelId ID for a membership level record
+     * @return bool
+     */
     public static function qualifiesForLogo($membershipLevelId)
     {
-        $qualifyingLevels = [
+        return in_array($membershipLevelId, self::getLogoQualifyingLevels());
+    }
+
+    /**
+     * Returns the membership levels that qualify to have their logos in the footer
+     *
+     * @return array
+     */
+    public static function getLogoQualifyingLevels()
+    {
+        return [
             self::AMBASSADOR_LEVEL,
             self::ARTS_HERO_LEVEL
         ];
-
-        return in_array($membershipLevelId, $qualifyingLevels);
     }
 }
