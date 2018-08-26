@@ -480,19 +480,20 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * A page listing all current members
+     *
+     * @return void
+     */
     public function members()
     {
         $query = $this->Users->find('members')
             ->select(['id', 'name', 'slug', 'main_picture_id'])
             ->contain([
-                'Tags' => function ($q) {
-                    /** @var Query $q */
-
+                'Tags' => function (Query $q) {
                     return $q->select(['id', 'name', 'slug']);
                 },
-                'Pictures' => function ($q) {
-                    /** @var Query $q */
-
+                'Pictures' => function (Query $q) {
                     return $q->select(['id', 'user_id', 'filename']);
                 }
             ])
@@ -503,13 +504,15 @@ class UsersController extends AppController
         foreach ($members as $member) {
             $member->main_picture_thumbnail = false;
             $member->main_picture_fullsize = false;
-            if ($member->main_picture_id) {
-                foreach ($member->pictures as $picture) {
-                    if ($picture['id'] == $member->main_picture_id) {
-                        $member->main_picture_fullsize = $picture->filename;
-                        $member->main_picture_thumbnail = $picture->thumbnail_filename;
-                    }
+            if (!$member->main_picture_id) {
+                continue;
+            }
+            foreach ($member->pictures as $picture) {
+                if ($picture['id'] != $member->main_picture_id) {
+                    continue;
                 }
+                $member->main_picture_fullsize = $picture->filename;
+                $member->main_picture_thumbnail = $picture->thumbnail_filename;
             }
         }
 
