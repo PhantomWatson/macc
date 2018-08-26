@@ -709,6 +709,7 @@ class UsersController extends AppController
         foreach ($dir->find() as $file) {
             (new File($dir->pwd() . DS . $file))->delete();
         }
+        $dir->delete();
 
         return $this->redirect($this->referer());
     }
