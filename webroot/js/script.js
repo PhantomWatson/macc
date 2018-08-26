@@ -471,12 +471,6 @@ var userPictureEditor = {
     }
 };
 
-var membersList = {
-    init: function () {
-        $('a.popup-img').magnificPopup(defaultMagnificConfig);
-    }
-};
-
 var memberProfile = {
     init: function () {
         $('a.popup-img').magnificPopup(defaultMagnificConfig);

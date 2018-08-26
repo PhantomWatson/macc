@@ -63,6 +63,7 @@
 <?php
     $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
     $this->Html->script('/magnific-popup/jquery.magnific-popup.js', ['block' => 'script']);
+    $this->Html->script('members_list.js', ['block' => 'script']);
 ?>
 <?php $this->append('buffered'); ?>
     membersList.init();
