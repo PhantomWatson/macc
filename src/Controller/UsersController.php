@@ -487,7 +487,7 @@ class UsersController extends AppController
      */
     public function members()
     {
-        $query = $this->Users->find('members')
+        $members = $this->Users->find('members')
             ->select(['id', 'name', 'slug', 'main_picture_id'])
             ->contain([
                 'Tags' => function (Query $q) {
@@ -497,9 +497,8 @@ class UsersController extends AppController
                     return $q->select(['id', 'user_id', 'filename']);
                 }
             ])
-            ->order(['Users.name' => 'ASC']);
-        $this->paginate['limit'] = 20;
-        $members = $this->paginate($query);
+            ->order(['Users.name' => 'ASC'])
+            ->all();
 
         foreach ($members as $member) {
             $member->main_picture_thumbnail = false;

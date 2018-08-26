@@ -9,9 +9,8 @@
     </p>
 <?php else: ?>
     <p>
-        These are the current members of the Muncie Arts and Culture Council.
-        Click on a member's name to view their profile.
-        Want to become a member?
+        These are the <?= count($members) ?> current members of the Muncie Arts and Culture Council.
+        Click on a member's name to view their profile. Want to become a member?
         <?= $this->Html->link(
             'Learn about the membership options available.',
             [
@@ -20,8 +19,6 @@
             ]
         ) ?>
     </p>
-
-    <?= $this->element('pagination') ?>
 
     <table id="members-table" class="table">
         <tbody>
@@ -52,8 +49,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <?= $this->element('pagination') ?>
 
 <?php endif; ?>
 
