@@ -39,6 +39,20 @@
         echo $this->element('jquery_ui');
     ?>
 
+    <?php if ($logoPath): ?>
+        <?= $this->Form->postLink(
+            'Remove logo',
+            [
+                'prefix' => false,
+                'action' => 'removeLogo'
+            ],
+            [
+                'class' => 'btn btn-danger',
+                'confirm' => "Are you sure you want to remove this logo?"
+            ]
+        ) ?>
+    <?php endif; ?>
+
     <?php if ($this->request->getQuery('flow')): ?>
         <p class="text-right">
             <?= $this->Html->link(

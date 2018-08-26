@@ -696,6 +696,24 @@ class UsersController extends AppController
     }
 
     /**
+     * Deletes all logos for the current user and redirects to referrer
+     *
+     * @return Response
+     */
+    public function removeLogo()
+    {
+        $this->loadModel('Logos');
+        $userId = $this->Auth->user('id');
+        $this->Logos->deleteAll(['user_id' => $userId]);
+        $dir = new Folder(WWW_ROOT . 'img' . DS . 'logos' . DS . $userId);
+        foreach ($dir->find() as $file) {
+            (new File($dir->pwd() . DS . $file))->delete();
+        }
+
+        return $this->redirect($this->referer());
+    }
+
+    /**
      * Sets the $manualFilesizeLimit view variable
      *
      * @return void
