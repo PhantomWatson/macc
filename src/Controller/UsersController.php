@@ -7,6 +7,8 @@ use App\Model\Entity\User;
 use App\Model\Table\LogosTable;
 use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
+use Cake\Filesystem\File;
+use Cake\Filesystem\Folder;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Network\Exception\ForbiddenException;
@@ -655,6 +657,15 @@ class UsersController extends AppController
             ]);
 
             if ($this->Logos->save($logo)) {
+                // Delete any previous logo files
+                $dir = new Folder(WWW_ROOT . 'img' . DS . 'logos' . DS . $userId);
+                $files = $dir->find();
+                foreach ($files as $file) {
+                    if ($file != $logo->filename) {
+                        (new File($dir->pwd() . DS . $file))->delete();
+                    }
+                }
+
                 // Delete any previous records
                 $this->Logos->deleteAll([
                     'user_id' => $userId,
