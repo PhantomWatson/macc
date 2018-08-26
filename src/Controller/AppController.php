@@ -20,6 +20,7 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Recaptcha\Controller\Component\RecaptchaComponent;
 
 /**
@@ -120,6 +121,7 @@ class AppController extends Controller
         }
 
         $this->set('authUser', $this->Auth->user());
+        $this->setFooterLogos();
     }
 
     public function beforeFilter(Event $event)
@@ -247,5 +249,58 @@ class AppController extends Controller
             'action' => 'login',
             '?' => ['redirect' => $redirect]
         ]);
+    }
+
+    /**
+     * Sets information about logos that should appear in the site footer
+     *
+     * @return void
+     */
+    private function setFooterLogos()
+    {
+        $users = TableRegistry::getTableLocator()
+            ->get('Users')
+            ->find()
+            ->find('members')
+            ->find('qualifiedForLogo')
+            ->select([
+                'Users.id',
+                'Users.name',
+                'Users.slug',
+                'Logos.filename'
+            ])
+            ->contain(['Logos'])
+            ->orderAsc('Users.id')
+            ->toArray();
+
+        $footerLogos = [
+            'hasLogo' => [],
+            'noLogo' => []
+        ];
+        foreach ($users as $user) {
+            $data = [
+                'url' => Router::url([
+                    'prefix' => false,
+                    'controller' => 'Users',
+                    'action' => 'view',
+                    $user['id'],
+                    $user['slug']
+                ]),
+                'name' => $user['name']
+            ];
+
+            if ($user->logo) {
+                $data['logo'] = sprintf(
+                    '/img/logos/%s/%s',
+                    $user['id'],
+                    $user['logo']['filename']
+                );
+                $footerLogos['hasLogo'][] = $data;
+            } else {
+                $footerLogos['noLogo'][] = $data;
+            }
+        }
+
+        $this->set('footerLogos', $footerLogos);
     }
 }

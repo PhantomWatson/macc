@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Membership;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
@@ -272,5 +273,24 @@ class UsersTable extends Table
             ->count();
 
         return $count > 0;
+    }
+
+    /**
+     * Finds all users that qualify to have their logos displayed in the footer,
+     * intended to be chained after find('members')
+     *
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findQualifiedForLogo(Query $query, array $options)
+    {
+        return $query->matching('Memberships', function (Query $q) {
+            return $q->where([
+                function (QueryExpression $exp) {
+                    return $exp->in('membership_level_id', Membership::getLogoQualifyingLevels());
+                }
+            ]);
+        });
     }
 }

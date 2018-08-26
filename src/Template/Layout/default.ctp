@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $footerLogos
  */
 ?>
 <!DOCTYPE html>
@@ -64,6 +65,10 @@
             </div>
         </div>
     </div>
+
+    <?php if ($footerLogos['hasLogo'] || $footerLogos['noLogo']): ?>
+        <?= $this->element('logos_footer') ?>
+    <?php endif; ?>
 
     <footer class="text-center">
         <p>
