@@ -50,15 +50,15 @@ class Membership extends Entity
     }
 
     /**
-     * Returns the membership levels that qualify to have their logos in the footer
+     * Returns the membership levels that qualify for logos in the footer, in the same order they should be displayed
      *
      * @return array
      */
     public static function getLogoQualifyingLevels()
     {
         return [
-            self::AMBASSADOR_LEVEL,
-            self::ARTS_HERO_LEVEL
+            self::ARTS_HERO_LEVEL,
+            self::AMBASSADOR_LEVEL
         ];
     }
 }

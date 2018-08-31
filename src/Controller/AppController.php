@@ -15,10 +15,12 @@
 namespace App\Controller;
 
 use App\MailingList\MailingList;
+use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Recaptcha\Controller\Component\RecaptchaComponent;
@@ -267,16 +269,27 @@ class AppController extends Controller
                 'Users.id',
                 'Users.name',
                 'Users.slug',
-                'Logos.filename'
             ])
-            ->contain(['Logos'])
+            ->contain([
+                'Logos' => function (Query $q) {
+                    return $q->select(['filename']);
+                },
+                'Memberships' => function (Query $q) {
+                    return $q->select(['id', 'user_id', 'membership_level_id']);
+                },
+            ])
             ->orderAsc('Users.id')
             ->toArray();
 
-        $footerLogos = [
-            'hasLogo' => [],
-            'noLogo' => []
-        ];
+        $footerLogos = [];
+        $membershipLevelsTable = TableRegistry::getTableLocator()->get('MembershipLevels');
+        foreach (Membership::getLogoQualifyingLevels() as $levelId) {
+            $footerLogos[$levelId] = [
+                'levelName' => $membershipLevelsTable->get($levelId)->name,
+                'hasLogo' => [],
+                'noLogo' => []
+            ];
+        }
         foreach ($users as $user) {
             $data = [
                 'url' => Router::url([
@@ -295,10 +308,14 @@ class AppController extends Controller
                     $user['id'],
                     $user['logo']['filename']
                 );
-                $footerLogos['hasLogo'][] = $data;
-            } else {
-                $footerLogos['noLogo'][] = $data;
             }
+
+            $key = isset($data['logo']) ? 'hasLogo' : 'noLogo';
+            $membershipLevelId = $user['memberships'][0]['membership_level_id'];
+            if (!isset($footerLogos[$membershipLevelId])) {
+                continue;
+            }
+            $footerLogos[$membershipLevelId][$key][] = $data;
         }
 
         $this->set('footerLogos', $footerLogos);
