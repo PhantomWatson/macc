@@ -18,6 +18,8 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
+        'app.logos',
+        'app.membership_levels',
         'app.memberships',
         'app.users'
     ];

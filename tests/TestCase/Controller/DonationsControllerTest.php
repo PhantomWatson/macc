@@ -21,6 +21,12 @@ use Cake\TestSuite\IntegrationTestCase;
  */
 class DonationsControllerTest extends IntegrationTestCase
 {
+    public $fixtures = [
+        'app.logos',
+        'app.membership_levels',
+        'app.memberships',
+        'app.users'
+    ];
 
     /**
      * Sets up this set of tests
