@@ -20,7 +20,7 @@ let paymentProcessor = {
         return {
             email: this.email,
             key: this.key,
-            image: 'http://members.munciearts.org/img/macc-logo-200px.jpg',
+            image: 'https://members.munciearts.org/img/macc-logo-200px.jpg',
             panelLabel: 'Continue (Total: {{amount}})',
             token: function (token) {
                 paymentProcessor.getToken(token);
