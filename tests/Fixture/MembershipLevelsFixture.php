@@ -41,9 +41,33 @@ class MembershipLevelsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'cost' => 1,
-            'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'name' => 'Artist',
+            'cost' => 30,
+            'description' => 'Lorem ipsum dolor sit amet',
+            'created' => '2016-02-07 00:15:27',
+            'modified' => '2016-02-07 00:15:27'
+        ],
+        [
+            'id' => 2,
+            'name' => 'Advocate',
+            'cost' => 100,
+            'description' => 'Lorem ipsum dolor sit amet',
+            'created' => '2016-02-07 00:15:27',
+            'modified' => '2016-02-07 00:15:27'
+        ],
+        [
+            'id' => 3,
+            'name' => 'Ambassador',
+            'cost' => 250,
+            'description' => 'Lorem ipsum dolor sit amet',
+            'created' => '2016-02-07 00:15:27',
+            'modified' => '2016-02-07 00:15:27'
+        ],
+        [
+            'id' => 4,
+            'name' => 'Arts Hero',
+            'cost' => 500,
+            'description' => 'Lorem ipsum dolor sit amet',
             'created' => '2016-02-07 00:15:27',
             'modified' => '2016-02-07 00:15:27'
         ],
