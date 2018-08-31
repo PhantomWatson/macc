@@ -2,12 +2,14 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\MembershipLevel $membershipLevel
+ * @var array $authUser
  */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     use League\CommonMark\CommonMarkConverter;
     $converter = new CommonMarkConverter();
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
+    $this->Html->script('payment_processor.js', ['block' => 'script']);
 ?>
 
 <form>
@@ -68,3 +70,4 @@
         'userId' => $authUser['id']
     ]) ?>);
 <?php $this->end(); ?>
+

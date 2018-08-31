@@ -1,10 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $authUser
  */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
+    $this->Html->script('payment_processor.js', ['block' => 'script']);
+    $this->Html->script('donation.js', ['block' => 'script']);
     $email = isset($authUser['email']) ? $authUser['email'] : null;
 ?>
 
@@ -22,6 +25,10 @@
             <input type="number" class="form-control" id="donation-amount" min="1" required="required" />
             <div class="input-group-addon">.00</div>
         </div>
+    </div>
+    <div class="form-group">
+        <label for="recipient-program">Optional: What MACC program would you like your donation to go toward?</label>
+        <input type="text" class="form-control" id="recipient-program" placeholder="" />
     </div>
     <button type="submit" class="btn btn-primary" id="donation-button">
         Enter payment information

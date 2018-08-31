@@ -6,15 +6,16 @@
  * @var bool $autoRenew
  */
 $this->Html->script('https://checkout.stripe.com/checkout.js', ['block' => 'script']);
+$this->Html->script('payment_processor.js', ['block' => 'script']);
 ?>
 
 <p>
     You will now be prompted to enter payment information using your debit or credit card to purchase a MACC membership
     at the <?= $membershipLevel->name ?> level for $<?= $membershipLevel->cost ?>. Click the button below to proceed.
 </p>
-    <button type="submit" class="btn btn-primary" id="payment-button">
-        Enter payment information
-    </button>
+<button type="submit" class="btn btn-primary" id="payment-button">
+    Enter payment information
+</button>
 
 <?php $this->append('buffered'); ?>
     membershipPurchase.init(<?= json_encode([
