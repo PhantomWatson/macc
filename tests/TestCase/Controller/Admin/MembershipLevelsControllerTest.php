@@ -18,6 +18,7 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
+        'app.logos',
         'app.membership_levels',
         'app.memberships',
         'app.users'
@@ -120,6 +121,7 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
     {
         $this->setAdminSession();
         $this->get($this->indexUrl);
+        //print_r($this->_response->getBody()->__toString());
         $this->assertResponseOk();
     }
 
