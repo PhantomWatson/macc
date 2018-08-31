@@ -62,7 +62,11 @@ class DonationsController extends AppController
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
         try {
-            $description = 'Donation to MACC of $'.number_format($amount, 2);
+            $description = 'Donation of $'.number_format($amount, 2);
+            $recipientProgram = $this->request->getData('recipientProgram');
+            if ($recipientProgram) {
+                $description .= ' for ' . $recipientProgram;
+            }
             \Stripe\Charge::create([
                 'amount' => $amount * 100, // amount in cents
                 'currency' => 'usd',

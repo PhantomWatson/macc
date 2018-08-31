@@ -13,6 +13,7 @@ let donation = {
                 return false;
             }
             paymentProcessor.postData.amount = amount;
+            paymentProcessor.postData.recipientProgram = $('#recipient-program').val();
             paymentProcessor.costDollars = amount;
             paymentProcessor.confirmationMessage = 'Confirm donation of $'+amount+'?';
             paymentProcessor.description = 'Donation of $'+amount+' to MACC';
