@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use Cake\Core\Configure;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\Exception\ForbiddenException;
 
 class DonationsController extends AppController
 {

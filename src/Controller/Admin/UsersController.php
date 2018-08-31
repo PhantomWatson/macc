@@ -6,7 +6,7 @@ use App\Model\Table\PicturesTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Response;
-use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 

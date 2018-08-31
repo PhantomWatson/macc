@@ -7,19 +7,17 @@ use App\Model\Entity\Payment;
 use App\Model\Entity\User;
 use App\Model\Table\MembershipRenewalLogsTable;
 use Cake\Core\Configure;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\MethodNotAllowedException;
-use Cake\Network\Exception\NotFoundException;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 /**

@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Model\Entity\Picture;
 use Cake\Core\Configure;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 /**

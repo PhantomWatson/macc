@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Model\Entity\Tag;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
@@ -98,7 +98,7 @@ class TagsController extends AppController
      *
      * @param string $slug
      * @return void
-     * @throws \Cake\Network\Exception\NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function view($slug = null)
     {
