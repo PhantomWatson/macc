@@ -7,6 +7,7 @@ use App\Model\Entity\Payment;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\Time;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -19,6 +20,8 @@ use Cake\ORM\TableRegistry;
  */
 class PaymentsController extends AppController
 {
+    use MailerAwareTrait;
+
     public $paginate = [
         'contain' => [
             'MembershipLevels' => ['fields' => ['id', 'name']],
@@ -63,7 +66,11 @@ class PaymentsController extends AppController
         $membershipLevels = [];
         $costs = [];
         foreach ($results as $membershipLevel) {
-            $membershipLevels[$membershipLevel->id] = $membershipLevel->name.' ($'.number_format($membershipLevel->cost).')';
+            $membershipLevels[$membershipLevel->id] = sprintf(
+                '%s ($%s)',
+                $membershipLevel->name,
+                number_format($membershipLevel->cost)
+            );
             $costs[$membershipLevel->id] = $membershipLevel->cost;
         }
 
@@ -97,8 +104,11 @@ class PaymentsController extends AppController
                     if (empty($errors)) {
                         $this->Memberships->save($membership);
                         $this->Flash->success('One year of membership added to that user\'s account');
+                        $this->getMailer('Membership')->send('membershipAddedByAdmin', [$membership]);
                     } else {
-                        $this->Flash->error('There was an error adding one year of membership to that user\'s account.');
+                        $this->Flash->error(
+                            'There was an error adding one year of membership to that user\'s account.'
+                        );
                     }
                 }
 

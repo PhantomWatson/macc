@@ -100,4 +100,18 @@ class MembershipMailPreview extends MailPreview
 
         return $mailer->accountAddedByAdmin($user, $password);
     }
+
+    /**
+     * Previews the 'a membership was created for you by an admin' email
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function membershipAddedByAdmin()
+    {
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+        $membership = $this->getArbitraryMembership();
+
+        return $mailer->membershipAddedByAdmin($membership);
+    }
 }

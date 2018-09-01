@@ -2,6 +2,7 @@
 namespace App\Mailer;
 
 use App\Model\Entity\Membership;
+use App\Model\Entity\MembershipLevel;
 use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
@@ -187,5 +188,38 @@ class MembershipMailer extends Mailer
                 'userEmail' => $user->email
             ])
             ->setTemplate('account_added_by_admin');
+    }
+
+    /**
+     * Defines an email that informs a user that their membership was added by an administrator
+     *
+     * @param Membership $membership Membership entity
+     * @return Email
+     */
+    public function membershipAddedByAdmin(Membership $membership)
+    {
+        $membershipLevelTable = TableRegistry::getTableLocator()->get('MembershipLevels');
+        /** @var MembershipLevel $membershipLevel */
+        $membershipLevel = $membershipLevelTable->get($membership->membership_level_id);
+        if (isset($membership->user)) {
+            $user = $membership->user;
+        } else {
+            $user = TableRegistry::getTableLocator()->get('Users')->get($membership->user_id);
+        }
+
+        return $this
+            ->setTo($user->email)
+            ->setSubject('Muncie Arts and Culture Council - Membership added')
+            ->setViewVars([
+                'userName' => $user->name,
+                'profileUrl' => Router::url([
+                    'controller' => 'Users',
+                    'action' => 'myBio',
+                    '?' => ['flow' => 1]
+                ], true),
+                'membershipLevelName' => $membershipLevel->name,
+                'expires' => $membership->expires->format('F j, Y')
+            ])
+            ->setTemplate('membership_added_by_admin');
     }
 }
