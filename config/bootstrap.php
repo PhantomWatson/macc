@@ -66,6 +66,10 @@ if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+    if (defined('TESTING') && TESTING === true) {
+        Configure::load('app_test');
+    }
+
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
