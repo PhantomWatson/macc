@@ -23,10 +23,13 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        print_r(Configure::read('EmailTransport'));
         Configure::write(
             'EmailTransport.default',
             Configure::read('EmailTransport.Debug')
         );
+        echo 'After write: ';
+        print_r(Configure::read('EmailTransport')); exit;
     }
 
     /**
@@ -36,7 +39,8 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
      */
     public function testSendAlertSuccess()
     {
-        print_r(Configure::read('EmailTransport')); exit;
+        echo 'In test: ';
+        print_r(Configure::read('EmailTransport'));
         $this->exec('alert-upcoming-expirations');
         $this->assertOutputContains('Expiring memberships found:');
         $this->assertOutputContains('User with membership expiring tomorrow');
