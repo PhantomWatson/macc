@@ -36,6 +36,7 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
      */
     public function testSendAlertSuccess()
     {
+        print_r(Configure::read('EmailTransport')); exit;
         $this->exec('alert-upcoming-expirations');
         $this->assertOutputContains('Expiring memberships found:');
         $this->assertOutputContains('User with membership expiring tomorrow');
