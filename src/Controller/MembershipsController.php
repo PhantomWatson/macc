@@ -349,7 +349,6 @@ class MembershipsController extends AppController
                 $this->Memberships->save($membership);
 
                 $errorMsg = $this->getCardDeclinedErrorMsg($membership);
-
             } catch (\Exception $e) {
                 $errorMsg = $this->getChargeErrorMsg($membership, $e);
                 $this->getMailer('Membership')
@@ -575,7 +574,7 @@ class MembershipsController extends AppController
 
         if ($this->request->is('post')) {
             $autoRenew = $this->request->getData('renewal') == 'automatic';
-            $redirectToPayment = function() use ($membershipLevelId, $autoRenew) {
+            $redirectToPayment = function () use ($membershipLevelId, $autoRenew) {
                 return $this->redirect([
                     'controller' => 'Memberships',
                     'action' => 'enterPayment',

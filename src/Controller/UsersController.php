@@ -709,7 +709,6 @@ class UsersController extends AppController
                 'message' => 'Error uploading logo. Details: ' . $errorDetails
             ]);
             $this->response = $this->response->withStatus(500);
-
         } else {
             throw new BadRequestException('No picture was uploaded');
         }
