@@ -73,7 +73,10 @@ class UsersController extends AppController
                     'action' => 'index'
                 ]);
             } else {
-                $this->Flash->error('There was an error creating this user\'s account. Please try again or contact an administrator for assistance.');
+                $this->Flash->error(
+                    'There was an error creating this user\'s account. ' .
+                    'Please try again or contact an administrator for assistance.'
+                );
             }
         }
         $this->set([
