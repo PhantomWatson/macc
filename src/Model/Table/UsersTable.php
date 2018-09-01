@@ -293,4 +293,39 @@ class UsersTable extends Table
             ]);
         });
     }
+
+    /**
+     * Finds users who have expired memberships but no current memberships
+     *
+     * @param Query $query
+     */
+    public function findWithUnrenewedMemberships(Query $query)
+    {
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        $userIds = $membershipsTable->getUserIdsWithUnrenewedMemberships();
+
+        return $query
+            ->where([
+                function (QueryExpression $exp) use ($userIds) {
+                    return $exp->in('id', $userIds);
+                }
+            ])
+            ->contain([
+                'Memberships' => function (Query $q) {
+                    return $q
+                        ->select([
+                            'expires',
+                            'membership_level_id',
+                            'user_id'
+                        ])
+                        ->contain([
+                            'MembershipLevels' => function (Query $q) {
+                                return $q
+                                    ->select(['name'])
+                                    ->orderDesc('created');
+                            }
+                        ]);
+                }
+            ]);
+    }
 }
