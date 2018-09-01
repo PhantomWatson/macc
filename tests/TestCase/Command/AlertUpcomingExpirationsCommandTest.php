@@ -23,7 +23,10 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        Configure::write('EmailTransport.default.className', 'Debug');
+        Configure::write(
+            'EmailTransport.default',
+            Configure::read('EmailTransport.Debug')
+        );
     }
 
     /**
