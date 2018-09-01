@@ -3,10 +3,10 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Membership;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -113,7 +113,7 @@ class MembershipsTable extends Table
      * @param array $options
      * @return Query
      */
-    public function findToAutoRenew(Query $query, array $options)
+    public function findToAutoRenew(Query $query)
     {
         return $query
             ->contain([
@@ -128,17 +128,17 @@ class MembershipsTable extends Table
                     return $q->select(['id', 'name', 'cost']);
                 }
             ])
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
                 /** @var QueryExpression $exp */
 
                 return $exp->isNull('canceled');
             })
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
                 /** @var QueryExpression $exp */
 
                 return $exp->gte('expires', date('Y-m-d') . ' 00:00:00');
             })
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
                 /** @var QueryExpression $exp */
 
                 return $exp->lte('expires', date('Y-m-d') . ' 23:59:59');
@@ -225,6 +225,51 @@ class MembershipsTable extends Table
             $msg,
             $membership->membership_level->name,
             $membership->expires->format('F jS, Y')
+        );
+    }
+
+    /**
+     * Returns a simple array of User IDs who have expired memberships but no current memberships
+     *
+     * @return array
+     */
+    public function getUserIdsWithUnrenewedMemberships()
+    {
+        $usersWithExpiredMemberships = $this->find()
+            ->select(['user_id'])
+            ->where([
+                function (QueryExpression $exp) {
+                    return $exp->lte('expires', date('Y-m-d H:i:s'));
+                }
+            ])
+            ->distinct(['user_id'])
+            ->enableHydration(false)
+            ->toArray();
+        $usersWithExpiredMemberships = Hash::extract($usersWithExpiredMemberships, '{n}.user_id');
+
+        $usersWithCurrentMemberships = $this->find()
+            ->select(['user_id'])
+            ->where([
+                function (QueryExpression $exp) {
+                    return $exp->gte('expires', date('Y-m-d H:i:s'));
+                },
+                function (QueryExpression $exp) {
+                    return $exp->isNull('canceled');
+                },
+                function (QueryExpression $exp) {
+                    return $exp->isNull('renewed');
+                },
+            ])
+            ->distinct(['user_id'])
+            ->enableHydration(false)
+            ->toArray();
+        $usersWithCurrentMemberships = Hash::extract($usersWithCurrentMemberships, '{n}.user_id');
+
+        return array_filter(
+            $usersWithExpiredMemberships,
+            function ($userId) use ($usersWithCurrentMemberships) {
+                return !in_array($userId, $usersWithCurrentMemberships);
+            }
         );
     }
 }

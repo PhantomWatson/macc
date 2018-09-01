@@ -56,7 +56,7 @@ class MembershipsController extends AppController
 
                     return $q
                         ->where([
-                            function ($exp, $q) {
+                            function ($exp) {
                                 /** @var QueryExpression $exp */
 
                                 return $exp->isNull('canceled');
@@ -82,6 +82,32 @@ class MembershipsController extends AppController
         $this->set([
             'logs' => $logs,
             'pageTitle' => 'Membership Auto-Renewal Logs'
+        ]);
+    }
+
+    /**
+     * Lists the most recent expired memberships for users who are not current members
+     * (i.e. who haven't renewed or upgraded their memberships)
+     */
+    public function expired()
+    {
+        $this->loadModel('Users');
+        $users = $this->Users
+            ->find('withUnrenewedMemberships')
+            ->select(['id', 'name', 'email'])
+            ->all();
+
+        // Sort by expiration date
+        $sortedUsers = [];
+        foreach ($users as $user) {
+            $key = $user->memberships[0]->expires->format('U') . $user->id;
+            $sortedUsers[$key] = $user;
+        }
+        krsort($sortedUsers);
+
+        $this->set([
+            'pageTitle' => 'Expired Memberships',
+            'users' => $sortedUsers
         ]);
     }
 }
