@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Command;
 
+use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 
 /**
@@ -22,6 +23,7 @@ class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        Configure::write('EmailTransport.default.className', 'Debug');
     }
 
     /**
