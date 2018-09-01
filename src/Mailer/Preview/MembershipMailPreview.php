@@ -3,6 +3,7 @@ namespace App\Mailer\Preview;
 
 use App\Mailer\MembershipMailer;
 use App\Model\Entity\Membership;
+use App\Model\Entity\User;
 use Cake\ORM\TableRegistry;
 use DebugKit\Mailer\MailPreview;
 
@@ -82,5 +83,21 @@ class MembershipMailPreview extends MailPreview
             ->contain(['Users'])
             ->orderDesc('expires')
             ->first();
+    }
+
+    /**
+     * Previews the 'an account was created for you by an admin' email
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function accountAddedByAdmin()
+    {
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+        /** @var User $user */
+        $user = TableRegistry::getTableLocator()->get('Users')->find()->first();
+        $password = 'randomlyGeneratedPassword';
+
+        return $mailer->accountAddedByAdmin($user, $password);
     }
 }

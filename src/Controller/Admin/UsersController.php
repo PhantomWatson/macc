@@ -7,6 +7,7 @@ use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Response;
 use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -18,6 +19,8 @@ use Cake\Utility\Hash;
  */
 class UsersController extends AppController
 {
+    use MailerAwareTrait;
+
     public $paginate = [
         'limit' => 25,
         'order' => [
@@ -68,6 +71,10 @@ class UsersController extends AppController
             $errors = $user->getErrors();
             if (empty($errors) && $this->Users->save($user)) {
                 $this->Flash->success('User account created');
+
+                $this->getMailer('Membership')
+                    ->send('accountAddedByAdmin', [$user, $data['new_password']]);
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'

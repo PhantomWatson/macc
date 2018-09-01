@@ -2,6 +2,7 @@
 namespace App\Mailer;
 
 use App\Model\Entity\Membership;
+use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
@@ -157,5 +158,34 @@ class MembershipMailer extends Mailer
                 ], true)
             ])
             ->setTemplate('membership_auto_renewed');
+    }
+
+    /**
+     * Defines an email that informs a user that their account was added by an administrator
+     *
+     * @param User $user User entity
+     * @param string $password Plain-text password
+     * @return Email
+     */
+    public function accountAddedByAdmin(User $user, $password)
+    {
+        return $this
+            ->setTo($user->email)
+            ->setSubject('Muncie Arts and Culture Council - User account created')
+            ->setViewVars([
+                'userName' => $user->name,
+                'profileUrl' => Router::url([
+                    'controller' => 'Users',
+                    'action' => 'myBio',
+                    '?' => ['flow' => 1]
+                ], true),
+                'password' => $password,
+                'loginUrl' => Router::url([
+                    'controller' => 'Users',
+                    'action' => 'login'
+                ], true),
+                'userEmail' => $user->email
+            ])
+            ->setTemplate('account_added_by_admin');
     }
 }
