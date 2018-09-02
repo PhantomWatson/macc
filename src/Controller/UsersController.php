@@ -452,6 +452,11 @@ class UsersController extends AppController
         return null;
     }
 
+    /**
+     * Page for changing the user's password
+     *
+     * @return void
+     */
     public function changePassword()
     {
         $userId = $this->Auth->user('id');
@@ -472,8 +477,9 @@ class UsersController extends AppController
             }
         }
 
-        $user['new_password'] = '';
-        $user['confirm_password'] = '';
+        $this->request = $this->request->withData('current_password', '');
+        $this->request = $this->request->withData('new_password', '');
+        $this->request = $this->request->withData('confirm_password', '');
 
         $this->set([
             'pageTitle' => 'Change Password',

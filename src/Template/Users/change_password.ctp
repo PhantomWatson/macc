@@ -5,12 +5,22 @@
  */
     echo $this->Form->create($user);
     echo $this->Form->control(
+        'current_password',
+        [
+            'autocomplete' => 'off',
+            'class' => 'form-control',
+            'div' => ['class' => 'form-group'],
+            'label' => 'Current password',
+            'type' => 'password'
+        ]
+    );
+    echo $this->Form->control(
         'new_password',
         [
             'autocomplete' => 'off',
             'class' => 'form-control',
             'div' => ['class' => 'form-group'],
-            'label' => 'Change password',
+            'label' => 'New password',
             'type' => 'password'
         ]
     );

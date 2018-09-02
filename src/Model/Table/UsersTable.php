@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Membership;
+use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
@@ -140,6 +141,21 @@ class UsersTable extends Table
         $validator
             ->maxLength('zipcode', 15)
             ->allowEmpty('zipcode');
+
+        $validator
+            ->notEmpty('current_password')
+            ->add('current_password', 'custom', [
+                'rule' =>
+                    function ($value, $context) {
+                        $user = $this->find()
+                            ->select(['password'])
+                            ->where(['id' => $context['data']['id']])
+                            ->first();
+
+                        return (new DefaultPasswordHasher)->check($value, $user->password);
+                    },
+                'message' => 'Current password is incorrect'
+            ]);
 
         return $validator;
     }
