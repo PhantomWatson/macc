@@ -67,7 +67,7 @@
 
     <?= $this->element('logos_footer') ?>
 
-    <footer class="text-center">
+    <footer id="footer-links" class="text-center">
         <p>
             &copy; <?= date('Y') ?> Muncie Arts &amp; Culture Council.
             All Rights Reserved.
@@ -83,6 +83,26 @@
             <li><a href="http://munciearts.org/support-2/">Support</a></li>
             <li><a href="http://munciearts.org/membership-2/">Membership</a></li>
             <li><a href="http://munciearts.org/arts-directory-2/">Arts Directory</a></li>
+            <li>
+                <?= $this->Html->link(
+                    'Terms of Service',
+                    [
+                        'prefix' => false,
+                        'controller' => 'Pages',
+                        'action' => 'terms'
+                    ]
+                ) ?>
+            </li>
+            <li>
+                <?= $this->Html->link(
+                    'Privacy Policy',
+                    [
+                        'prefix' => false,
+                        'controller' => 'Pages',
+                        'action' => 'privacy'
+                    ]
+                ) ?>
+            </li>
         </ul>
     </footer>
 
