@@ -180,7 +180,7 @@ class UsersTable extends Table
      * @param array $options
      * @return Query
      */
-    public function findMembers(Query $query, array $options)
+    public function findMembers(Query $query)
     {
         return $query->matching('Memberships', function ($q) {
             /** @var Query $q */
@@ -283,7 +283,7 @@ class UsersTable extends Table
      * @param array $options
      * @return Query
      */
-    public function findQualifiedForLogo(Query $query, array $options)
+    public function findQualifiedForLogo(Query $query)
     {
         return $query->matching('Memberships', function (Query $q) {
             return $q->where([
@@ -298,6 +298,7 @@ class UsersTable extends Table
      * Finds users who have expired memberships but no current memberships
      *
      * @param Query $query
+     * @return array|Query
      */
     public function findWithUnrenewedMemberships(Query $query)
     {
