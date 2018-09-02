@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ * @var array $roles
  */
 ?>
 <p>
@@ -34,7 +36,9 @@
     echo $this->Form->control(
         'role',
         [
-            'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
+            'after' => '<span class="note">' .
+                'Admins automatically have access to all communities and site functions' .
+                '</span>',
             'class' => 'form-control',
             'options' => $roles
         ]
