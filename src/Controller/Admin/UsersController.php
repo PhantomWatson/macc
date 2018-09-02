@@ -75,6 +75,22 @@ class UsersController extends AppController
                 $this->getMailer('Membership')
                     ->send('accountAddedByAdmin', [$user, $data['new_password']]);
 
+                if ($this->request->getData('addMembership')) {
+                    $this->Flash->set(
+                        'Now, you can use this form to manually create a payment record reflecting that this ' .
+                        'user has purchased a membership'
+                    );
+
+                    return $this->redirect([
+                        'prefix' => 'admin',
+                        'controller' => 'Payments',
+                        'action' => 'add',
+                        '?' => [
+                            'u' => $user->id
+                        ]
+                    ]);
+                }
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'

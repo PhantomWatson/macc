@@ -73,6 +73,15 @@
     </div>
 <?php elseif ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'add'): ?>
     <?= $passwordFields ?>
+    <div class="checkbox">
+        <label for="add-membership-checkbox">
+            <?= $this->Form->checkbox('addMembership', [
+                'id' => 'add-membership-checkbox'
+            ]) ?>
+            <strong>Grant this user a MACC membership</strong>
+            (you'll specify which level on the next page)
+        </label>
+    </div>
 <?php endif; ?>
 
 <?php
