@@ -143,7 +143,7 @@ class UsersTable extends Table
             ->allowEmpty('zipcode');
 
         $validator
-            ->notEmpty('current_password')
+            ->allowEmpty('current_password')
             ->add('current_password', 'custom', [
                 'rule' =>
                     function ($value, $context) {

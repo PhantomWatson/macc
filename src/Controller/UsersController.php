@@ -546,6 +546,11 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('put')) {
+            $emailChanged = $this->request->getData('email') != $user->email;
+            if (!$emailChanged) {
+                $this->request = $this->request->withData('current_password', null);
+            }
+
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
                 'fieldList' => [
                     'email',
@@ -564,9 +569,6 @@ class UsersController extends AppController
                     }
 
                     $this->Flash->success('Contact info updated');
-                    $this->Flash->set(
-                        'Please review your member profile to make sure your information is complete and accurate'
-                    );
                     if ($this->request->getQuery('flow')) {
                         return $this->redirect([
                             'controller' => 'Users',
@@ -578,10 +580,14 @@ class UsersController extends AppController
                 }
             }
         }
+
+        $this->request = $this->request->withData('current_password', null);
+
         $this->set([
             'pageTitle' => 'My Contact Info',
             'qualifiesForLogo' => $this->qualifiesForLogo(),
-            'user' => $user
+            'user' => $user,
+            'showPasswordField' => (bool)$user->getError('current_password')
         ]);
 
         return null;
