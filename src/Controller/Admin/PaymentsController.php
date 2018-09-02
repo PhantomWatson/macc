@@ -122,6 +122,12 @@ class PaymentsController extends AppController
         $usersTable = TableRegistry::getTableLocator()->get('Users');
         $users = $usersTable->find('list')->order(['name' => 'ASC']);
 
+        // Automatically select user
+        $queryStringUserId = $this->request->getQuery('u');
+        if (!$this->request->getData('user_id') && is_numeric($queryStringUserId)) {
+            $payment->user_id = $queryStringUserId;
+        }
+
         $this->set([
             'membershipLevels' => $membershipLevels,
             'pageTitle' => 'Add a New Payment Record',
