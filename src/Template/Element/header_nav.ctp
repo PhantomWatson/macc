@@ -179,6 +179,17 @@ if (! function_exists('navLink')) {
                             $this
                         ) ?>
                     </li>
+                    <li>
+                        <?= navLink(
+                            'Mailing Addresses',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Users',
+                                'action' => 'addresses'
+                            ],
+                            $this
+                        ) ?>
+                    </li>
                 </ul>
             </li>
         <?php endif; ?>

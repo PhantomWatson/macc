@@ -8,6 +8,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Response;
 use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\Mailer\MailerAwareTrait;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -256,6 +257,47 @@ class UsersController extends AppController
         $this->set([
             'pageTitle' => 'Email Lists',
             'emailLists' => $emailLists
+        ]);
+    }
+
+    public function addresses()
+    {
+        $users = TableRegistry::getTableLocator()
+            ->get('Users')
+            ->find()
+            ->find('members')
+            ->select([
+                'Users.id',
+                'Users.name',
+                'Users.address',
+                'Users.city',
+                'Users.state',
+                'Users.zipcode'
+            ])
+            ->where([
+                function (QueryExpression $exp) {
+                    return $exp->notEq('address', '');
+                }
+            ])
+            ->contain([
+                'Memberships' => function (Query $q) {
+                    return $q
+                        ->select([
+                            'Memberships.id',
+                            'Memberships.user_id',
+                            'Memberships.membership_level_id',
+                            'MembershipLevels.name'
+                        ])
+                        ->contain(['MembershipLevels'])
+                        ->orderDesc('Memberships.created');
+                },
+            ])
+            ->orderAsc('Users.name')
+            ->all();
+
+        $this->set([
+            'pageTitle' => 'Mailing Addresses',
+            'users' => $users
         ]);
     }
 }
