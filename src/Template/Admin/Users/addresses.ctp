@@ -6,7 +6,29 @@
 ?>
 
 <p>
-    The following are all of the current members who have submitted their mailing addresses to us.
+    <?php if ($this->request->getQuery('all')): ?>
+        The following are <strong>all of the mailing addresses</strong> that have been submitted by users of the
+        membership website.
+        <?= $this->Html->link(
+            'Only show current members.',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Users',
+                'action' => 'addresses'
+            ]
+        ) ?>
+    <?php else: ?>
+        The following are all of the <strong>current members</strong> who have submitted their mailing addresses to us.
+        <?= $this->Html->link(
+            'Show mailing addresses for non-members too.',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Users',
+                'action' => 'addresses',
+                '?' => ['all' => 1]
+            ]
+        ) ?>
+    <?php endif; ?>
 </p>
 
 <?php if ($users): ?>
@@ -31,7 +53,9 @@
                         <?= $user->name ?>
                     </td>
                     <td>
-                        <?= $user->memberships[0]->membership_level->name ?>
+                        <?php if(isset($user->memberships[0])): ?>
+                            <?= $user->memberships[0]->membership_level->name ?>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <?= $user->address ?>

@@ -260,12 +260,16 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Page that lists the mailing addresses for all members (or optionally, all users)
+     *
+     * @return void
+     */
     public function addresses()
     {
-        $users = TableRegistry::getTableLocator()
+        $query = TableRegistry::getTableLocator()
             ->get('Users')
             ->find()
-            ->find('members')
             ->select([
                 'Users.id',
                 'Users.name',
@@ -288,16 +292,24 @@ class UsersController extends AppController
                             'Memberships.membership_level_id',
                             'MembershipLevels.name'
                         ])
+                        ->where([
+                            function (QueryExpression $exp) {
+                                return $exp->gte('expires', date('Y-m-d H:i:s'));
+                            }
+                        ])
                         ->contain(['MembershipLevels'])
                         ->orderDesc('Memberships.created');
                 },
             ])
-            ->orderAsc('Users.name')
-            ->all();
+            ->orderAsc('Users.name');
+
+        if (!$this->request->getQuery('all')) {
+            $query->find('members');
+        }
 
         $this->set([
             'pageTitle' => 'Mailing Addresses',
-            'users' => $users
+            'users' => $query->all()
         ]);
     }
 }
