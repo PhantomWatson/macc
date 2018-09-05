@@ -130,7 +130,7 @@ class PaymentsController extends AppController
 
         $this->set([
             'membershipLevels' => $membershipLevels,
-            'pageTitle' => 'Add a New Payment Record',
+            'pageTitle' => 'Add a New Membership Payment',
             'payment' => $payment,
             'users' => $users
         ]);

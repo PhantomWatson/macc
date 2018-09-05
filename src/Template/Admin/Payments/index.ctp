@@ -6,7 +6,7 @@
 ?>
 <p>
     <?= $this->Html->link(
-        'Add Payment Record',
+        'Add Membership Payment',
         [
             'prefix' => 'admin',
             'controller' => 'Payments',
@@ -16,21 +16,30 @@
     ) ?>
 </p>
 
-<p>
-    This is a list of all MACC membership payment records, including payments made through the website and
-    payment records added manually by administrators.
-</p>
-
-<?php if (empty($payments)): ?>
-    <p class="alert alert-info">
-        No payment records found
-    </p>
-<?php else: ?>
+<div class="alert alert-info">
     <p>
-        <strong>Refunds:</strong> If a refund is issued, click the [Refund] button next to that payment to
-        record the refund. Note that the [Refund] button does not actually issue a refund, only record that a refund has been issued.
+        This is a list of all MACC membership payment records, including payments made through the website and
+        payment records added manually by administrators.
     </p>
 
+    <p>
+        <strong>Received a check or cash payment for a membership?</strong> Click 'Add Membership Payment' above to manually
+        add a payment record and grant a user one year of membership.
+    </p>
+
+    <?php if (empty($payments)): ?>
+        <p class="alert alert-info">
+            No payment records found
+        </p>
+    <?php else: ?>
+        <p>
+            <strong>Refunds:</strong> If a refund is issued, click the [Refund] button next to that payment to
+            record the refund. Note that the [Refund] button does not actually issue a refund, only record that a refund has been issued.
+        </p>
+    <?php endif; ?>
+</div>
+
+<?php if ($payments): ?>
     <?= $this->element('pagination') ?>
 
     <table class="table" id="payments_index">
