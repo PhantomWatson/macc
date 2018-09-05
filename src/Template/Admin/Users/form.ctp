@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  * @var array $roles
+ * @var string $randomPassword
  */
 ?>
 <p>
@@ -43,23 +44,6 @@
             'options' => $roles
         ]
     );
-    $passwordFields = $this->Form->control(
-        'new_password',
-        [
-            'autocomplete' => 'off',
-            'class' => 'form-control',
-            'label' => $this->request->getParam('action') == 'add' ? 'Password' : 'New Password',
-            'type' => 'password'
-        ]
-    );
-    $passwordFields .= $this->Form->control(
-        'confirm_password',
-        [
-            'class' => 'form-control',
-            'label' => 'Confirm password',
-            'type' => 'password'
-        ]
-    );
 ?>
 
 <?php if ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'edit'): ?>
@@ -69,10 +53,35 @@
         </a>
     </div>
     <div id="password-fields" style="display: none;">
-        <?= $passwordFields ?>
+        <?= $this->Form->control(
+            'new_password',
+            [
+                'autocomplete' => 'off',
+                'class' => 'form-control',
+                'label' => 'New password',
+                'type' => 'password'
+            ]
+        ) ?>
+        <?= $this->Form->control(
+            'confirm_password',
+            [
+                'class' => 'form-control',
+                'label' => 'Confirm password',
+                'type' => 'password'
+            ]
+        ) ?>
     </div>
 <?php elseif ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'add'): ?>
-    <?= $passwordFields ?>
+    <?= $this->Form->control(
+        'password',
+        [
+            'autocomplete' => 'off',
+            'class' => 'form-control',
+            'label' => 'Password',
+            'type' => 'text',
+            'value' => $this->request->getData('password') ?? $randomPassword
+        ]
+    ) ?>
     <div class="checkbox">
         <label for="add-membership-checkbox">
             <?= $this->Form->checkbox('addMembership', [

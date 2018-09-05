@@ -67,14 +67,16 @@ class UsersController extends AppController
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $data = $this->request->getData();
-            $data['password'] = $data['new_password'];
+            if ($this->request->getData('new_password')) {
+                $data['password'] = $data['new_password'];
+            }
             $user = $this->Users->patchEntity($user, $data);
             $errors = $user->getErrors();
             if (empty($errors) && $this->Users->save($user)) {
                 $this->Flash->success('User account created');
 
                 $this->getMailer('Membership')
-                    ->send('accountAddedByAdmin', [$user, $data['new_password']]);
+                    ->send('accountAddedByAdmin', [$user, $data['password']]);
 
                 if ($this->request->getData('addMembership')) {
                     $this->Flash->set(
@@ -109,7 +111,8 @@ class UsersController extends AppController
                 'user' => 'User',
                 'admin' => 'Admin'
             ],
-            'user' => $user
+            'user' => $user,
+            'randomPassword' => $this->getRandomPassword()
         ]);
 
         return $this->render('/Admin/Users/form');
@@ -311,5 +314,17 @@ class UsersController extends AppController
             'pageTitle' => 'Mailing Addresses',
             'users' => $query->all()
         ]);
+    }
+
+    /**
+     * Returns a randomized password
+     *
+     * @return string
+     */
+    private function getRandomPassword()
+    {
+        $characters = str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
+
+        return substr($characters, 0, 6);
     }
 }
