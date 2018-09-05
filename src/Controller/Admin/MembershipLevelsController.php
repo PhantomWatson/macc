@@ -15,7 +15,14 @@ class MembershipLevelsController extends AppController
     {
         $membershipLevels = $this->MembershipLevels
             ->find('all')
-            ->order(['cost' => 'ASC']);
+            ->order(['cost' => 'ASC'])
+            ->toArray();
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+
+        foreach ($membershipLevels as &$membershipLevel) {
+            $membershipLevel->hasMemberships = $membershipsTable
+                ->exists(['membership_level_id' => $membershipLevel->id]);
+        }
 
         $this->set([
             'membershipLevels' => $membershipLevels,

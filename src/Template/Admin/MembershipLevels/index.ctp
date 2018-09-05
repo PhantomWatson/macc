@@ -59,7 +59,11 @@
                         ],
                         [
                             'class' => 'btn btn-default',
-                            'confirm' => "Are you sure you want to delete this membership level?"
+                            'confirm' => "Are you sure you want to delete this membership level?",
+                            'disabled' => $membershipLevel->hasMemberships,
+                            'title' => $membershipLevel->hasMemberships
+                                ? 'Can\'t delete membership levels that have been purchased by members'
+                                : ''
                         ]
                     ) ?>
                 </td>
