@@ -35,9 +35,11 @@ class Application extends BaseApplication
      */
     public function bootstrap()
     {
-        $this->addPlugin('Migrations');
-
         $this->addPlugin('IdeHelper');
+        $this->addPlugin('CakeDC/Auth');
+        $this->addPlugin('Xety/Cake3Sluggable');
+        $this->addPlugin('Josegonzalez/Upload');
+        $this->addPlugin('Recaptcha', ['bootstrap' => true]);
 
         // Call parent to load bootstrap from files.
         parent::bootstrap();
