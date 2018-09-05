@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * MembershipLevels Controller
@@ -63,15 +64,28 @@ class MembershipLevelsController extends AppController
         return $this->render('form');
     }
 
-    public function delete($id = null)
+    /**
+     * Action that deletes a membership level and redirects back to index
+     *
+     * @param int $id MembershipLevel ID
+     * @return \Cake\Http\Response
+     */
+    public function delete($id)
     {
         $this->request->allowMethod(['post', 'delete']);
         $membershipLevel = $this->MembershipLevels->get($id);
-        if ($this->MembershipLevels->delete($membershipLevel)) {
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        $hasMemberships = $membershipsTable->exists(['membership_level_id' => $membershipLevel->id]);
+        if ($hasMemberships) {
+            $this->Flash->error(
+                'That membership level cannot be deleted because it has memberships associated with it.'
+            );
+        } elseif ($this->MembershipLevels->delete($membershipLevel)) {
             $this->Flash->success('The membership level has been deleted.');
         } else {
             $this->Flash->error('The membership level could not be deleted. Please, try again.');
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

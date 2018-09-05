@@ -1,7 +1,11 @@
 <?php
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -61,5 +65,23 @@ class MembershipLevelsTable extends Table
             ->notEmpty('cost');
 
         return $validator;
+    }
+
+    /**
+     * Prevents a MembershipLevel with associated Memberships from being deleted
+     *
+     * @param Event $event CakePHP event object
+     * @param EntityInterface $entity MembershipLevel entity
+     * @param ArrayObject $options Delete operation options
+     * @return void
+     */
+    public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $membershipLevelId = $entity->id;
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        $hasMemberships = $membershipsTable->exists(['membership_level_id' => $membershipLevelId]);
+        if ($hasMemberships) {
+            $event->stopPropagation();
+        }
     }
 }
