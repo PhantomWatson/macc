@@ -4,9 +4,15 @@
  * @var array $emailLists
  */
 ?>
-<p class="well">
-    Need to email a whole category of users? Use the following automatically-compiled email lists.
-</p>
+<div class="well">
+    <p>
+        Need to email a whole category of users? Use the following automatically-compiled email lists.
+    </p>
+    <p>
+        You can copy each list and paste it into the <em>to</em> field of a new message, or you can click
+        on a list to automatically begin composing an email in your default email client.
+    </p>
+</div>
 
 <?php foreach ($emailLists as $header => $list): ?>
     <section class="email-list">
