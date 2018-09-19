@@ -9,10 +9,12 @@
 </p>
 
 <?php foreach ($emailLists as $header => $list): ?>
-    <h2>
-        <?= $header ?>
-    </h2>
-    <a href="mailto:<?= implode(';', $list) ?>">
-        <?= implode('<br />', $list) ?>
-    </a>
+    <section class="email-list">
+        <h2>
+            <?= $header ?>
+        </h2>
+        <a href="mailto:<?= implode(';', $list) ?>">
+            <?= implode('<br />', $list) ?>
+        </a>
+    </section>
 <?php endforeach; ?>
