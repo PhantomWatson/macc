@@ -114,4 +114,21 @@ class MembershipMailPreview extends MailPreview
 
         return $mailer->membershipAddedByAdmin($membership);
     }
+
+    /**
+     * Previews the 'hey there admin, some admin added a membership' email
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function membershipAddedByAdminToAdmin()
+    {
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+        $membership = $this->getArbitraryMembership();
+        /** @var User $adminUser */
+        $adminUser = TableRegistry::getTableLocator()->get('Users')->find()->first();
+        $recipientEmail = 'recipient@example.com';
+
+        return $mailer->membershipAddedByAdminToAdmin($recipientEmail, $adminUser->name, $membership);
+    }
 }

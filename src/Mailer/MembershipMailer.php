@@ -222,4 +222,39 @@ class MembershipMailer extends Mailer
             ])
             ->setTemplate('membership_added_by_admin');
     }
+
+    /**
+     * Defines an email to an admin informing them that a membership was added by an admin
+     *
+     * with an awkward method name
+     *
+     * @param string $recipientEmail Recipient email address
+     * @param string $adminUserName Admin user entity name
+     * @param Membership $membership Membership entity
+     * @return Email
+     */
+    public function membershipAddedByAdminToAdmin($recipientEmail, $adminUserName, Membership $membership)
+    {
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $member = $usersTable->get($membership->user_id);
+        $membershipLevelTable = TableRegistry::getTableLocator()->get('MembershipLevels');
+        $membershipLevel = $membershipLevelTable->get($membership->membership_level_id);
+
+        return $this
+            ->setTo($recipientEmail)
+            ->setSubject('MACC - New Member: ' . $member->name)
+            ->setViewVars([
+                'membership' => $membership,
+                'membershipLevel' => $membershipLevel,
+                'member' => $member,
+                'adminUserName' => $adminUserName,
+                'profileUrl' => Router::url([
+                    'controller' => 'Users',
+                    'action' => 'view',
+                    $member->id,
+                    $member->slug
+                ], true)
+            ])
+            ->setTemplate('membership_added_by_admin_to_admin');
+    }
 }

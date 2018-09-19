@@ -2,10 +2,13 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Event\EmailListener;
 use App\Model\Entity\Membership;
 use App\Model\Entity\Payment;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\I18n\Time;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
@@ -42,6 +45,19 @@ class PaymentsController extends AppController
         'limit' => 10,
         'order' => ['Payments.created' => 'DESC']
     ];
+
+    /**
+     * Initialize method
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $emailListener = new EmailListener();
+        EventManager::instance()->on($emailListener);
+    }
 
     public function index()
     {
@@ -105,6 +121,13 @@ class PaymentsController extends AppController
                         $this->Memberships->save($membership);
                         $this->Flash->success('One year of membership added to that user\'s account');
                         $this->getMailer('Membership')->send('membershipAddedByAdmin', [$membership]);
+
+                        // Dispatch event
+                        $eventName = 'Model.Membership.afterAdminGranted';
+                        $adminUserName = $this->Auth->user('name');
+                        $metadata = ['meta' => compact('adminUserName', 'membership')];
+                        $event = new Event($eventName, $this, $metadata);
+                        EventManager::instance()->dispatch($event);
                     } else {
                         $this->Flash->error(
                             'There was an error adding one year of membership to that user\'s account.'
