@@ -2,7 +2,10 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\PicturesTable;
+use App\Model\Table\TagsTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Response;
@@ -15,8 +18,9 @@ use Cake\Utility\Hash;
 /**
  * Users Controller
  *
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\TagsTable $Tags
+ * @property UsersTable $Users
+ * @property TagsTable $Tags
+ * @property MembershipLevelsTable $MembershipLevels
  */
 class UsersController extends AppController
 {
@@ -232,16 +236,52 @@ class UsersController extends AppController
         return null;
     }
 
+    /**
+     * Renders a page showing email lists for various categories of users
+     *
+     * @return void
+     */
     public function emailLists()
     {
         $emailLists = [];
+
+        // All Members
+        $allMembers = $this->Users->find('members')
+            ->select(['id', 'email'])
+            ->contain([
+                'Memberships' => function (Query $q) {
+                    return $q
+                        ->orderDesc('Memberships.created')
+                        ->contain(['MembershipLevels']);
+                }
+            ])
+            ->order(['email' => 'ASC'])
+            ->toArray();
+        $emailLists['All Current Members'] = Hash::extract($allMembers, '{n}.email');
+
+        // Members at specific levels
+        $this->loadModel('MembershipLevels');
+        $membershipLevels = $this->MembershipLevels->find()->all();
+        foreach ($membershipLevels as $membershipLevel) {
+            $key = sprintf(
+                'Members (%s level)',
+                $membershipLevel->name
+            );
+            foreach ($allMembers as $member) {
+                $membershipLevelId = $member->memberships[0]->membership_level_id;
+                if ($membershipLevelId == $membershipLevel->id) {
+                    $emailLists[$key][] = $member->email;
+                }
+            }
+        }
 
         $results = $this->Users->find('members')
             ->select(['id', 'email'])
             ->order(['email' => 'ASC'])
             ->toArray();
-        $emailLists['Current Members'] = Hash::extract($results, '{n}.email');
+        $emailLists['All Current Members'] = Hash::extract($results, '{n}.email');
 
+        // Non-members
         $memberIds = Hash::extract($results, '{n}.id');
         $results = $this->Users->find('all')
             ->where([
