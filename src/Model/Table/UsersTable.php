@@ -193,7 +193,6 @@ class UsersTable extends Table
      * Finds all users with memberships that have not expired or been canceled
      *
      * @param Query $query
-     * @param array $options
      * @return Query
      */
     public function findMembers(Query $query)
