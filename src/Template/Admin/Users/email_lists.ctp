@@ -16,6 +16,9 @@
 
 <?php foreach ($emailLists as $header => $list): ?>
     <section class="email-list">
+        <button class="copy-email-list btn btn-sm btn-default">
+            Copy to clipboard
+        </button>
         <h2>
             <?= $header ?>
         </h2>
@@ -24,3 +27,20 @@
         </a>
     </section>
 <?php endforeach; ?>
+
+<?php $this->append('buffered'); ?>
+    function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
+    $('.copy-email-list').click(function (event) {
+        event.preventDefault();
+        const list = $(this).siblings('a').prop('href').replace('mailto:', '');
+        copyToClipboard(list);
+    });
+<?php $this->end(); ?>
