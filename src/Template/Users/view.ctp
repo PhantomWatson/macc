@@ -47,6 +47,9 @@
 <?php endif; ?>
 
 <section>
+    <h2 class="sr-only">
+        About <?= $user->name ?>
+    </h2>
     <?php if (empty($user->profile)): ?>
         <p class="alert alert-info">
             Sorry, this person does not have any profile information yet.
@@ -69,6 +72,9 @@
 
 <?php if (! empty($nonMainPictures)): ?>
     <section id="profile-pictures">
+        <h2 class="sr-only">
+            Pictures
+        </h2>
         <ul>
             <?php foreach ($nonMainPictures as $picture): ?>
                 <li>
