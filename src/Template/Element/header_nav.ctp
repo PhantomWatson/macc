@@ -13,11 +13,17 @@ if (! function_exists('navLink')) {
      * @return mixed
      */
     function navLink($label, $url, $view) {
-        $url = Router::url($url);
-        $class = $view->request->getAttribute('here') == $url ? 'current' : '';
+        // Ignore SSL option for the purposes of comparing this URL to the one the user is currently viewing
+        $urlForComparison = $url;
+        if (isset($urlForComparison['_ssl'])) {
+            unset($urlForComparison['_ssl']);
+        }
+
+        $here = $view->request->getAttribute('here');
+        $class =  $here == Router::url($urlForComparison) ? 'current' : '';
         return $view->Html->link(
             $label,
-            $url,
+            Router::url($url),
             ['class' => $class]
         );
     }
