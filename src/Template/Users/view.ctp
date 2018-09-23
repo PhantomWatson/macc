@@ -81,8 +81,8 @@
     </section>
 <?php endif; ?>
 
-<section id="profile-tags">
-    <?php if (! empty($user->tags)): ?>
+<?php if (! empty($user->tags)): ?>
+    <section id="profile-tags">
         <h2>
             Tags
         </h2>
@@ -100,8 +100,8 @@
                 </li>
             <?php endforeach; ?>
         </ul>
-    <?php endif; ?>
-</section>
+    </section>
+<?php endif; ?>
 
 <?php
     $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
