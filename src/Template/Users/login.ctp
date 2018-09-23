@@ -4,7 +4,7 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<p class="alert alert-info">
+<p>
     Don't have an account yet?
     You can <?= $this->Html->link(
         'register a MACC website account',
