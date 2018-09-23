@@ -5,7 +5,6 @@
  * @var \App\Model\Entity\Picture $picture
  * @var array $tags
  */
-    $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
 <?= $this->element('account_info_header') ?>
