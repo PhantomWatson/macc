@@ -28,19 +28,21 @@ if (! function_exists('navLink')) {
         );
     }
 
-    function navLinkGroup($label, $links, $view) {
+    function navLinkGroup($label, $links, $view, $relatedUrls = []) {
         $isCurrent = false;
         $here = $view->request->getAttribute('here');
-        foreach ($links as $link) {
+        $urls = \Cake\Utility\Hash::extract($links, '{n}.url');
+        $urls = array_merge($urls, $relatedUrls);
+        foreach ($urls as $url) {
             // Ignore SSL option for the purposes of comparing this URL to the one the user is currently viewing
-            $urlForComparison = $link['url'];
-            if (isset($urlForComparison['_ssl'])) {
-                unset($urlForComparison['_ssl']);
+            if (isset($url['_ssl'])) {
+                unset($url['_ssl']);
             }
 
-            if ($here == Router::url($urlForComparison)) {
+            if ($here == Router::url($url)) {
                 $isCurrent = true;
             }
+            //echo "<li>$here vs. " . Router::url($url) . '</li>';
         }
         ?>
         <li class="dropdown">
@@ -143,7 +145,25 @@ if (! function_exists('navLink')) {
                     ]
                 ]
             ],
-            $this
+            $this,
+            [
+                [
+                    'controller' => 'Users',
+                    'action' => 'myTags'
+                ],
+                [
+                    'controller' => 'Users',
+                    'action' => 'myPictures'
+                ],
+                [
+                    'controller' => 'Users',
+                    'action' => 'myLogo'
+                ],
+                [
+                    'controller' => 'Users',
+                    'action' => 'myContact'
+                ]
+            ]
         ) ?>
         <?php if ($authUser['role'] == 'admin'): ?>
             <?= navLinkGroup(
