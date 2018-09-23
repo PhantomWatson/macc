@@ -62,6 +62,10 @@ Router::scope('/', function (RouteBuilder $routes) {
         'pass' => ['id', 'slug'],
         'id' => '[0-9]+'
     ]);
+    $routes->connect('/my-bio', ['controller' => 'Users', 'action' => 'myBio']);
+    $routes->connect('/my-tags', ['controller' => 'Users', 'action' => 'myTags']);
+    $routes->connect('/my-pictures', ['controller' => 'Users', 'action' => 'myPictures']);
+    $routes->connect('/my-contact', ['controller' => 'Users', 'action' => 'myContact']);
 
     $routes->connect('/tag/:slug', ['controller' => 'Tags', 'action' => 'view'], [
         'pass' => ['slug']
