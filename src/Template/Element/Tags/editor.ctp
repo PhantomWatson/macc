@@ -1,8 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $availableTags
  */
-	$this->Html->script('tag_manager.js', ['block' => 'script']);
+    $this->element('jquery_ui');
+    $this->Html->script('tag_manager.js', ['block' => 'script']);
 ?>
 
 <div class="input" id="tag_editing">
