@@ -15,6 +15,9 @@
 
     <?= $this->Form->control('name') ?>
 
+    <h2>
+        Bio
+    </h2>
     <p>
         Tell about your past and present role in the community,
         the groups you associate with, and the work that you do.
