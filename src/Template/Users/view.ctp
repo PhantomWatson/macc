@@ -94,9 +94,6 @@
 
 <?php if (! empty($nonMainPictures)): ?>
     <section id="profile-pictures">
-        <h2>
-            Pictures
-        </h2>
         <ul>
             <?php foreach ($nonMainPictures as $picture): ?>
                 <li>
