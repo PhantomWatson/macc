@@ -47,7 +47,7 @@
         <?= $profileUnavailableMsg ?>
     </p>
 <?php elseif (!$this->request->getQuery('flow')): ?>
-    <p class="alert alert-info">
+    <p>
         <?php
             $url = Router::url([
                 'controller' => 'Users',
@@ -56,7 +56,7 @@
                 $authUser['slug']
             ], true);
         ?>
-        My member profile: <?= $this->Html->link($url, $url) ?>
+        <?= $this->Html->link('View my profile', $url, ['class' => 'btn btn-default']) ?>
     </p>
 <?php endif; ?>
 
