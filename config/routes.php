@@ -49,6 +49,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/styling', ['controller' => 'Pages', 'action' => 'styling']);
+    $routes->connect('/terms', ['controller' => 'Pages', 'action' => 'terms']);
+    $routes->connect('/privacy', ['controller' => 'Pages', 'action' => 'privacy']);
 
     $routes->connect('/account', ['controller' => 'Users', 'action' => 'account']);
     $routes->connect('/change-password', ['controller' => 'Users', 'action' => 'changePassword']);
