@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\User $user
  * @var \App\Model\Entity\Picture $picture
  */
-    use Cake\Core\Configure;
     $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
