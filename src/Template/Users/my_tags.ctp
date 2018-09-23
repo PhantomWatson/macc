@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  * @var \App\Model\Entity\Picture $picture
+ * @var array $tags
  */
     $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
