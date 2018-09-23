@@ -27,6 +27,39 @@ if (! function_exists('navLink')) {
             ['class' => $class]
         );
     }
+
+    function navLinkGroup($label, $links, $view) {
+        $isCurrent = false;
+        $here = $view->request->getAttribute('here');
+        foreach ($links as $link) {
+            // Ignore SSL option for the purposes of comparing this URL to the one the user is currently viewing
+            $urlForComparison = $link['url'];
+            if (isset($urlForComparison['_ssl'])) {
+                unset($urlForComparison['_ssl']);
+            }
+
+            if ($here == Router::url($urlForComparison)) {
+                $isCurrent = true;
+            }
+        }
+        ?>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle <?= $isCurrent ? 'current' : '' ?>" data-toggle="dropdown" role="button"
+               aria-haspopup="true" aria-expanded="false">
+                <?= $label ?>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <?php foreach ($links as $link): ?>
+                    <li>
+                        <?= navLink($link['label'], $link['url'], $view) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <?php
+        return null;
+    }
 }
 ?>
 
@@ -82,122 +115,91 @@ if (! function_exists('navLink')) {
         ) ?>
     </li>
     <?php if (isset($authUser)): ?>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                My Account
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <?= navLink(
-                        'My account',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Users',
-                            'action' => 'myBio'
-                        ],
-                        $this
-                    ) ?>
-                </li>
-                <li>
-                    <?= navLink(
-                        'My membership',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Memberships',
-                            'action' => 'myMembership'
-                        ],
-                        $this
-                    ) ?>
-                </li>
-                <li>
-                    <?= navLink(
-                        'Change password',
-                        [
-                            'prefix' => false,
-                            'controller' => 'Users',
-                            'action' => 'changePassword'
-                        ],
-                        $this
-                    ) ?>
-                </li>
-            </ul>
-        </li>
+        <?= navLinkGroup(
+            'My Account',
+            [
+                [
+                    'label' => 'My account',
+                    'url' => [
+                        'prefix' => false,
+                        'controller' => 'Users',
+                        'action' => 'myBio'
+                    ]
+                ],
+                [
+                    'label' => 'My membership',
+                    'url' => [
+                        'prefix' => false,
+                        'controller' => 'Memberships',
+                        'action' => 'myMembership'
+                    ]
+                ],
+                [
+                    'label' => 'Change password',
+                    'url' => [
+                        'prefix' => false,
+                        'controller' => 'Users',
+                        'action' => 'changePassword'
+                    ]
+                ]
+            ],
+            $this
+        ) ?>
         <?php if ($authUser['role'] == 'admin'): ?>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    Admin
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <?= navLink(
-                            'Manage Users',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'Users',
-                                'action' => 'index'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                    <li>
-                        <?= navLink(
-                            'Membership Levels',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'MembershipLevels',
-                                'action' => 'index'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                    <li>
-                        <?= navLink(
-                            'Memberships',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'Memberships',
-                                'action' => 'index'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                    <li>
-                        <?= navLink(
-                            'Payment Records',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'Payments',
-                                'action' => 'index'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                    <li>
-                        <?= navLink(
-                            'Email Lists',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'Users',
-                                'action' => 'emailLists'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                    <li>
-                        <?= navLink(
-                            'Mailing Addresses',
-                            [
-                                'prefix' => 'admin',
-                                'controller' => 'Users',
-                                'action' => 'addresses'
-                            ],
-                            $this
-                        ) ?>
-                    </li>
-                </ul>
-            </li>
+            <?= navLinkGroup(
+                'Admin',
+                [
+                    [
+                        'label' => 'Manage Users',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Users',
+                            'action' => 'index'
+                        ]
+                    ],
+                    [
+                        'label' => 'Membership Levels',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'MembershipLevels',
+                            'action' => 'index'
+                        ]
+                    ],
+                    [
+                        'label' => 'Memberships',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Memberships',
+                            'action' => 'index'
+                        ]
+                    ],
+                    [
+                        'label' => 'Payment Records',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Payments',
+                            'action' => 'index'
+                        ]
+                    ],
+                    [
+                        'label' => 'Email Lists',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Users',
+                            'action' => 'emailLists'
+                        ]
+                    ],
+                    [
+                        'label' => 'Mailing Addresses',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Users',
+                            'action' => 'addresses'
+                        ]
+                    ],
+                ],
+                $this
+            ) ?>
         <?php endif; ?>
         <li>
             <?= navLink(
