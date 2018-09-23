@@ -58,28 +58,6 @@
     <?php endif; ?>
 </section>
 
-<section>
-    <?php if (! empty($user->tags)): ?>
-        <h2>
-            Tags
-        </h2>
-        <ul>
-            <?php foreach ($user->tags as $tag): ?>
-                <li>
-                    <?= $this->Html->link(
-                        $tag->name,
-                        [
-                            'controller' => 'Tags',
-                            'action' => 'view',
-                            $tag->slug
-                        ]
-                    ) ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-</section>
-
 <?php
     $nonMainPictures = [];
     foreach ($user->pictures as $picture) {
@@ -102,6 +80,28 @@
         </ul>
     </section>
 <?php endif; ?>
+
+<section id="profile-tags">
+    <?php if (! empty($user->tags)): ?>
+        <h2>
+            Tags
+        </h2>
+        <ul>
+            <?php foreach ($user->tags as $tag): ?>
+                <li>
+                    <?= $this->Html->link(
+                        $tag->name,
+                        [
+                            'controller' => 'Tags',
+                            'action' => 'view',
+                            $tag->slug
+                        ]
+                    ) ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</section>
 
 <?php
     $this->Html->css('/magnific-popup/magnific-popup.css', ['block' => 'css']);
