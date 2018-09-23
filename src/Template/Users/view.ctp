@@ -47,9 +47,6 @@
 <?php endif; ?>
 
 <section>
-    <h2>
-        About
-    </h2>
     <?php if (empty($user->profile)): ?>
         <p class="alert alert-info">
             Sorry, this person does not have any profile information yet.
