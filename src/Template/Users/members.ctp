@@ -57,7 +57,8 @@
                                 'controller' => 'Users',
                                 'action' => 'view',
                                 $member->id,
-                                $member->slug
+                                $member->slug,
+                                '?' => ['back' => 'index']
                             ]
                         ) ?>
                         <p class="tag-list">

@@ -6,19 +6,35 @@
  * @var bool $ownProfile
  * @var array $mainPicture
  */
+    $backToIndex = $this->request->getQuery('back') == 'index';
 ?>
-<?php if ($ownProfile): ?>
+<?php if ($backToIndex || $ownProfile): ?>
     <p>
-        <?= $this->Html->link(
-            'Edit Profile',
-            [
-                'controller' => 'Users',
-                'action' => 'myBio'
-            ],
-            [
-                'class' => 'btn btn-default'
-            ]
-        ) ?>
+        <?php if ($backToIndex): ?>
+            <?= $this->Html->link(
+                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Members',
+                [
+                    'controller' => 'Users',
+                    'action' => 'members'
+                ],
+                [
+                    'class' => 'btn btn-default',
+                    'escape' => false
+                ]
+            ) ?>
+        <?php endif; ?>
+        <?php if ($ownProfile): ?>
+            <?= $this->Html->link(
+                'Edit Profile',
+                [
+                    'controller' => 'Users',
+                    'action' => 'myBio'
+                ],
+                [
+                    'class' => 'btn btn-default'
+                ]
+            ) ?>
+        <?php endif; ?>
     </p>
 <?php endif; ?>
 
