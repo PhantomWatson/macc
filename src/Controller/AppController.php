@@ -275,7 +275,9 @@ class AppController extends Controller
                     return $q->select(['filename']);
                 },
                 'Memberships' => function (Query $q) {
-                    return $q->select(['id', 'user_id', 'membership_level_id']);
+                    return $q
+                        ->select(['id', 'user_id', 'membership_level_id'])
+                        ->orderDesc('created');
                 },
             ])
             ->orderAsc('Users.id')
