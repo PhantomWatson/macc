@@ -1,10 +1,15 @@
 <?php
 namespace App\Model\Table;
 
+use App\Integrations\LglIntegration;
 use App\Model\Entity\Membership;
+use App\Model\Entity\User;
+use ArrayObject;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -343,5 +348,60 @@ class UsersTable extends Table
                         ]);
                 }
             ]);
+    }
+
+    /**
+     * afterSave callback method
+     *
+     * @param Event $event CakePHP event
+     * @param EntityInterface $user User entity
+     * @param ArrayObject $options Options array
+     * @return void
+     */
+    public function afterSave(Event $event, EntityInterface $user, ArrayObject $options)
+    {
+        /** @var User $user */
+        $this->updateLglIntegration($user);
+    }
+
+    /**
+     * Sends constituent info updates to LGL
+     *
+     * @param User $user User entity
+     * @return void
+     */
+    private function updateLglIntegration(User $user)
+    {
+        // Add new constituent to LGL
+        if ($user->isNew()) {
+            (new LglIntegration())->addUserOrMembership($user);
+
+            return;
+        }
+
+        // Update constituent name in LGL
+        $nameUpdated = $user->name != $user->getOriginal('name');
+        if ($nameUpdated) {
+            (new LglIntegration())->updateName($user);
+
+            return;
+        }
+
+        // Update constituent contact info in LGL
+        $contactFields = [
+            'email',
+            'address',
+            'city',
+            'state',
+            'zipcode'
+        ];
+        foreach ($contactFields as $contactField) {
+            $hasChanged = $user->$contactField != $user->getOriginal($contactField);
+            if ($hasChanged) {
+                (new LglIntegration())->updateContact($user);
+
+                return;
+            }
+        }
     }
 }

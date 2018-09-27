@@ -1,11 +1,17 @@
 <?php
 namespace App\Model\Table;
 
+use App\Integrations\LglIntegration;
 use App\Model\Entity\Membership;
+use App\Model\Entity\User;
+use ArrayObject;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
@@ -110,7 +116,6 @@ class MembershipsTable extends Table
      * for automatic renewal, and have not been renewed or canceled.
      *
      * @param Query $query
-     * @param array $options
      * @return Query
      */
     public function findToAutoRenew(Query $query)
@@ -271,5 +276,36 @@ class MembershipsTable extends Table
                 return !in_array($userId, $usersWithCurrentMemberships);
             }
         );
+    }
+
+    /**
+     * afterSave callback method
+     *
+     * @param Event $event CakePHP event
+     * @param EntityInterface $membership Membership entity
+     * @param ArrayObject $options Options array
+     * @return void
+     */
+    public function afterSave(Event $event, EntityInterface $membership, ArrayObject $options)
+    {
+        /** @var Membership $membership */
+        $this->updateLglIntegration($membership);
+    }
+
+    /**
+     * Sends constituent info updates to LGL
+     *
+     * @param Membership $membership Membership entity
+     * @return void
+     */
+    private function updateLglIntegration(Membership $membership)
+    {
+        if ($membership->isNew()) {
+            /** @var User $user */
+            $user = TableRegistry::getTableLocator()
+                ->get('Users')
+                ->get($membership->user_id);
+            (new LglIntegration())->addUserOrMembership($user, $membership);
+        }
     }
 }
