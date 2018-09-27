@@ -45,7 +45,7 @@ class LglIntegration
             'membership_level' => $membershipLevel->name,
             'membership_start' => $membership->created->format('M j, Y'),
             'membership_end' => $membership->expires->format('M j, Y'),
-            'record_id' => $user->id
+            'macc_user_id' => $user->id
         ];
         $response = $this->client->post($url, $data);
 
@@ -76,7 +76,7 @@ class LglIntegration
             'city' => $user->city,
             'state' => $user->state,
             'zipcode' => $user->zipcode,
-            'record_id' => $user->id
+            'macc_user_id' => $user->id
         ];
         $response = $this->client->post($url, $data);
 
@@ -103,7 +103,7 @@ class LglIntegration
         $data = [
             'name' => $user->name,
             'email' => $user->email,
-            'record_id' => $user->id
+            'macc_user_id' => $user->id
         ];
         $response = $this->client->post($url, $data);
 
