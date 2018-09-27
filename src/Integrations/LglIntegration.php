@@ -30,23 +30,25 @@ class LglIntegration
      * Sends an update request to LGL either creating a constituent record or updating a constituent's membership info
      *
      * @param User $user User entity
-     * @param Membership $membership Membership entity
+     * @param Membership|null $membership Membership entity
      * @return bool
      */
-    public function addUserOrMembership($user, $membership)
+    public function addUserOrMembership($user, $membership = null)
     {
         $url = Configure::read('lglIntegrationListeners.addOrRenew');
-        $membershipLevel = TableRegistry::getTableLocator()
-            ->get('MembershipLevels')
-            ->get($membership->membership_level_id);
         $data = [
             'name' => $user->name,
             'email' => $user->email,
-            'membership_level' => $membershipLevel->name,
-            'membership_start' => $membership->created->format('M j, Y'),
-            'membership_end' => $membership->expires->format('M j, Y'),
             'macc_user_id' => $user->id
         ];
+        if ($membership) {
+            $membershipLevel = TableRegistry::getTableLocator()
+                ->get('MembershipLevels')
+                ->get($membership->membership_level_id);
+            $data['membership_level'] = $membershipLevel->name;
+            $data['membership_start'] = $membership->created->format('M j, Y');
+            $data['membership_end'] = $membership->expires->format('M j, Y');
+        }
         $response = $this->client->post($url, $data);
 
         if ($response->isOk()) {
