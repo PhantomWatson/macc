@@ -27,28 +27,54 @@ class LglIntegration
     }
 
     /**
-     * Sends an update request to LGL either creating a constituent record or updating a constituent's membership info
+     * Sends an update request to LGL creating a constituent record
      *
      * @param User $user User entity
-     * @param Membership|null $membership Membership entity
      * @return bool
      */
-    public function addUserOrMembership($user, $membership = null)
+    public function addUser($user)
     {
-        $url = Configure::read('lglIntegrationListeners.addOrRenew');
+        $url = Configure::read('lglIntegrationListeners.addUser');
+
         $data = [
             'name' => $user->name,
             'email' => $user->email,
             'macc_user_id' => $user->id
         ];
-        if ($membership) {
-            $membershipLevel = TableRegistry::getTableLocator()
-                ->get('MembershipLevels')
-                ->get($membership->membership_level_id);
-            $data['membership_level'] = $membershipLevel->name;
-            $data['membership_start'] = $membership->created->format('M j, Y');
-            $data['membership_end'] = $membership->expires->format('M j, Y');
+        $response = $this->client->post($url, $data);
+
+        if ($response->isOk()) {
+            $this->logSuccess($url, $data, $response);
+
+            return true;
         }
+
+        $this->logError($url, $data, $response);
+
+        return false;
+    }
+
+    /**
+     * Sends an update request to LGL updating a constituent's membership info
+     *
+     * @param User $user User entity
+     * @param Membership|null $membership Membership entity
+     * @return bool
+     */
+    public function addMembership($user, $membership = null)
+    {
+        $url = Configure::read('lglIntegrationListeners.addMembership');
+        $membershipLevel = TableRegistry::getTableLocator()
+            ->get('MembershipLevels')
+            ->get($membership->membership_level_id);
+        $data = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'macc_user_id' => $user->id,
+            'membership_level' => $membershipLevel->name,
+            'membership_start' => $membership->created->format('M j, Y'),
+            'membership_end' => $membership->expires->format('M j, Y')
+        ];
         $response = $this->client->post($url, $data);
 
         if ($response->isOk()) {

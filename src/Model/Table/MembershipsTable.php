@@ -305,7 +305,7 @@ class MembershipsTable extends Table
             $user = TableRegistry::getTableLocator()
                 ->get('Users')
                 ->get($membership->user_id);
-            (new LglIntegration())->addUserOrMembership($user, $membership);
+            (new LglIntegration())->addMembership($user, $membership);
         }
     }
 }

@@ -300,7 +300,6 @@ class UsersTable extends Table
      * intended to be chained after find('members')
      *
      * @param Query $query
-     * @param array $options
      * @return Query
      */
     public function findQualifiedForLogo(Query $query)
@@ -374,7 +373,7 @@ class UsersTable extends Table
     {
         // Add new constituent to LGL
         if ($user->isNew()) {
-            (new LglIntegration())->addUserOrMembership($user);
+            (new LglIntegration())->addUser($user);
 
             return;
         }
