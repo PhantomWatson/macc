@@ -50,6 +50,8 @@ class LglIntegration
         $response = $this->client->post($url, $data);
 
         if ($response->isOk()) {
+            $this->logSuccess($url, $data, $response);
+
             return true;
         }
 
@@ -79,6 +81,8 @@ class LglIntegration
         $response = $this->client->post($url, $data);
 
         if ($response->isOk()) {
+            $this->logSuccess($url, $data, $response);
+
             return true;
         }
 
@@ -104,6 +108,8 @@ class LglIntegration
         $response = $this->client->post($url, $data);
 
         if ($response->isOk()) {
+            $this->logSuccess($url, $data, $response);
+
             return true;
         }
 
@@ -130,5 +136,30 @@ class LglIntegration
             $response->getBody()
         );
         Log::write('error', $errorMsg);
+    }
+
+    /**
+     * Logs information about a successful response
+     *
+     * @param string $url URL of request
+     * @param array $data POST data sent
+     * @param Response $response Response to request
+     * @return void
+     */
+    private function logSuccess($url, array $data, Response $response)
+    {
+        // Only write to log in debug mode
+        if (!Configure::read('debug')) {
+            return;
+        }
+
+        $successMsg = sprintf(
+            "LGL integration returned status code %s.\nURL: %s\nPOST data:%s\nResponse: %s",
+            $response->getStatusCode(),
+            $url,
+            print_r($data, true),
+            $response->getBody()
+        );
+        Log::write('debug', $successMsg);
     }
 }
