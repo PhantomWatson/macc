@@ -437,7 +437,7 @@ $config = [
     ],
     'lglIntegrationListeners' => [
         'addUser' =>
-            'https://munciearts.littlegreenlight.com/integrations/91362265-4fc4-45e0-bb47-882d0eab3427/listener',
+            'https://munciearts.littlegreenlight.com/integrations/5c4db838-9f17-431d-b222-5a97431b1edd/listener',
         'addMembership' =>
             'https://munciearts.littlegreenlight.com/integrations/200ec11e-165e-47e3-9beb-c2290548bdb3/listener',
         'updateContact' =>
