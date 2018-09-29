@@ -65,13 +65,14 @@ class DonationsController extends AppController
             $metadata['Donor name'] = '';
         }
         $metadata['Donor email'] = $this->request->getData('email');
+        $recipientProgram = $this->request->getData('recipientProgram');
+        $metadata['Recipient program'] = $recipientProgram ? $recipientProgram : '(none specified)';
 
         // Create the charge on Stripe's servers - this will charge the user's card
         $apiKey = Configure::read('Stripe.Secret');
         \Stripe\Stripe::setApiKey($apiKey);
         try {
             $description = 'Donation of $'.number_format($amount, 2);
-            $recipientProgram = $this->request->getData('recipientProgram');
             if ($recipientProgram) {
                 $description .= ' for ' . $recipientProgram;
             }
