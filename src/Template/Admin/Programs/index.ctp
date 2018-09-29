@@ -53,7 +53,7 @@
                         <?= $program->name ?>
                     </td>
                     <td>
-                        <?= $program->description ?>
+                        <?= nl2br($program->description) ?>
                     </td>
                     <td>
                         <div class="btn-group">
