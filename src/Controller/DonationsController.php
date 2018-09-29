@@ -1,9 +1,15 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Table\ProgramsTable;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 
+/**
+ * Class DonationsController
+ * @package App\Controller
+ * @property ProgramsTable $Programs
+ */
 class DonationsController extends AppController
 {
 
@@ -35,8 +41,10 @@ class DonationsController extends AppController
 
     public function donate()
     {
+        $this->loadModel('Programs');
         $this->set([
-            'pageTitle' => 'Donate to the Muncie Arts and Culture Council'
+            'pageTitle' => 'Donate to the Muncie Arts and Culture Council',
+            'programs' => $this->Programs->find()->orderAsc('name')->all()
         ]);
     }
 

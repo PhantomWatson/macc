@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var array $authUser
+ * @var \Cake\Datasource\ResultSetInterface $programs
  */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
@@ -26,10 +27,36 @@
             <div class="input-group-addon">.00</div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="recipient-program">Optional: What MACC program would you like your donation to go toward?</label>
-        <input type="text" class="form-control" id="recipient-program" placeholder="" />
-    </div>
+
+    <?php if ($programs->isEmpty()): ?>
+        <input type="hidden" name="noProgramSelected" value="1" />
+    <?php else: ?>
+        <section id="select-program">
+            <h3>
+                What MACC program would you like your donation to go toward?
+            </h3>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="programId" value="" checked="checked">
+                    No specific program
+                </label>
+            </div>
+
+            <?php foreach ($programs as $program): ?>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="programId" value="<?= $program->id ?>">
+                        <?= $program->name ?>
+                    </label>
+                    <p class="description">
+                        <?= nl2br($program->description) ?>
+                    </p>
+                </div>
+            <?php endforeach; ?>
+        </section>
+    <?php endif; ?>
+
     <button type="submit" class="btn btn-primary" id="donation-button">
         Enter payment information
     </button>
