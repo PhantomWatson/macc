@@ -8,7 +8,7 @@ let donation = {
         paymentProcessor.beforePurchase = function () {
             var recipientProgram = '';
             if ($('#noProgramSelected').val() !== '1') {
-                recipientProgram = $('input.recipient-program:checked').val();
+                recipientProgram = $('input[name=recipient-program]:checked').first().val();
             }
 
             var amount = $('#donation-amount').val();
