@@ -19,30 +19,28 @@
     ) ?>
 </p>
 
-<div class="alert alert-info">
-    <p>
-        You will need to manually add a payment record if someone pays for membership
-        by a method <em>other than</em> through the MACC website, such as with a check. Please include
-        information about how this payment was received in the <strong>notes</strong> section.
-    </p>
+<p>
+    You will need to manually add a payment record if someone pays for membership
+    by a method <em>other than</em> through the MACC website, such as with a check. Please include
+    information about how this payment was received in the <strong>notes</strong> section.
+</p>
 
-    <p>
-        Adding a payment record will grant the selected user one year of membership at the specified level.
-    </p>
+<p>
+    Adding a payment record will grant the selected user one year of membership at the specified level.
+</p>
 
-    <p>
-        <strong>Does the user not have a website account?</strong>
-        <?= $this->Html->link(
-            'Create a new user account',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Users',
-                'action' => 'add'
-            ]
-        ) ?>
-        first, and select the "Grant this user a MACC membership" checkbox at the bottom of the form.
-    </p>
-</div>
+<p>
+    <strong>Does the user not have a website account?</strong>
+    <?= $this->Html->link(
+        'Create a new user account',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Users',
+            'action' => 'add'
+        ]
+    ) ?>
+    first, and select the "Grant this user a MACC membership" checkbox at the bottom of the form.
+</p>
 
 <?= $this->Form->create($payment) ?>
 
