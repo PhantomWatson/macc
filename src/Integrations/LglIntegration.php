@@ -35,9 +35,16 @@ class LglIntegration
     public function addUser($user)
     {
         $url = Configure::read('lglIntegrationListeners.addUser');
+        $nameWords = explode(' ', trim($user->name));
+        $constituentType = count($nameWords) > 3 ? 'organization' : 'individual';
+        $parsedName = $this->getParsedName($user->name);
 
         $data = [
-            'name' => $user->name,
+            'first_name' => $parsedName['first'],
+            'middle_name' => $parsedName['middle'],
+            'last_name' => $parsedName['last'],
+            'organization_name' => $parsedName['organization'],
+            'constituent_type' => $constituentType,
             'email' => $user->email,
             'macc_user_id' => $user->id
         ];
@@ -128,8 +135,16 @@ class LglIntegration
     public function updateName($user)
     {
         $url = Configure::read('lglIntegrationListeners.updateName');
+        $nameWords = explode(' ', trim($user->name));
+        $constituentType = count($nameWords) > 3 ? 'organization' : 'individual';
+        $parsedName = $this->getParsedName($user->name);
+
         $data = [
-            'name' => $user->name,
+            'first_name' => $parsedName['first'],
+            'middle_name' => $parsedName['middle'],
+            'last_name' => $parsedName['last'],
+            'organization_name' => $parsedName['organization'],
+            'constituent_type' => $constituentType,
             'email' => $user->email,
             'macc_user_id' => $user->id
         ];
@@ -189,5 +204,36 @@ class LglIntegration
             $response->getBody()
         );
         Log::write('debug', $successMsg);
+    }
+
+    /**
+     * Splits up a name into first, middle, last, and organization name according to how many words are in it
+     *
+     * Assumes > 4 words correspond to an organization name
+     *
+     * @param string $name Individual/organization name
+     * @return array
+     */
+    private function getParsedName(string $name)
+    {
+        $name = trim($name);
+        $nameWords = explode(' ', $name);
+        $constituentType = count($nameWords) > 3 ? 'organization' : 'individual';
+
+        if ($constituentType == 'organization') {
+            return [
+                'first' => $name,
+                'middle' => '',
+                'last' => '',
+                'organization' => $name
+            ];
+        }
+
+        return [
+            'first' => $nameWords[0],
+            'middle' => count($nameWords) == 3 ? $nameWords[1] : '',
+            'last' => count($nameWords) > 1 ? end($nameWords) : '',
+            'organization' => ''
+        ];
     }
 }
