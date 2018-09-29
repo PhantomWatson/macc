@@ -84,4 +84,24 @@ class ProgramsController extends AppController
 
         return $this->render('form');
     }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Program id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $program = $this->Programs->get($id);
+        if ($this->Programs->delete($program)) {
+            $this->Flash->success('Program deleted');
+        } else {
+            $this->Flash->error('The program could not be deleted. :(');
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
 }
