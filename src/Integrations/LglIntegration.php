@@ -44,6 +44,7 @@ class LglIntegration
             'middle_name' => $parsedName['middle'],
             'last_name' => $parsedName['last'],
             'organization_name' => $parsedName['organization'],
+            'addressee' => $user->name,
             'constituent_type' => $constituentType,
             'email' => $user->email,
             'macc_user_id' => $user->id
@@ -144,6 +145,7 @@ class LglIntegration
             'middle_name' => $parsedName['middle'],
             'last_name' => $parsedName['last'],
             'organization_name' => $parsedName['organization'],
+            'addressee' => $user->name,
             'constituent_type' => $constituentType,
             'email' => $user->email,
             'macc_user_id' => $user->id
