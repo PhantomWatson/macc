@@ -40,7 +40,7 @@ class ProgramsController extends AppController
         if ($this->request->is('post')) {
             $program = $this->Programs->patchEntity($program, $this->request->getData());
             if ($this->Programs->save($program)) {
-                $this->Flash->success('The program has been saved.');
+                $this->Flash->success('Program added');
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -53,6 +53,35 @@ class ProgramsController extends AppController
             'program' => $program
         ]);
 
-        return null;
+        return $this->render('form');
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Program id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $program = $this->Programs->get($id);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $program = $this->Programs->patchEntity($program, $this->request->getData());
+            if ($this->Programs->save($program)) {
+                $this->Flash->success('Program updated');
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(
+                'The program could not be saved. Please correct any displayed errors and try again.'
+            );
+        }
+        $this->set([
+            'pageTitle' => 'Update Program',
+            'program' => $program
+        ]);
+
+        return $this->render('form');
     }
 }
