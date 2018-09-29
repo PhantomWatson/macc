@@ -12,7 +12,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Program[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Program|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Program|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Program patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Program patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, $options = [])
  * @method \App\Model\Entity\Program[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Program findOrCreate($search, callable $callback = null, $options = [])
  *
