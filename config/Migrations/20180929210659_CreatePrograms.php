@@ -13,12 +13,6 @@ class CreatePrograms extends AbstractMigration
     public function change()
     {
         $table = $this->table('programs');
-        $table->addColumn('id', 'integer', [
-            'autoIncrement' => true,
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-        ]);
         $table->addColumn('name', 'string', [
             'default' => null,
             'limit' => 255,
