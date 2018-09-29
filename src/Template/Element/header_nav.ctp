@@ -217,6 +217,14 @@ if (! function_exists('navLink')) {
                             'action' => 'addresses'
                         ]
                     ],
+                    [
+                        'label' => 'Programs',
+                        'url' => [
+                            'prefix' => 'admin',
+                            'controller' => 'Programs',
+                            'action' => 'index'
+                        ]
+                    ],
                 ],
                 $this
             ) ?>
