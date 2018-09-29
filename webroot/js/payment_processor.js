@@ -128,7 +128,7 @@ let paymentProcessor = {
             '</div>'+
             '<div class="modal-footer">'+
             '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'+
-            '<button type="button" class="btn btn-primary">Complete Purchase</button>'+
+            '<button type="button" class="btn btn-primary">Process Payment</button>'+
             '</div>'+
             '</div>'+
             '</div>'+
