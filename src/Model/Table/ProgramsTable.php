@@ -58,8 +58,7 @@ class ProgramsTable extends Table
 
         $validator
             ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
+            ->requirePresence('description', 'create');
 
         return $validator;
     }
