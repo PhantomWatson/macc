@@ -38,7 +38,7 @@
 
             <div class="radio">
                 <label>
-                    <input type="radio" name="programId" value="" checked="checked">
+                    <input type="radio" name="recipient-program" value="" checked="checked">
                     No specific program
                 </label>
             </div>
@@ -46,7 +46,7 @@
             <?php foreach ($programs as $program): ?>
                 <div class="radio">
                     <label>
-                        <input type="radio" name="programId" value="<?= $program->id ?>">
+                        <input type="radio" name="recipient-program" value="<?= $program->name ?>">
                         <?= $program->name ?>
                     </label>
                     <p class="description">

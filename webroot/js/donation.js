@@ -6,6 +6,11 @@ let donation = {
         paymentProcessor.postUrl = params.postUrl;
         paymentProcessor.redirectUrl = params.redirectUrl;
         paymentProcessor.beforePurchase = function () {
+            var recipientProgram = '';
+            if ($('#noProgramSelected').val() !== '1') {
+                recipientProgram = $('input.recipient-program:checked').val();
+            }
+
             var amount = $('#donation-amount').val();
             amount = parseInt(amount);
             if (isNaN(amount) || amount < 1) {
@@ -13,7 +18,7 @@ let donation = {
                 return false;
             }
             paymentProcessor.postData.amount = amount;
-            paymentProcessor.postData.recipientProgram = $('#recipient-program').val();
+            paymentProcessor.postData.recipientProgram = recipientProgram;
             paymentProcessor.costDollars = amount;
             paymentProcessor.confirmationMessage = 'Confirm donation of $'+amount+'?';
             paymentProcessor.description = 'Donation of $'+amount+' to MACC';
