@@ -56,19 +56,28 @@
                         <?= $program->description ?>
                     </td>
                     <td>
-                        <?= $this->Html->link(
-                            'Edit',
-                            ['action' => 'edit', $program->id],
-                            ['class' => 'btn btn-primary']
-                        ) ?>
-                        <?= $this->Form->postLink(
-                            'Delete',
-                            ['action' => 'delete', $program->id],
-                            [
-                                'confirm' => 'Are you sure you want to remove this program?',
-                                'class' => 'btn btn-danger'
-                            ]
-                        ) ?>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <?= $this->Html->link(
+                                        'Edit',
+                                        ['action' => 'edit', $program->id]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Form->postLink(
+                                        'Delete',
+                                        ['action' => 'delete', $program->id],
+                                        [
+                                            'confirm' => 'Are you sure you want to remove this program?'
+                                        ]
+                                    ) ?>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             <?php endforeach; ?>
