@@ -80,6 +80,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/my-membership', ['controller' => 'Memberships', 'action' => 'myMembership']);
     $routes->connect('/purchase-complete', ['controller' => 'Memberships', 'action' => 'purchaseComplete']);
 
+    $routes->redirect('/admin/users/login', ['prefix' => false, 'controller' => 'Users', 'action' => 'login']);
+    $routes->redirect('/admin/users/my-bio', ['prefix' => false, 'controller' => 'Users', 'action' => 'myBio']);
+
     $routes->fallbacks(DashedRoute::class);
 });
 
