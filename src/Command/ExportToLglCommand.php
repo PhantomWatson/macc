@@ -6,7 +6,6 @@ use Cake\Console\Arguments;
 use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
 use Cake\ORM\TableRegistry;
-use Cake\Shell\Helper\ProgressHelper;
 
 /**
  * Class ExportToLglCommand
@@ -44,11 +43,9 @@ class ExportToLglCommand extends Command
 
         $io->out();
         $io->out('Collecting users...');
-        $users = TableRegistry::getTableLocator()
-            ->get('Users')
-            ->find()
-            ->all();
-        $count = count($users);
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $users = $usersTable->find()->all();
+        $count = $users->count();
         $io->out(sprintf(
             ' - %s %s found',
             $count,
@@ -58,20 +55,38 @@ class ExportToLglCommand extends Command
         $io->out();
         $io->out('Sending user info to LGL...');
 
-        /** @var ProgressHelper $progress */
-        $progress = $io->helper('Progress');
-        $progress->init([
-            'total' => $count,
-            'width' => 20
-        ]);
         $lgl = new LglIntegration();
         foreach ($users as $user) {
             $lgl->addUser($user);
-            $progress->increment(1);
-            $progress->draw();
         }
+        $io->out(' - Done');
 
         $io->out();
-        $io->success('Done');
+        $io->out('Collecting current membership info...');
+        $members = [];
+        foreach ($users as $user) {
+            if ($usersTable->isCurrentMember($user->id)) {
+                $members[] = $user;
+            }
+        }
+
+        $count = count($members);
+        $io->out(sprintf(
+            ' - %s current %s found',
+            $count,
+            __n('membership', 'memberships', $count)
+        ));
+        $io->out();
+
+        $io->out('Sending membership info to LGL...');
+        $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
+        foreach ($members as $member) {
+            $membership = $membershipsTable->getCurrentMembership($member->id);
+            $lgl->addMembership($member, $membership);
+        }
+        $io->out(' - Done');
+
+        $io->out();
+        $io->success('Export complete');
     }
 }
