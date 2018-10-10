@@ -36,6 +36,7 @@ class MembershipMailer extends Mailer
                 'membershipLevel' => $membershipLevel,
                 'user' => $user,
                 'profileUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'view',
                     $user->id,
@@ -63,6 +64,7 @@ class MembershipMailer extends Mailer
                 'autoRenew' => (bool)$membership->auto_renew,
                 'expires' => $membership->expires->format('F jS'),
                 'renewUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Memberships',
                     'action' => 'level',
                     $membership->membership_level_id,
@@ -107,6 +109,7 @@ class MembershipMailer extends Mailer
             ->setViewVars([
                 'userName' => $membership->user->name,
                 'renewUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Memberships',
                     'action' => 'level',
                     $membership->membership_level_id,
@@ -153,6 +156,7 @@ class MembershipMailer extends Mailer
             ->setViewVars([
                 'userName' => $membership->user->name,
                 'profileUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'myBio',
                     '?' => ['flow' => 1]
@@ -176,12 +180,14 @@ class MembershipMailer extends Mailer
             ->setViewVars([
                 'userName' => $user->name,
                 'profileUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'myBio',
                     '?' => ['flow' => 1]
                 ], true),
                 'password' => $password,
                 'loginUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'login'
                 ], true),
@@ -213,6 +219,7 @@ class MembershipMailer extends Mailer
             ->setViewVars([
                 'userName' => $user->name,
                 'profileUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'myBio',
                     '?' => ['flow' => 1]
@@ -249,6 +256,7 @@ class MembershipMailer extends Mailer
                 'member' => $member,
                 'adminUserName' => $adminUserName,
                 'profileUrl' => Router::url([
+                    'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'view',
                     $member->id,
