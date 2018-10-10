@@ -15,6 +15,7 @@
 namespace App;
 
 use App\Command\AlertUpcomingExpirationsCommand;
+use App\Command\ExportToLglCommand;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -99,6 +100,7 @@ class Application extends BaseApplication
         $commands->autoDiscover();
 
         $commands->add('alert-upcoming-expirations', AlertUpcomingExpirationsCommand::class);
+        $commands->add('export-to-lgl', ExportToLglCommand::class);
 
         return $commands;
     }
