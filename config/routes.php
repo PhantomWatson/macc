@@ -68,6 +68,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/my-tags', ['controller' => 'Users', 'action' => 'myTags']);
     $routes->connect('/my-pictures', ['controller' => 'Users', 'action' => 'myPictures']);
     $routes->connect('/my-contact', ['controller' => 'Users', 'action' => 'myContact']);
+    $routes->connect('/my-logo', ['controller' => 'Users', 'action' => 'myLogo']);
 
     $routes->connect('/tag/:slug', ['controller' => 'Tags', 'action' => 'view'], [
         'pass' => ['slug']
