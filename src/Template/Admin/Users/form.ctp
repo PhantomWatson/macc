@@ -71,7 +71,10 @@
             ]
         ) ?>
     </div>
-<?php elseif ($this->request->getParam('prefix') == 'admin' && $this->request->getParam('action') == 'add'): ?>
+<?php elseif (
+    $this->request->getParam('prefix') == 'admin' &&
+    $this->request->getParam('action') == 'add'
+): ?>
     <?= $this->Form->control(
         'password',
         [
