@@ -201,7 +201,7 @@ class AppController extends Controller
         $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->newEntity();
         $user = $usersTable->patchEntity($user, $data, [
-            'fieldList' => ['name', 'email', 'password', 'role']
+            'fields' => ['name', 'email', 'password', 'role']
         ]);
 
         if (!$usersTable->save($user)) {

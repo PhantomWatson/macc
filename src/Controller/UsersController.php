@@ -148,7 +148,7 @@ class UsersController extends AppController
         $user = $this->Users->get($userId);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['name', 'profile'],
+                'fields' => ['name', 'profile'],
             ]);
             $errors = $user->getErrors();
             if (empty($errors)) {
@@ -190,7 +190,7 @@ class UsersController extends AppController
         ]);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['tags'],
+                'fields' => ['tags'],
                 'associated' => ['Tags'],
                 'onlyIds' => true
             ]);
@@ -368,7 +368,7 @@ class UsersController extends AppController
             $data = $this->request->getData();
             $data['password'] = $data['new_password'];
             $user = $this->Users->patchEntity($user, $data, [
-                'fieldList' => ['password']
+                'fields' => ['password']
             ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
@@ -465,7 +465,7 @@ class UsersController extends AppController
             $data = $this->request->getData();
             $data['password'] = $data['new_password'];
             $user = $this->Users->patchEntity($user, $data, [
-                'fieldList' => ['password']
+                'fields' => ['password']
             ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
@@ -552,7 +552,7 @@ class UsersController extends AppController
             }
 
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => [
+                'fields' => [
                     'email',
                     'address',
                     'city',

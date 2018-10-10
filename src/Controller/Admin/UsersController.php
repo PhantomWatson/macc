@@ -199,7 +199,7 @@ class UsersController extends AppController
         $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['profile', 'tags'],
+                'fields' => ['profile', 'tags'],
                 'associated' => ['Tags'],
                 'onlyIds' => true
             ]);
