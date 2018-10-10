@@ -46,7 +46,7 @@
     );
 ?>
 
-<?php if ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'edit'): ?>
+<?php if ($this->request->getParam('prefix') == 'admin' && $this->request->getParam('action') == 'edit'): ?>
     <div id="password-fields-button" class="form-group">
         <a href="#">
             Change password
@@ -71,7 +71,7 @@
             ]
         ) ?>
     </div>
-<?php elseif ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'add'): ?>
+<?php elseif ($this->request->getParam('prefix') == 'admin' && $this->request->getParam('action') == 'add'): ?>
     <?= $this->Form->control(
         'password',
         [
