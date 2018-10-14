@@ -73,16 +73,16 @@
         <thead>
             <tr>
                 <th>
-                    <?= $this->Paginator->sort('Users.name', 'Name') ?>
+                    Name
                 </th>
                 <th>
-                    <?= $this->Paginator->sort('Memberships.membership_level_id', 'Membership Status') ?>
+                    Membership Level
                 </th>
                 <th>
-                    <?= $this->Paginator->sort('Memberships.expires', 'Expiration') ?>
+                    Expiration
                 </th>
                 <th>
-                    <?= $this->Paginator->sort('Memberships.auto_renew', 'Auto Renew?') ?>
+                    Auto Renew?
                 </th>
             </tr>
         </thead>
