@@ -20,8 +20,9 @@
 </p>
 
 <p>
-    The following are users who previously had MACC memberships but aren't members anymore. The membership levels listed
-    are the most recent membership levels held by each user.
+    The following are users who previously had MACC memberships but aren't members anymore. The membership levels
+    listed are the most recent membership levels held by each user. These former members are listed in reverse
+    chronological order of when their membership expired.
 </p>
 
 <?php if (empty($users)): ?>
