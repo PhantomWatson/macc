@@ -16,9 +16,6 @@ class MembershipsController extends AppController
     public $paginate = [
         'Memberships' => [
             'limit' => 25,
-            'order' => [
-                'Memberships.expires' => 'ASC'
-            ],
             'sortWhitelist' => [
                 'Users.name',
                 'Memberships.expires',
@@ -65,7 +62,8 @@ class MembershipsController extends AppController
                         ->contain('MembershipLevels')
                         ->order(['expires' => 'DESC']);
                 }
-            ]);
+            ])
+            ->orderAsc('name');
         $members = $this->paginate($query);
 
         $this->set([
