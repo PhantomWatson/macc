@@ -102,14 +102,14 @@
                         <td class="expired">
                             Expired
                         </td>
-                        <td class="expired">
+                        <td class="date expired">
                             <?= $expires->format('F j, Y') ?>
                         </td>
                     <?php else: ?>
                         <td>
                             <?= $member->memberships[0]['membership_level']['name'] ?>
                         </td>
-                        <td>
+                        <td class="date">
                             <?= $expires->format('F j, Y') ?>
                         </td>
                     <?php endif; ?>
