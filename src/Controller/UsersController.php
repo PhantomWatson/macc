@@ -539,6 +539,7 @@ class UsersController extends AppController
      * Page for updating one's own contact info
      *
      * @return Response|null
+     * @throws \Exception
      */
     public function myContact()
     {
