@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Integrations\LglIntegration;
+use App\MailingList\MailingList;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use ArrayObject;
@@ -356,11 +357,13 @@ class UsersTable extends Table
      * @param EntityInterface $user User entity
      * @param ArrayObject $options Options array
      * @return void
+     * @throws \Exception
      */
     public function afterSave(Event $event, EntityInterface $user, ArrayObject $options)
     {
         /** @var User $user */
         $this->updateLglIntegration($user);
+        $this->updateMailChimp($user);
     }
 
     /**
@@ -401,6 +404,24 @@ class UsersTable extends Table
 
                 return;
             }
+        }
+    }
+
+    /**
+     * Updates a user's MailChimp subscription information
+     *
+     * @param User $user User entity
+     * @throws \Exception
+     */
+    private function updateMailChimp($user)
+    {
+        $oldEmail = $user->getOriginal('email');
+        $newEmail = $user->email;
+        $emailChanged = $newEmail != $oldEmail;
+
+        // Update email address in MailChimp
+        if ($emailChanged && MailingList::isSubscribed($oldEmail)) {
+            MailingList::updateEmailAddress($oldEmail, $newEmail);
         }
     }
 }
