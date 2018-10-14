@@ -24,22 +24,18 @@
             'controller' => 'Users',
             'action' => 'myPictures',
             '?' => $queryStrings
-        ])
-    ];
-
-    if ($qualifiesForLogo) {
-        $tabs['Logo'] = Router::url([
+        ]),
+        'Logo' => Router::url([
             'controller' => 'Users',
             'action' => 'myLogo',
             '?' => $queryStrings
-        ]);
-    }
-
-    $tabs['Contact'] = Router::url([
-        'controller' => 'Users',
-        'action' => 'myContact',
-        '?' => $queryStrings
-    ]);
+        ]),
+        'Contact' => Router::url([
+            'controller' => 'Users',
+            'action' => 'myContact',
+            '?' => $queryStrings
+        ])
+    ];
 ?>
 
 <?php if (isset($profileUnavailableMsg)): ?>

@@ -597,13 +597,6 @@ class UsersController extends AppController
     {
         // Users can see this page if their most recent membership (expired or not) is at a high enough level
         $qualifies = $this->qualifiesForLogo();
-        if (!$qualifies) {
-            $this->Flash->error(
-                'Sorry, you\'ll need to purchase a membership at the Ambassador or Arts Hero level in order ' .
-                'to upload a logo to be displayed on the MACC website.'
-            );
-            return $this->redirect('/');
-        }
 
         $this->setNonMemberAlert();
         $userId = $this->Auth->user('id');
@@ -674,6 +667,15 @@ class UsersController extends AppController
      */
     public function uploadLogo()
     {
+        if (!$this->qualifiesForLogo()) {
+            $this->set([
+                'message' => 'Error uploading logo: No current membership at qualifying level'
+            ]);
+            $this->response = $this->response->withStatus(500);
+
+            return;
+        }
+
         $this->viewBuilder()->setLayout('json');
         $this->set('_serialize', ['message', 'filepath']);
 
@@ -712,6 +714,7 @@ class UsersController extends AppController
                         $logo->filename
                     )
                 ]);
+
                 return;
             }
 
