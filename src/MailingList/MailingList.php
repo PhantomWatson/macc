@@ -3,6 +3,7 @@ namespace App\MailingList;
 
 use App\Model\Entity\User;
 use Cake\Core\Configure;
+use Cake\Log\Log;
 use DrewM\MailChimp\MailChimp;
 
 class MailingList
@@ -54,11 +55,42 @@ class MailingList
     }
 
     /**
+     * Updates a user's email address in MailChimp and returns a boolean indicating success
+     *
+     * @param string $oldEmail Previous email address
+     * @param string $newEmail What the email address is being updated to
+     * @return boolean
+     * @throws \Exception
+     */
+    public static function updateEmailAddress($oldEmail, $newEmail)
+    {
+        $MailChimp = MailingList::getMailChimpObject();
+        $listId = Configure::read('mailChimpListId');
+        $subscriberHash = $MailChimp->subscriberHash($oldEmail);
+        $response = $MailChimp->post(
+            "lists/$listId/members/$subscriberHash",
+            ['email_address' => $newEmail]
+        );
+
+        if (isset($response['status']) && $response['status'] == 'subscribed') {
+            return true;
+        }
+
+        // Log error
+        $msg = "Error updating email address from $oldEmail to $newEmail in MailChimp. Details: \n";
+        $msg .= print_r($response, true);
+        Log::write('error', $msg);
+
+        return false;
+    }
+
+    /**
      * Returns TRUE if an email address is subscribed
      * to the MailChimp mailing list
      *
      * @param string $email
      * @return boolean
+     * @throws \Exception
      */
     public static function isSubscribed($email)
     {
