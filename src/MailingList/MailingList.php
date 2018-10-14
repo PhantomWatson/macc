@@ -37,8 +37,7 @@ class MailingList
      */
     public static function addToList($user)
     {
-        $isSubscribed = MailingList::isSubscribed($user->email);
-        if ($isSubscribed) {
+        if (MailingList::isMember($user->email)) {
             return true;
         }
         $MailChimp = MailingList::getMailChimpObject();
@@ -100,11 +99,13 @@ class MailingList
     /**
      * Returns TRUE if an email address is a member of MACC's MailChimp mailing list
      *
+     * This includes both subscribed and unsubscribed members
+     *
      * @param string $email
      * @return boolean
      * @throws \Exception
      */
-    public static function isSubscribed($email)
+    public static function isMember($email)
     {
         $MailChimp = MailingList::getMailChimpObject();
         $listId = Configure::read('mailChimpListId');

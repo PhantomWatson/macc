@@ -420,7 +420,7 @@ class UsersTable extends Table
         $emailChanged = $newEmail != $oldEmail;
 
         // Update email address in MailChimp
-        if ($emailChanged && MailingList::isSubscribed($oldEmail)) {
+        if ($emailChanged && MailingList::isMember($oldEmail)) {
             MailingList::updateEmailAddress($oldEmail, $newEmail);
         }
     }
