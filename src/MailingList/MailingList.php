@@ -9,6 +9,8 @@ use DrewM\MailChimp\MailChimp;
 class MailingList
 {
     /**
+     * Returns a MailChimp API object
+     *
      * @return \DrewM\MailChimp\MailChimp
      * @throws \Exception
      */
@@ -19,6 +21,7 @@ class MailingList
         if (Configure::read('debug')) {
             $MailChimp->verify_ssl = false;
         }
+
         return $MailChimp;
     }
 
@@ -51,7 +54,17 @@ class MailingList
             ],
             'status' => 'subscribed'
         ]);
-        return isset($response['status']) && $response['status'] == 'subscribed';
+
+        if (isset($response['status']) && $response['status'] == 'subscribed') {
+            return true;
+        }
+
+        // Log error
+        $msg = "Error adding user {$user->id} to MailChimp list. Details: \n";
+        $msg .= print_r($response, true);
+        Log::write('error', $msg);
+
+        return false;
     }
 
     /**
@@ -85,8 +98,7 @@ class MailingList
     }
 
     /**
-     * Returns TRUE if an email address is subscribed
-     * to the MailChimp mailing list
+     * Returns TRUE if an email address is a member of MACC's MailChimp mailing list
      *
      * @param string $email
      * @return boolean
@@ -98,6 +110,7 @@ class MailingList
         $listId = Configure::read('mailChimpListId');
         $subscriberHash = $MailChimp->subscriberHash($email);
         $response = $MailChimp->get("lists/$listId/members/$subscriberHash");
+
         return isset($response['status']) && $response['status'] != 404;
     }
 }
