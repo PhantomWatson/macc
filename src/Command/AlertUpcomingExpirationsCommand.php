@@ -1,6 +1,7 @@
 <?php
 namespace App\Command;
 
+use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
 use Cake\Console\Arguments;
 use Cake\Console\Command;
@@ -55,7 +56,7 @@ class AlertUpcomingExpirationsCommand extends Command
             $io->out(sprintf(
                 ' - %s (%s)',
                 $membership->user->name,
-                $membership->expires->format('F j, Y')
+                LocalTime::getDate($membership->expires)
             ));
         }
 

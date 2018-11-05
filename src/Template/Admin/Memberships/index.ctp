@@ -103,14 +103,14 @@
                             Expired
                         </td>
                         <td class="date expired">
-                            <?= $expires->format('F j, Y') ?>
+                            <?= \App\LocalTime\LocalTime::getDate($expires) ?>
                         </td>
                     <?php else: ?>
                         <td>
                             <?= $member->memberships[0]['membership_level']['name'] ?>
                         </td>
                         <td class="date">
-                            <?= $expires->format('F j, Y') ?>
+                            <?= \App\LocalTime\LocalTime::getDate($expires) ?>
                         </td>
                     <?php endif; ?>
 

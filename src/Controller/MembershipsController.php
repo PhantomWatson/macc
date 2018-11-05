@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Event\EmailListener;
+use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
 use App\Model\Entity\Payment;
 use App\Model\Entity\User;
@@ -152,7 +153,11 @@ class MembershipsController extends AppController
         $msg = 'Membership auto-renewal turned ' . ($value ? 'on' : 'off') . '.';
         if ($value) {
             $timestamp = $membership->expires->format('U') - (60 * 60 * 24);
-            $msg .= ' Your membership will be automatically renewed on ' . date('F j, Y', $timestamp) . '.';
+            $dateTime = new \DateTime($timestamp);
+            $msg .= sprintf(
+                ' Your membership will be automatically renewed on %s.',
+                LocalTime::getDate($dateTime)
+            );
         }
         $this->Flash->success($msg);
         $this->redirect($this->referer());

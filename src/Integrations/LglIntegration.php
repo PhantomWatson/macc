@@ -1,6 +1,7 @@
 <?php
 namespace App\Integrations;
 
+use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use Cake\Core\Configure;
@@ -80,8 +81,8 @@ class LglIntegration
             'email' => $user->email,
             'macc_user_id' => $user->id,
             'membership_level' => $membershipLevel->name,
-            'membership_start' => $membership->created->format('M j, Y'),
-            'membership_end' => $membership->expires->format('M j, Y')
+            'membership_start' => LocalTime::get($membership->created, 'MMM d, YYYY'),
+            'membership_end' => LocalTime::get($membership->expires, 'MMM d, YYYY')
         ];
         $response = $this->client->post($url, $data);
 

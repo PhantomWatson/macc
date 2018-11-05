@@ -20,7 +20,7 @@
     <?php if ($membership->expires->format('U') < time()): ?>
         <p>
             Your membership expired on
-            <?= $membership->expires->format('F j, Y') ?>.
+            <?= \App\LocalTime\LocalTime::getDate($membership->expires) ?>.
             Would you like to
             <?= $this->Html->link(
                 'renew your membership',
@@ -49,7 +49,7 @@
                         Expires:
                     </th>
                     <td>
-                        <?= $membership->expires->format('F j, Y') ?>
+                        <?= \App\LocalTime\LocalTime::getDate($membership->expires) ?>
                     </td>
                     <td>
                         <?= $this->Html->link(

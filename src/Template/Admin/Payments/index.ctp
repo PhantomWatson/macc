@@ -64,7 +64,7 @@
             <?php foreach ($payments as $payment): ?>
                 <tr>
                     <td>
-                        <?= $payment->created->format('n/j/Y') ?>
+                        <?= \App\LocalTime\LocalTime::get($payment->created, 'M/d/YYYY') ?>
                     </td>
                     <td>
                         <?= $payment->user['name'] ?>
@@ -128,7 +128,7 @@
                                         an unknown user
                                     <?php endif; ?>
                                     on
-                                    <?= $payment->refunded_date->format('F j, Y') ?>
+                                    <?= \App\LocalTime\LocalTime::getDate($payment->refunded_date) ?>
                                 </li>
                             <?php endif; ?>
                             <?php if ($payment->notes): ?>

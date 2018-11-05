@@ -49,7 +49,7 @@
                         <?= ucwords($user['role']) ?>
                     </td>
                     <td>
-                        <?= $user->created->format('F j, Y') ?>
+                        <?= \App\LocalTime\LocalTime::getDate($user->created) ?>
                     </td>
                     <td class="actions btn-group">
                         <div class="btn-group">

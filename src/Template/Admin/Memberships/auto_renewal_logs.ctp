@@ -33,7 +33,7 @@
         <?php foreach ($logs as $log): ?>
             <tr <?= $log->error ? 'class="error"' : '' ?>>
                 <td>
-                    <?= $log->created->format('M j, Y g:ia') ?>
+                    <?= \App\LocalTime\LocalTime::getDateTime($log->created) ?>
                 </td>
                 <td class="message">
                     <?php

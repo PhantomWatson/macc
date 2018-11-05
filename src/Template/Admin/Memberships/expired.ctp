@@ -58,7 +58,7 @@
                         <?= $user->memberships[0]->membership_level->name ?>
                     </td>
                     <td>
-                        <?= $user->memberships[0]->expires->format('F j, Y') ?>
+                        <?= \App\LocalTime\LocalTime::getDate($user->memberships[0]->expires) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

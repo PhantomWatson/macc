@@ -1,6 +1,7 @@
 <?php
 namespace App\Mailer;
 
+use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
 use App\Model\Entity\MembershipLevel;
 use App\Model\Entity\User;
@@ -68,7 +69,7 @@ class MembershipMailer extends Mailer
             ->setViewVars([
                 'userName' => $membership->user->name,
                 'autoRenew' => $autoRenew,
-                'expires' => $membership->expires->format('F jS'),
+                'expires' => LocalTime::get($membership->expires, 'MMMM d'),
                 'renewUrl' => Router::url([
                     'prefix' => false,
                     'controller' => 'Memberships',
@@ -231,7 +232,7 @@ class MembershipMailer extends Mailer
                     '?' => ['flow' => 1]
                 ], true),
                 'membershipLevelName' => $membershipLevel->name,
-                'expires' => $membership->expires->format('F j, Y')
+                'expires' => LocalTime::getDate($membership->expires)
             ])
             ->setTemplate('membership_added_by_admin');
     }
