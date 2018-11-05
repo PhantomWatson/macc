@@ -27,4 +27,31 @@ class LocalTime
                 Configure::read('localTimezone')
             );
     }
+
+    /**
+     * Returns the provided UTC time as a local-timezone date string
+     *
+     * @param DateTime|FrozenTime|FrozenDate $dateTime
+     * @return string
+     */
+    public static function getDate($dateTime)
+    {
+        return self::get($dateTime, 'MMMM d, YYYY');
+    }
+
+    /**
+     * Returns the provided UTC time as a local-timezone "date, time" string
+     *
+     * @param DateTime|FrozenTime|FrozenDate $dateTime
+     * @return string
+     */
+    public static function getDateTime($dateTime)
+    {
+        $retval = self::get($dateTime, 'MMM d, YYYY h:mma');
+
+        // Make "AM" and "PM" lowercase
+        $retval = str_replace(['AM', 'PM'], ['am', 'pm'], $retval);
+
+        return $retval;
+    }
 }
