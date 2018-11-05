@@ -444,7 +444,8 @@ $config = [
             'https://munciearts.littlegreenlight.com/integrations/3d10e10f-a92b-47b4-9627-e7abae001621/listener',
         'updateName' =>
             'https://munciearts.littlegreenlight.com/integrations/91362265-4fc4-45e0-bb47-882d0eab3427/listener'
-    ]
+    ],
+    'localTimezone' => 'America/Indiana/Indianapolis'
 ];
 
 // Debug mode configuration
