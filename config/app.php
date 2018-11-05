@@ -276,7 +276,7 @@ $config = [
              * You do not need to set this flag to use full utf-8 encoding (internal default since CakePHP 3.6).
              */
             'encoding' => 'utf8',
-            'timezone' => '-5:00',
+            'timezone' => 'UTC',
             'flags' => [],
             'cacheMetadata' => true,
             'log' => false,
@@ -316,7 +316,7 @@ $config = [
             'password' => env('TEST_DATABASE_PASSWORD'),
             'database' => env('TEST_DATABASE_NAME', 'macc_test'),
             'encoding' => 'utf8',
-            'timezone' => '-5:00',
+            'timezone' => 'UTC',
             'cacheMetadata' => true,
             'quoteIdentifiers' => false,
             'log' => false,
