@@ -71,29 +71,22 @@ class PicturesTable extends Table
             ->notEmpty('filename');
 
         $validator->setProvider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
-        $fileUploaded = function ($context) {
-            return !empty($context['data']['filename']) && $context['data']['filename']['error'] == UPLOAD_ERR_OK;
-        };
-        $fileUploaded = true;
         $validator
             ->add('filename', 'isValidExtension', [
                 'rule' => ['extension', ['jpg', 'jpeg', 'gif', 'png']],
                 'message' => 'Sorry, your images need to have a filetype of .jpg, .png, or .gif',
-                'on' => $fileUploaded,
                 'last' => true
             ])
             ->add('filename', 'fileUnderPhpSizeLimit', [
                 'rule' => 'isUnderPhpSizeLimit',
                 'message' => 'Sorry, this image exceeds the maximum filesize',
                 'provider' => 'upload',
-                'on' => $fileUploaded,
                 'last' => true
             ])
             ->add('filename', 'fileCompletedUpload', [
                 'rule' => 'isCompletedUpload',
                 'message' => 'This file could not be uploaded completely',
                 'provider' => 'upload',
-                'on' => $fileUploaded,
                 'last' => true
             ])
             ->add('filename', 'fileFileUpload', [
@@ -106,20 +99,17 @@ class PicturesTable extends Table
                 'rule' => 'isSuccessfulWrite',
                 'message' => 'There was an error saving the uploaded file',
                 'provider' => 'upload',
-                'on' => $fileUploaded,
                 'last' => true
             ])
             ->add('filename', 'fileAboveMinHeight', [
                 'rule' => ['isAboveMinHeight', 200],
                 'message' => 'This image should at least be 200px high',
                 'provider' => 'upload',
-                'on' => $fileUploaded
             ])
             ->add('filename', 'fileAboveMinWidth', [
                 'rule' => ['isAboveMinWidth', 200],
                 'message' => 'This image should at least be 200px wide',
                 'provider' => 'upload',
-                'on' => $fileUploaded
             ]);
 
         return $validator;
