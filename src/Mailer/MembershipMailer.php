@@ -55,13 +55,19 @@ class MembershipMailer extends Mailer
     public function expiringMembership($membership)
     {
         $expirationString = $this->getExpirationString($membership->expires);
+        $autoRenew = (bool)$membership->auto_renew;
+        $subject = sprintf(
+            'Muncie Arts and Culture Council - Membership %s %s',
+            $autoRenew ? 'automatically renewing' : 'expiring',
+            $expirationString
+        );
 
         return $this
             ->setTo($membership->user->email)
-            ->setSubject('Muncie Arts and Culture Council - Membership expiring ' . $expirationString)
+            ->setSubject($subject)
             ->setViewVars([
                 'userName' => $membership->user->name,
-                'autoRenew' => (bool)$membership->auto_renew,
+                'autoRenew' => $autoRenew,
                 'expires' => $membership->expires->format('F jS'),
                 'renewUrl' => Router::url([
                     'prefix' => false,
