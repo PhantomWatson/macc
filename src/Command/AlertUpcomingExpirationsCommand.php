@@ -5,6 +5,7 @@ use App\Model\Entity\Membership;
 use Cake\Console\Arguments;
 use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
+use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Exception\SocketException;
 use Cake\I18n\Time;
@@ -93,17 +94,13 @@ class AlertUpcomingExpirationsCommand extends Command
     private function getExpiringMemberships()
     {
         $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
-        $expirationDateTriggers = [
-            new Time('+ 1 week'),
-            new Time('+ 1 day')
-        ];
+        $expirationDateTriggers = $this->getExpirationDateTriggers();
         $retval = [];
-        foreach ($expirationDateTriggers as $time) {
-            /** @var Time $time */
+        foreach ($expirationDateTriggers as $boundaries) {
             $memberships = $membershipsTable->find()
                 ->where([
-                    'expires >=' => $time->i18nFormat('yyyy-MM-dd') . ' 00:00:00',
-                    'expires <=' => $time->i18nFormat('yyyy-MM-dd') . ' 23:59:59',
+                    'expires >=' => $boundaries['start'],
+                    'expires <=' => $boundaries['end'],
                     function (QueryExpression $exp) {
                         return $exp->isNull('canceled');
                     },
@@ -121,5 +118,71 @@ class AlertUpcomingExpirationsCommand extends Command
         }
 
         return $retval;
+    }
+
+    /**
+     * Returns the number of seconds between the current UTC time and the current local (Muncie) time
+     *
+     * @return int
+     */
+    private function getOffsetFromUtc()
+    {
+        $localTimezone = new \DateTimeZone(Configure::read('localTimezone'));
+        $utcTime = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        return $localTimezone->getOffset($utcTime);
+    }
+
+    /**
+     * Returns an array that contains the UTC times that correspond to the boundaries of local days
+     *
+     * e.g. for "tomorrow", the UTC times are returned that correspond to the local times that begin and end that day
+     * This is used so that statements like "your membership will expire tomorrow" can be accurate despite the
+     * complications of storing dates in UTC time
+     *
+     * @return array
+     */
+    private function getExpirationDateTriggers()
+    {
+        $offset = $this->getOffsetFromUtc();
+        $nowLocal = Time::now()->addSeconds($offset);
+        $todayStart = $nowLocal
+            ->copy()
+            ->hour(0)
+            ->minute(0)
+            ->second(0);
+        $todayEnd = $nowLocal
+            ->copy()
+            ->hour(23)
+            ->minute(59)
+            ->second(59);
+
+        $expirationDateTriggers = [];
+
+        // Boundaries for the day one week from today
+        $expirationDateTriggers[] = [
+            'start' => $todayStart
+                ->copy()
+                ->addDays(7)
+                ->subSeconds($offset),
+            'end' => $todayEnd
+                ->copy()
+                ->addDays(7)
+                ->subSeconds($offset)
+        ];
+
+        // Boundaries for tomorrow
+        $expirationDateTriggers[] = [
+            'start' => $todayStart
+                ->copy()
+                ->addDays(1)
+                ->subSeconds($offset),
+            'end' => $todayEnd
+                ->copy()
+                ->addDays(1)
+                ->subSeconds($offset)
+        ];
+
+        return $expirationDateTriggers;
     }
 }
