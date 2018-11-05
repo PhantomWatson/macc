@@ -21,7 +21,8 @@
         "phpunit/phpunit": "^6.0",
         "stripe/stripe-php": "3.*",
         "twbs/bootstrap": "~3.0",
-        "xety/cake3-sluggable": "1.*"
+        "xety/cake3-sluggable": "1.*",
+        "ext-intl": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
