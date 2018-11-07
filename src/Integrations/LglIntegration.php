@@ -251,6 +251,6 @@ class LglIntegration
      */
     private function getBlankable($value)
     {
-        return $value == '' ? "\x20" : $value;
+        return $value == '' ? "&nbsp;" : $value;
     }
 }
