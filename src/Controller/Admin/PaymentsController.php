@@ -96,7 +96,7 @@ class PaymentsController extends AppController
             $data['admin_adder_id'] = $this->Auth->user('id');
             $data['postback'] = '';
             $membershipLevelId = $this->request->getData('membership_level_id');
-            $data['amount'] = isset($costs[$membershipLevel->id]) ? $costs[$membershipLevel->id] : 0;
+            $data['amount'] = isset($costs[$membershipLevelId]) ? $costs[$membershipLevelId] : 0;
             /** @var Payment $payment */
             $payment = $this->Payments->patchEntity($payment, $data);
             $errors = $payment->getErrors();
