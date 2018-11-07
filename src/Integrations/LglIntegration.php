@@ -241,10 +241,9 @@ class LglIntegration
     }
 
     /**
-     * Returns the provided string, or a single space if the provided string is blank
+     * Returns the provided string, or &nbsp; if the provided string is blank
      *
-     * This is a workaround for LGL ignoring any updates that would make a nonblank field blank. Instead, this updates
-     * blank fields to a single space.
+     * This is a workaround for LGL ignoring any updates that would make a nonblank field blank.
      *
      * @param string $value A string
      * @return string
