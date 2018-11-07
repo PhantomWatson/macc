@@ -41,10 +41,10 @@ class LglIntegration
         $parsedName = $this->getParsedName($user->name);
 
         $data = [
-            'first_name' => $parsedName['first'],
-            'middle_name' => $parsedName['middle'],
-            'last_name' => $parsedName['last'],
-            'organization_name' => $parsedName['organization'],
+            'first_name' => $this->getBlankable($parsedName['first']),
+            'middle_name' => $this->getBlankable($parsedName['middle']),
+            'last_name' => $this->getBlankable($parsedName['last']),
+            'organization_name' => $this->getBlankable($parsedName['organization']),
             'addressee' => $user->name,
             'constituent_type' => $constituentType,
             'email' => $user->email,
@@ -109,10 +109,10 @@ class LglIntegration
         $data = [
             'name' => $user->name,
             'email' => $user->email,
-            'address' => $user->address,
-            'city' => $user->city,
-            'state' => $user->state,
-            'zipcode' => $user->zipcode,
+            'address' => $this->getBlankable($user->address),
+            'city' => $this->getBlankable($user->city),
+            'state' => $this->getBlankable($user->state),
+            'zipcode' => $this->getBlankable($user->zipcode),
             'macc_user_id' => $user->id
         ];
         $response = $this->client->post($url, $data);
@@ -142,10 +142,10 @@ class LglIntegration
         $parsedName = $this->getParsedName($user->name);
 
         $data = [
-            'first_name' => $parsedName['first'],
-            'middle_name' => $parsedName['middle'],
-            'last_name' => $parsedName['last'],
-            'organization_name' => $parsedName['organization'],
+            'first_name' => $this->getBlankable($parsedName['first']),
+            'middle_name' => $this->getBlankable($parsedName['middle']),
+            'last_name' => $this->getBlankable($parsedName['last']),
+            'organization_name' => $this->getBlankable($parsedName['organization']),
             'addressee' => $user->name,
             'constituent_type' => $constituentType,
             'email' => $user->email,
@@ -238,5 +238,19 @@ class LglIntegration
             'last' => count($nameWords) > 1 ? end($nameWords) : '',
             'organization' => ''
         ];
+    }
+
+    /**
+     * Returns the provided string, or a single space if the provided string is blank
+     *
+     * This is a workaround for LGL ignoring any updates that would make a nonblank field blank. Instead, this updates
+     * blank fields to a single space.
+     *
+     * @param string $value A string
+     * @return string
+     */
+    private function getBlankable($value)
+    {
+        return $value == '' ? ' ' : $value;
     }
 }
