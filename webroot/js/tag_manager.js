@@ -117,6 +117,11 @@ var TagManager = {
 
 	unselectTag: function(tag_id, unselect_link) {
 		var available_tag_list_item = $('#available_tag_li_'+tag_id);
+
+    // Mark form as dirty
+    if (typeof $.fn.dirty !== 'undefined') {
+      unselect_link.closest('form').dirty('setAsDirty');
+    }
 		
 		// If available tag has not yet been loaded, then simply remove the selected tag
 		if (available_tag_list_item.length == 0) {
@@ -153,11 +158,6 @@ var TagManager = {
 			unselect_link.effect('transfer', options, 200, remove_link);
 		} else {
 			remove_link();
-		}
-
-		// Mark form as dirty
-		if (typeof $.fn.dirty !== 'undefined') {
-			link.closest('form').dirty('setAsDirty');
 		}
 	},
 
