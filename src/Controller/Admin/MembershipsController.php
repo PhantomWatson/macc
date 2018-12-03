@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Table\MembershipsTable;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -75,7 +76,13 @@ class MembershipsController extends AppController
     public function autoRenewalLogs()
     {
         $logsTable = TableRegistry::getTableLocator()->get('MembershipRenewalLogs');
-        $logs = $this->paginate($logsTable);
+        $query = $logsTable
+            ->find()
+            ->where(function (QueryExpression $exp) {
+                return $exp->notEq('message', MembershipsTable::NO_RENEWAL_NEEDED_MSG);
+            })
+            ->orderDesc('created');
+        $logs = $this->paginate($query);
 
         $this->set([
             'logs' => $logs,
