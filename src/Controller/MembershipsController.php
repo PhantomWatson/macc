@@ -119,6 +119,7 @@ class MembershipsController extends AppController
      *
      * @param null|int $value Either 1 or 0 for toggling on or off
      * @return void
+     * @throws \Exception
      */
     public function toggleAutoRenewal($value = null)
     {
