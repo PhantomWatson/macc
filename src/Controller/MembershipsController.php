@@ -7,6 +7,7 @@ use App\Model\Entity\Membership;
 use App\Model\Entity\Payment;
 use App\Model\Entity\User;
 use App\Model\Table\MembershipRenewalLogsTable;
+use App\Model\Table\MembershipsTable;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -324,9 +325,8 @@ class MembershipsController extends AppController
         $results = [];
 
         if ($memberships->isEmpty()) {
-            $errorMsg = 'No memberships need to be renewed at this time.';
-            $logsTable->logAutoRenewal($errorMsg);
-            $results[] = $errorMsg;
+            $logsTable->logAutoRenewal(MembershipsTable::NO_RENEWAL_NEEDED_MSG);
+            $results[] = MembershipsTable::NO_RENEWAL_NEEDED_MSG;
         }
 
         $chargedUsers = [];

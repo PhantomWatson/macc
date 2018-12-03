@@ -24,6 +24,7 @@ use Cake\Validation\Validator;
  */
 class MembershipsTable extends Table
 {
+    const NO_RENEWAL_NEEDED_MSG = 'No memberships need to be renewed at this time.';
 
     /**
      * Initialize method
