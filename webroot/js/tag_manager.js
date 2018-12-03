@@ -155,10 +155,10 @@ var TagManager = {
 			remove_link();
 		}
 
-        // Mark form as dirty
-        if (typeof $.fn.dirty !== 'undefined') {
-            link.closest('form').dirty('setAsDirty');
-        }
+		// Mark form as dirty
+		if (typeof $.fn.dirty !== 'undefined') {
+			link.closest('form').dirty('setAsDirty');
+		}
 	},
 
 	selectTag: function(tag_id, tag_name, available_tag_list_item) {
