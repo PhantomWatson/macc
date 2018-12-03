@@ -49,8 +49,8 @@ let TagManager = {
         (function(children) {
           iconLink.click(function(event) {
             event.preventDefault();
-            let icon = $(this);
-            let iconContainer = icon.parent('div');
+            let iconLink = $(this);
+            let iconContainer = iconLink.parent('div');
             let childrenContainer = iconContainer.next('.children');
 
             // Populate list if it is empty
@@ -59,8 +59,8 @@ let TagManager = {
             }
 
             // Open/close
-            let toggle = function() {
-              let icon = icon.children('span.expand_collapse');
+            let toggle = function(iconLink) {
+              let icon = iconLink.children('span.expand_collapse');
               if (childrenContainer.is(':visible')) {
                 icon.removeClass('glyphicon-triangle-right');
                 icon.addClass('glyphicon-triangle-bottom');
@@ -70,7 +70,7 @@ let TagManager = {
               }
             };
             childrenContainer.slideToggle(200, function() {
-              toggle(icon);
+              toggle(iconLink);
             });
           });
         })(children);
