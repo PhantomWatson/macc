@@ -182,12 +182,13 @@ let TagManager = {
     let listItem = $('<a href="#"></a>')
       .attr('id', 'selected_tag_' + tagId)
       .attr('title', 'Click to remove')
-      .attr('data-tag-id', tagId);
-    listItem.append(tagName);
-    listItem.append('<input />')
+      .attr('data-tag-id', tagId)
+      .html(tagName);
+    let hiddenInput = $('<input />')
       .attr('type', 'hidden')
       .attr('name', 'tags[_ids][]')
       .attr('value', tagId);
+    listItem.append(hiddenInput);
     listItem.click(function(event) {
       event.preventDefault();
       let unselectLink = $(this);
