@@ -5,12 +5,16 @@
  * @var \App\Model\Entity\Picture $picture
  * @var array $tags
  */
+    $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
 <?= $this->element('account_info_header') ?>
 
 <div id="edit_profile">
-    <?= $this->Form->create($user) ?>
+    <?= $this->Form->create(
+        $user,
+        ['id' => 'my-tags-form']
+    ) ?>
 
     <p>
         Select any tags that describe what you perform, produce, and do in the community.
@@ -29,3 +33,8 @@
 
     <?= $this->Form->end() ?>
 </div>
+<?php $this->append('buffered'); ?>
+    $('#my-tags-form').dirty({
+        preventLeaving: true
+    });
+<?php $this->end(); ?>
