@@ -98,7 +98,7 @@ var TagManager = {
 		var selected_tags = $('#selected_tags a');
 		for (var i = 0; i < selected_tags.length; i++) {
 			var tag = $(selected_tags[i]);
-			if (tag.data('tagId') == tag_id) {
+			if (tag.data('tagId') === tag_id) {
 				return true;
 			}
 		}
@@ -106,7 +106,7 @@ var TagManager = {
 	},
 
 	preselectTags: function(selected_tags) {
-		if (selected_tags.length == 0) {
+		if (selected_tags.length === 0) {
 			return;
 		}
 		$('#selected_tags_container').show();
@@ -124,9 +124,9 @@ var TagManager = {
     }
 		
 		// If available tag has not yet been loaded, then simply remove the selected tag
-		if (available_tag_list_item.length == 0) {
+		if (available_tag_list_item.length === 0) {
 			unselect_link.remove();
-			if ($('#selected_tags').children().length == 0) {
+			if ($('#selected_tags').children().length === 0) {
 				$('#selected_tags_container').slideUp(200);
 			}
 			return;
@@ -141,7 +141,7 @@ var TagManager = {
 		var remove_link = function() {
 			unselect_link.fadeOut(200, function() {
 				unselect_link.remove();
-				if ($('#selected_tags').children().length == 0) {
+				if ($('#selected_tags').children().length === 0) {
 					$('#selected_tags_container').slideUp(200);
 				}
 			});
@@ -188,7 +188,7 @@ var TagManager = {
 
 		// If available tag has not yet been loaded, then return
 		var available_tag_list_item = $('#available_tag_li_'+tag_id);
-		if (available_tag_list_item.length == 0) {
+		if (available_tag_list_item.length === 0) {
 			return;
 		}
 
@@ -200,7 +200,7 @@ var TagManager = {
 		};
 		var callback = function() {
 			link.addClass('selected');
-			var has_children = (available_tag_list_item.children('div.children').length != 0);
+			var has_children = (available_tag_list_item.children('div.children').length !== 0);
 			if (! has_children) {
 				available_tag_list_item.slideUp(200);
 			}
