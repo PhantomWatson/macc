@@ -7,7 +7,7 @@ let TagManager = {
    * @param container $('#container_id')
    * @returns
    */
-  createTagList: function(data, container) {
+  createTagList: function (data, container) {
     let list = $('<ul></ul>');
     for (let i = 0; i < data.length; i++) {
       let tagId = data[i].id;
@@ -26,8 +26,8 @@ let TagManager = {
           .attr('id', 'available_tag_' + tagId)
           .attr('title', 'Click to select')
           .append(tagName);
-        (function(tagId) {
-          tagLink.click(function(event) {
+        (function (tagId) {
+          tagLink.click(function (event) {
             event.preventDefault();
             let link = $(this);
             let tagName = link.html();
@@ -46,8 +46,8 @@ let TagManager = {
           .attr('title', 'Click to expand/collapse')
           .addClass('glyphicon glyphicon-triangle-right expand_collapse');
         iconLink.append(glyphicon);
-        (function(children) {
-          iconLink.click(function(event) {
+        (function (children) {
+          iconLink.click(function (event) {
             event.preventDefault();
             let iconLink = $(this);
             let iconContainer = iconLink.parent('div');
@@ -59,7 +59,7 @@ let TagManager = {
             }
 
             // Open/close
-            let toggle = function(iconLink) {
+            let toggle = function (iconLink) {
               let icon = iconLink.children('span.expand_collapse');
               if (childrenContainer.is(':visible')) {
                 icon.removeClass('glyphicon-triangle-right');
@@ -69,7 +69,7 @@ let TagManager = {
                 icon.addClass('glyphicon-triangle-right');
               }
             };
-            childrenContainer.slideToggle(200, function() {
+            childrenContainer.slideToggle(200, function () {
               toggle(iconLink);
             });
           });
@@ -101,7 +101,7 @@ let TagManager = {
     container.append(list);
   },
 
-  tagIsSelected: function(tagId) {
+  tagIsSelected: function (tagId) {
     let selectedTags = $('#selected_tags').find('a');
     for (let i = 0; i < selectedTags.length; i++) {
       let tag = $(selectedTags[i]);
@@ -112,7 +112,7 @@ let TagManager = {
     return false;
   },
 
-  preselectTags: function(selectedTags) {
+  preselectTags: function (selectedTags) {
     if (selectedTags.length === 0) {
       return;
     }
@@ -122,7 +122,7 @@ let TagManager = {
     }
   },
 
-  unselectTag: function(tagId, unselectLink) {
+  unselectTag: function (tagId, unselectLink) {
     let availableTagListItem = $('#available_tag_li_' + tagId);
 
     // Mark form as dirty
@@ -143,8 +143,8 @@ let TagManager = {
     let availableLink = $('#available_tag_' + tagId);
     availableLink.removeClass('selected');
 
-    let removeLink = function() {
-      unselectLink.fadeOut(200, function() {
+    let removeLink = function () {
+      unselectLink.fadeOut(200, function () {
         unselectLink.remove();
         const noTagsSelected = $('#selected_tags').children().length === 0;
         if (noTagsSelected) {
@@ -167,7 +167,7 @@ let TagManager = {
     }
   },
 
-  selectTag: function(tagId, tagName) {
+  selectTag: function (tagId, tagName) {
     let selectedContainer = $('#selected_tags_container');
     if (! selectedContainer.is(':visible')) {
       selectedContainer.slideDown(200);
@@ -189,7 +189,7 @@ let TagManager = {
       .attr('name', 'tags[_ids][]')
       .attr('value', tagId);
     listItem.append(hiddenInput);
-    listItem.click(function(event) {
+    listItem.click(function (event) {
       event.preventDefault();
       let unselectLink = $(this);
       let tagId = unselectLink.data('tagId');
@@ -211,7 +211,7 @@ let TagManager = {
       to: '#selected_tag_' + tagId,
       className: 'ui-effects-transfer',
     };
-    let callback = function() {
+    let callback = function () {
       link.addClass('selected');
       const children = availableTagListItem.children('div.children');
       let hasChildren = children.length !== 0;
@@ -227,33 +227,33 @@ let TagManager = {
     }
   },
 
-  setupAutosuggest: function(selector) {
-    $(selector).bind('keydown', function(event) {
+  setupAutosuggest: function (selector) {
+    $(selector).bind('keydown', function (event) {
       if (event.keyCode === $.ui.keyCode.TAB &&
         $(this).data('autocomplete').menu.active) {
         event.preventDefault();
       }
     }).autocomplete({
-      source: function(request, response) {
+      source: function (request, response) {
         $.getJSON('/tags/auto_complete', {
           term: extractLast(request.term),
         }, response);
       },
       delay: 0,
-      search: function() {
+      search: function () {
         let term = extractLast(this.value);
         if (term.length < 2) {
           return false;
         }
         $(selector).siblings('img.loading').show();
       },
-      response: function() {
+      response: function () {
         $(selector).siblings('img.loading').hide();
       },
-      focus: function() {
+      focus: function () {
         return false;
       },
-      select: function(event, ui) {
+      select: function (event, ui) {
         let tagName = ui.item.label;
         let terms = split(this.value);
         terms.pop();
@@ -266,24 +266,24 @@ let TagManager = {
     });
   },
 
-  setupCustomTagInput: function(selector) {
+  setupCustomTagInput: function (selector) {
     if (! selector) {
       selector = '#custom_tag_input';
     }
-    $(selector).bind('keydown', function(event) {
+    $(selector).bind('keydown', function (event) {
       // don't navigate away from the field on tab when selecting an item
       if (event.keyCode === $.ui.keyCode.TAB &&
         $(this).data('autocomplete').menu.active) {
         event.preventDefault();
       }
     }).autocomplete({
-      source: function(request, response) {
+      source: function (request, response) {
         $.getJSON('/tags/auto_complete', {
           term: extractLast(request.term),
         }, response);
       },
       delay: 0,
-      search: function() {
+      search: function () {
         // custom minLength
         let term = extractLast(this.value);
         if (term.length < 2) {
@@ -291,14 +291,14 @@ let TagManager = {
         }
         $('#tag_autosuggest_loading').show();
       },
-      response: function() {
+      response: function () {
         $('#tag_autosuggest_loading').hide();
       },
-      focus: function() {
+      focus: function () {
         // prevent value inserted on focus
         return false;
       },
-      select: function(event, ui) {
+      select: function (event, ui) {
         // Add the selected term to 'selected tags'
         let tagName = ui.item.label;
         let tagId = ui.item.value;
