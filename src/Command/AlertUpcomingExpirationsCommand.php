@@ -109,7 +109,7 @@ class AlertUpcomingExpirationsCommand extends Command
                         return $exp->isNull('renewed');
                     }
                 ])
-                ->contain(['Users'])
+                ->contain(['Users', 'MembershipLevels'])
                 ->all();
             if ($memberships) {
                 foreach ($memberships as $membership) {

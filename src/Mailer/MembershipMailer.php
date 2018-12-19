@@ -70,12 +70,27 @@ class MembershipMailer extends Mailer
                 'userName' => $membership->user->name,
                 'autoRenew' => $autoRenew,
                 'expires' => LocalTime::get($membership->expires, 'MMMM d'),
+                'membershipLevel' => $membership->membership_level,
                 'renewUrl' => Router::url([
                     'prefix' => false,
                     'controller' => 'Memberships',
                     'action' => 'level',
                     $membership->membership_level_id,
                     '?' => ['renewing' => 1]
+                ], true),
+                'membershipLevelsUrl' => Router::url([
+                    'prefix' => false,
+                    'controller' => 'Memberships',
+                    'action' => 'levels',
+                    '?' => [
+                        'renewing' => 1,
+                        'mlid' => $membership->membership_level->id
+                    ]
+                ], true),
+                'myMembershipUrl' => Router::url([
+                    'prefix' => false,
+                    'controller' => 'Memberships',
+                    'action' => 'myMembership'
                 ], true)
             ])
             ->setTemplate('expiring_membership');
