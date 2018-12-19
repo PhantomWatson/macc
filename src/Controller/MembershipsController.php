@@ -542,13 +542,20 @@ class MembershipsController extends AppController
             $this->Flash->set($expirationWarning);
         }
 
+        $renewing = (bool)$this->request->getQuery('renewing');
+
+        // ID of renewing user's current membership level
+        $membershipLevelId = $renewing ? $this->request->getQuery('mlid') : null;
+
         $this->loadModel('MembershipLevels');
         $membershipLevels = $this->MembershipLevels
             ->find('all')
             ->order(['cost' => 'ASC']);
         $this->set([
             'membershipLevels' => $membershipLevels,
-            'pageTitle' => 'Become a Member'
+            'pageTitle' => $renewing ? 'Renew Your Membership' : 'Become a Member',
+            'renewing' => $renewing,
+            'membershipLevelId' => $membershipLevelId
         ]);
     }
 

@@ -2,16 +2,21 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\MembershipLevel[]|\Cake\Collection\CollectionInterface $membershipLevels
+ * @var bool $renewing
+ * @var int|null $membershipLevelId
  */
     use Cake\Core\Configure;
 ?>
 
 <div id="membership-levels-index">
     <p>
-        Becoming a member of the Muncie Arts and Culture Council is a great
-        way to support your arts community. Membership can be purchased in
-        one-year increments and is open to everyone, regardless of whether
-        you're an artist yourself or simply want to contribute.
+        <?php if ($renewing): ?>
+            Renewing your Muncie Arts and Culture Council membership
+        <?php else: ?>
+            Becoming a member of the Muncie Arts and Culture Council
+        <?php endif; ?>
+        is a great way to support your arts community. Membership can be purchased in one-year increments and is open
+        to everyone, regardless of whether you're an artist yourself or simply want to contribute.
     </p>
 
     <p>
@@ -30,19 +35,31 @@
             <p>
                 <?= $this->element('commonmark_parsed', ['input' => $membershipLevel->description]) ?>
             </p>
-            <?= $this->Html->link(
-                'Purchase',
-                [
-                    'controller' => 'Memberships',
-                    'action' => 'level',
-                    $membershipLevel->id,
-                    '_ssl' => Configure::read('forceSSL')
-                ],
-                [
-                    'class' => 'btn btn-primary',
-                    'id' => 'purchaseLevel'.$membershipLevel->id
-                ]
-            ) ?>
+            <?php
+                $label = ($renewing && $membershipLevelId)
+                    ? (
+                        $membershipLevel->id == $membershipLevelId
+                        ? 'Renew Membership'
+                        : 'Change Membership Level'
+                    )
+                    : 'Purchase';
+                $class = ($renewing && $membershipLevel->id == $membershipLevelId)
+                    ? 'btn btn-success'
+                    : 'btn btn-primary';
+                echo $this->Html->link(
+                    $label,
+                    [
+                        'controller' => 'Memberships',
+                        'action' => 'level',
+                        $membershipLevel->id,
+                        '_ssl' => Configure::read('forceSSL')
+                    ],
+                    [
+                        'class' => $class,
+                        'id' => 'purchaseLevel' . $membershipLevel->id
+                    ]
+                );
+            ?>
         </section>
     <?php endforeach; ?>
 </div>
