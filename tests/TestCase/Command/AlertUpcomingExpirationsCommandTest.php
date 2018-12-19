@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Command;
 
-use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 
 /**
