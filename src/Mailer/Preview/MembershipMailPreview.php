@@ -10,13 +10,30 @@ use DebugKit\Mailer\MailPreview;
 class MembershipMailPreview extends MailPreview
 {
     /**
-     * Previews the 'expiring membership' email
+     * Previews the 'expiring membership' email for a user with auto-renew on
      *
      * @return \Cake\Mailer\Email
      */
-    public function expiringMembership()
+    public function expiringMembershipAutoRenew()
     {
         $membership = $this->getArbitraryMembership();
+        $membership->auto_renew = true;
+
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+
+        return $mailer->expiringMembership($membership);
+    }
+
+    /**
+     * Previews the 'expiring membership' email for a user with auto-renew off
+     *
+     * @return \Cake\Mailer\Email
+     */
+    public function expiringMembershipManualRenew()
+    {
+        $membership = $this->getArbitraryMembership();
+        $membership->auto_renew = false;
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
@@ -80,7 +97,7 @@ class MembershipMailPreview extends MailPreview
 
         return $membershipsTable
             ->find()
-            ->contain(['Users'])
+            ->contain(['Users', 'MembershipLevels'])
             ->orderDesc('expires')
             ->first();
     }
