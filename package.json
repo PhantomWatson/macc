@@ -6,11 +6,11 @@
     "gulp-notify": "^3.2.0",
     "gulp-phpcs": "^2.2.0",
     "gulp-phpunit": "^0.26.0",
-    "gulp-plumber": "^1.2.0",
+    "gulp-plumber": "^1.2.1",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.0",
     "gulp-watch-less": "^1.0.1",
-    "jshint": "^2.9.6",
+    "jshint": "^2.9.7",
     "jshint-stylish": "^2.2.1",
     "less-plugin-clean-css": "^1.5.1",
     "run-sequence": "^2.2.1"
