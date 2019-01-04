@@ -105,7 +105,7 @@ class MembershipsController extends AppController
         // Sort by expiration date
         $sortedUsers = [];
         foreach ($users as $user) {
-            $key = $user->memberships[0]->expires->format('U') . $user->id;
+            $key = $user->memberships[0]->expires->format('U') . '.' . $user->id;
             $sortedUsers[$key] = $user;
         }
         krsort($sortedUsers);
