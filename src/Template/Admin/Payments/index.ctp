@@ -64,7 +64,7 @@
             <?php foreach ($payments as $payment): ?>
                 <tr>
                     <td>
-                        <?= \App\LocalTime\LocalTime::get($payment->created, 'M/d/YYYY') ?>
+                        <?= \App\LocalTime\LocalTime::get($payment->created, 'M/d/yyyy') ?>
                     </td>
                     <td>
                         <?= $payment->user['name'] ?>

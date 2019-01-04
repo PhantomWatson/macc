@@ -81,8 +81,8 @@ class LglIntegration
             'email' => $user->email,
             'macc_user_id' => $user->id,
             'membership_level' => $membershipLevel->name,
-            'membership_start' => LocalTime::get($membership->created, 'MMM d, YYYY'),
-            'membership_end' => LocalTime::get($membership->expires, 'MMM d, YYYY')
+            'membership_start' => LocalTime::get($membership->created, 'MMM d, yyyy'),
+            'membership_end' => LocalTime::get($membership->expires, 'MMM d, yyyy')
         ];
         $response = $this->client->post($url, $data);
 

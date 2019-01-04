@@ -17,7 +17,7 @@ class LocalTime
      * @param string $format i18nFormat() compatible formatting string
      * @return string
      */
-    public static function get($dateTime, $format = 'MMMM d, YYYY')
+    public static function get($dateTime, $format = 'MMMM d, yyyy')
     {
         return (new TimeHelper(new AppView()))
             ->format(
@@ -36,7 +36,7 @@ class LocalTime
      */
     public static function getDate($dateTime)
     {
-        return self::get($dateTime, 'MMMM d, YYYY');
+        return self::get($dateTime, 'MMMM d, yyyy');
     }
 
     /**
@@ -47,7 +47,7 @@ class LocalTime
      */
     public static function getDateTime($dateTime)
     {
-        $retval = self::get($dateTime, 'MMM d, YYYY h:mma');
+        $retval = self::get($dateTime, 'MMM d, yyyy h:mma');
 
         // Make "AM" and "PM" lowercase
         $retval = str_replace(['AM', 'PM'], ['am', 'pm'], $retval);
