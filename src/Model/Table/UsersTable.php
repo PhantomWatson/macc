@@ -346,7 +346,8 @@ class UsersTable extends Table
                                     ->select(['name'])
                                     ->orderDesc('created');
                             }
-                        ]);
+                        ])
+                        ->orderDesc('expires');
                 }
             ]);
     }
