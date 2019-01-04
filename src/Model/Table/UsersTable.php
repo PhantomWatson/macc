@@ -322,6 +322,7 @@ class UsersTable extends Table
      */
     public function findWithUnrenewedMemberships(Query $query)
     {
+        /** @var MembershipsTable $membershipsTable */
         $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $userIds = $membershipsTable->getUserIdsWithUnrenewedMemberships();
 
