@@ -200,7 +200,7 @@ $config = [
             /*
              * The following keys are used in SMTP transports:
              */
-            'host' => 'sub4.mail.dreamhost.com',
+            'host' => 'smtp.gmail.com',
             'port' => 587,
             'timeout' => 30,
             'username' => 'noreply@munciearts.org',
