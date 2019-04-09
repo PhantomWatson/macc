@@ -206,7 +206,7 @@ $config = [
             'username' => 'noreply@munciearts.org',
             'password' => env('EMAIL_PASSWORD'),
             'client' => null,
-            'tls' => null,
+            'tls' => true,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
 
