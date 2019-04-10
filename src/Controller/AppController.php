@@ -210,12 +210,10 @@ class AppController extends Controller
             }
         } else {
             $adminEmail = Configure::read('admin_email');
-            $errorDetails = $this->getEntityErrorString($user);
             $this->Flash->error(
                 'There was an error registering your account. ' .
                 'Please correct any indicated errors and try again. ' .
-                'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.' .
-                ($errorDetails ? '<br /><br />' . $errorDetails : '')
+                'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.'
             );
         }
 
