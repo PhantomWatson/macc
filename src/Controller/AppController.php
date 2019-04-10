@@ -19,10 +19,12 @@ use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Inflector;
 use Recaptcha\Controller\Component\RecaptchaComponent;
 
 /**
@@ -174,21 +176,15 @@ class AppController extends Controller
     }
 
     /**
-     * Processes a form with user registration info, returning either the registered user entity or FALSE
+     * Processes a form with user registration info, returning an array of (bool)success and the registered user entity
      *
      * Shows flash messages for errors, but does not show any messages for success
      *
      * @throws \Exception
-     * @return bool|\Cake\Http\Response
+     * @return array
      */
     protected function processRegister()
     {
-        if (!$this->Recaptcha->verify()) {
-            $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
-
-            return false;
-        }
-
         $email = $this->request->getData('email');
         $email = trim($email);
         $email = strtolower($email);
@@ -204,24 +200,26 @@ class AppController extends Controller
             'fields' => ['name', 'email', 'password', 'role']
         ]);
 
-        if (!$usersTable->save($user)) {
+        $success = false;
+        if (!$this->Recaptcha->verify()) {
+            $this->Flash->error('There was an error verifying your reCAPTCHA response. Please try again.');
+        } elseif ($usersTable->save($user)) {
+            $success = true;
+            if ($this->request->getData('mailing_list')) {
+                MailingList::addToList($user);
+            }
+        } else {
             $adminEmail = Configure::read('admin_email');
-            $errorDetails = implode('; ', array_values($user->getErrors()));
+            $errorDetails = $this->getEntityErrorString($user);
             $this->Flash->error(
                 'There was an error registering your account. ' .
                 'Please correct any indicated errors and try again. ' .
                 'For assistance, please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>.' .
-                'Details: ' . $errorDetails
+                ($errorDetails ? '<br /><br />' . $errorDetails : '')
             );
-
-            return false;
         }
 
-        if ($this->request->getData('mailing_list')) {
-            MailingList::addToList($user);
-        }
-
-        return $user;
+        return [$success, $user];
     }
 
     /**
@@ -323,5 +321,27 @@ class AppController extends Controller
         }
 
         $this->set('footerLogos', $footerLogos);
+    }
+
+    /**
+     * Returns a string with the entity's current errors in a semicolon-delimited list
+     *
+     * @param EntityInterface $entity Entity with errors
+     * @return string|null
+     */
+    private function getEntityErrorString(EntityInterface $entity)
+    {
+        if (!$entity->getErrors()) {
+            return null;
+        }
+
+        $retval = [];
+        foreach ($entity->getErrors() as $fieldname => $errors) {
+            foreach ($errors as $ruleName => $msg) {
+                $retval[] = ucfirst(Inflector::humanize($fieldname)) . ': ' . $msg;
+            }
+        }
+
+        return implode('; ', $retval);
     }
 }

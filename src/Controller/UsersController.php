@@ -64,19 +64,19 @@ class UsersController extends AppController
                 return $this->redirectToLogin();
             }
 
-            /** @var User|bool $result */
-            $result = $this->processRegister();
-            if ($result) {
+            /** @var User $user */
+            list($success, $user) = $this->processRegister();
+            if ($success) {
                 $password = $this->request->getData('new_password');
                 $this->request = $this->request->withData('password', $password);
 
                 // Log user in
                 if ($this->Auth->identify()) {
-                    $this->Auth->setUser($result->toArray());
+                    $this->Auth->setUser($user->toArray());
                     $this->Flash->success(
                         'Your new website account has been created and you have been logged in.'
                     );
-                    $userId = $result->id;
+                    $userId = $user->id;
                     if (!$this->Users->hasMembership($userId)) {
                         $this->Flash->set(
                             'Check out the MACC membership options available below ' .

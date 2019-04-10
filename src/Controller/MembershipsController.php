@@ -615,15 +615,15 @@ class MembershipsController extends AppController
             }
 
             // Register user and log them in
-            /** @var User|bool $result */
-            $result = $this->processRegister();
-            if ($result) {
+            /** @var User $user */
+            list($success, $user) = $this->processRegister();
+            if ($success) {
                 $password = $this->request->getData('new_password');
                 $this->request = $this->request->withData('password', $password);
 
                 // Redirect to payment page
                 if ($this->Auth->identify()) {
-                    $this->Auth->setUser($result->toArray());
+                    $this->Auth->setUser($user->toArray());
                     $this->Flash->success(
                         'Your new website account has been created and you have been logged in.'
                     );
