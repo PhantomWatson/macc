@@ -17,7 +17,7 @@
 
 <?php
     echo $this->Form->create($user);
-    echo $this->element('register_fields', ['user' => $user]);
+    echo $this->element('register_fields');
     echo $this->Form->submit(
         'Register',
         ['class' => 'btn btn-primary']
