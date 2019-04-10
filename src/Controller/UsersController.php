@@ -99,11 +99,6 @@ class UsersController extends AppController
             $user['mailing_list'] = true;
         }
 
-        /* So the password fields aren't filled out automatically when the user
-         * is bounced back to the page by a validation error */
-        $user['new_password'] = null;
-        $user['confirm_password'] = null;
-
         $this->set([
             'pageTitle' => 'Register an Account',
             'user' => $user

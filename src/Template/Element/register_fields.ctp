@@ -33,7 +33,8 @@
                 'placeholder' => 'Password',
                 'div' => [
                     'class' => 'form-group'
-                ]
+                ],
+                'value' => ''
             ]
         );
         echo $this->Form->control(
@@ -44,7 +45,8 @@
                 'placeholder' => 'Confirm your password',
                 'div' => [
                     'class' => 'form-group'
-                ]
+                ],
+                'value' => ''
             ]
         );
         ?>
