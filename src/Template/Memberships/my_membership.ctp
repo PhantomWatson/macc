@@ -1,8 +1,14 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Membership $membership
+ * @var AppView $this
+ * @var Membership $membership
+ * @var bool $canBeAutoRenewed
  */
+
+use App\LocalTime\LocalTime;
+use App\Model\Entity\Membership;
+use App\View\AppView;
+
 ?>
 <?php if (empty($membership)): ?>
     <p>
@@ -20,7 +26,7 @@
     <?php if ($membership->expires->format('U') < time()): ?>
         <p>
             Your membership expired on
-            <?= \App\LocalTime\LocalTime::getDate($membership->expires) ?>.
+            <?= LocalTime::getDate($membership->expires) ?>.
             Would you like to
             <?= $this->Html->link(
                 'renew your membership',
@@ -49,7 +55,7 @@
                         Expires:
                     </th>
                     <td>
-                        <?= \App\LocalTime\LocalTime::getDate($membership->expires) ?>
+                        <?= LocalTime::getDate($membership->expires) ?>
                     </td>
                     <td>
                         <?= $this->Html->link(
@@ -68,7 +74,7 @@
                         Automatic renewal:
                     </th>
                     <td>
-                        <?php if (! $canBeAutoRenewed): ?>
+                        <?php if (!$canBeAutoRenewed): ?>
                             <span class="text-danger">
                                 Unavailable
                             </span>
@@ -103,7 +109,7 @@
             </tbody>
         </table>
 
-        <?php if (! $canBeAutoRenewed): ?>
+        <?php if (!$canBeAutoRenewed): ?>
             <p class="alert alert-info">
                 Renew your membership online with a credit card to take
                 advantage of automatic renewal.

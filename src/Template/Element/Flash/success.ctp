@@ -1,9 +1,11 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var AppView $this
+ * @var string $message
  */
+use App\View\AppView;
 ?>
-<?= $this->element('Flash'.DS.'default', [
+<?= $this->element('Flash' . DS . 'default', [
     'class' => 'success',
     'message' => $message
-]); ?>
+]) ?>

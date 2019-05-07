@@ -1,7 +1,11 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var AppView $this
+ * @var array $logs
  */
+
+use App\LocalTime\LocalTime;
+use App\View\AppView;
 ?>
 <p>
     <?= $this->Html->link(
@@ -33,7 +37,7 @@
         <?php foreach ($logs as $log): ?>
             <tr <?= $log->error ? 'class="error"' : '' ?>>
                 <td>
-                    <?= \App\LocalTime\LocalTime::getDateTime($log->created) ?>
+                    <?= LocalTime::getDateTime($log->created) ?>
                 </td>
                 <td class="message">
                     <?php

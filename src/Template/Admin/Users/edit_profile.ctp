@@ -1,11 +1,17 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- * @var \App\Model\Entity\Picture $picture
+ * @var AppView $this
+ * @var User $user
+ * @var Picture $picture
+ * @var array $tags
+ * @var int $picLimit
  */
-    use Cake\Core\Configure;
-    $this->Html->script('jquery.dirty.js', ['block' => 'script']);
+
+use App\Model\Entity\Picture;
+use App\Model\Entity\User;
+use App\View\AppView;
+use Cake\Core\Configure;
+$this->Html->script('jquery.dirty.js', ['block' => 'script']);
 ?>
 
 <p>
