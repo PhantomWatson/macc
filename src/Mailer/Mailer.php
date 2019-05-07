@@ -30,13 +30,14 @@ class Mailer
         $email = new Email();
         $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->get($userId);
-        $email->setTemplate('reset_password')
-            ->setSubject('MACC website password reset')
+        $email->setSubject('MACC website password reset')
             ->setTo($user->email)
             ->setViewVars(compact(
                 'user',
                 'resetUrl'
-            ));
+            ))
+            ->viewBuilder()
+            ->setTemplate('reset_password');
 
         return $email->send();
     }

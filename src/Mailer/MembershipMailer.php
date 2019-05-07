@@ -8,7 +8,6 @@ use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -20,7 +19,7 @@ class MembershipMailer extends Mailer
      *
      * @param string $recipientEmail Email address of recipient
      * @param Membership $membership New membership entity
-     * @return Email
+     * @return void
      */
     public function newMember($recipientEmail, $membership)
     {
@@ -29,7 +28,7 @@ class MembershipMailer extends Mailer
         $membershipLevelTable = TableRegistry::getTableLocator()->get('MembershipLevels');
         $membershipLevel = $membershipLevelTable->get($membership->membership_level_id);
 
-        return $this
+        $this
             ->setTo($recipientEmail)
             ->setSubject('MACC - New Member: ' . $user->name)
             ->setViewVars([
@@ -44,6 +43,7 @@ class MembershipMailer extends Mailer
                     $user->slug
                 ], true)
             ])
+            ->viewBuilder()
             ->setTemplate('new_member');
     }
 
@@ -51,7 +51,7 @@ class MembershipMailer extends Mailer
      * Defines an email informing a user that their membership is about to expire
      *
      * @param Membership $membership Membership entity
-     * @return Email
+     * @return void
      */
     public function expiringMembership($membership)
     {
@@ -63,7 +63,7 @@ class MembershipMailer extends Mailer
             $expirationString
         );
 
-        return $this
+        $this
             ->setTo($membership->user->email)
             ->setSubject($subject)
             ->setViewVars([
@@ -93,6 +93,7 @@ class MembershipMailer extends Mailer
                     'action' => 'myMembership'
                 ], true)
             ])
+            ->viewBuilder()
             ->setTemplate('expiring_membership');
     }
 
@@ -121,11 +122,11 @@ class MembershipMailer extends Mailer
      * Defines an email that informs a user that their membership could not be renewed because of a declined payment
      *
      * @param Membership $membership Membership entity
-     * @return Email
+     * @return void
      */
     public function autoRenewFailedCardDeclined(Membership $membership)
     {
-        return $this
+        $this
             ->setTo($membership->user->email)
             ->setSubject('Muncie Arts and Culture Council - Error renewing membership')
             ->setViewVars([
@@ -138,6 +139,7 @@ class MembershipMailer extends Mailer
                     '?' => ['renewing' => 1]
                 ], true)
             ])
+            ->viewBuilder()
             ->setTemplate('card_declined');
     }
 
@@ -147,11 +149,11 @@ class MembershipMailer extends Mailer
      *
      * @param Membership $membership Membership entity
      * @param string $errorMsg Error message
-     * @return Email
+     * @return void
      */
     public function errorRenewingMembership(Membership $membership, $errorMsg)
     {
-        return $this
+        $this
             ->setTo(Configure::read('admin_email'))
             ->setSubject(sprintf(
                 'Muncie Arts and Culture Council - Error renewing %s\'s membership',
@@ -161,6 +163,7 @@ class MembershipMailer extends Mailer
                 'userName' => $membership->user->name,
                 'errorMsg' => $errorMsg
             ])
+            ->viewBuilder()
             ->setTemplate('error_renewing');
     }
 
@@ -168,11 +171,11 @@ class MembershipMailer extends Mailer
      * Defines an email that informs a user that their membership was just auto-renewed
      *
      * @param Membership $membership Membership entity
-     * @return Email
+     * @return void
      */
     public function membershipAutoRenewed(Membership $membership)
     {
-        return $this
+        $this
             ->setTo($membership->user->email)
             ->setSubject('Muncie Arts and Culture Council - Membership automatically renewed')
             ->setViewVars([
@@ -184,6 +187,7 @@ class MembershipMailer extends Mailer
                     '?' => ['flow' => 1]
                 ], true)
             ])
+            ->viewBuilder()
             ->setTemplate('membership_auto_renewed');
     }
 
@@ -192,11 +196,11 @@ class MembershipMailer extends Mailer
      *
      * @param User $user User entity
      * @param string $password Plain-text password
-     * @return Email
+     * @return void
      */
     public function accountAddedByAdmin(User $user, $password)
     {
-        return $this
+        $this
             ->setTo($user->email)
             ->setSubject('Muncie Arts and Culture Council - User account created')
             ->setViewVars([
@@ -215,6 +219,7 @@ class MembershipMailer extends Mailer
                 ], true),
                 'userEmail' => $user->email
             ])
+            ->viewBuilder()
             ->setTemplate('account_added_by_admin');
     }
 
@@ -222,7 +227,7 @@ class MembershipMailer extends Mailer
      * Defines an email that informs a user that their membership was added by an administrator
      *
      * @param Membership $membership Membership entity
-     * @return Email
+     * @return void
      */
     public function membershipAddedByAdmin(Membership $membership)
     {
@@ -235,7 +240,7 @@ class MembershipMailer extends Mailer
             $user = TableRegistry::getTableLocator()->get('Users')->get($membership->user_id);
         }
 
-        return $this
+        $this
             ->setTo($user->email)
             ->setSubject('Muncie Arts and Culture Council - Membership added')
             ->setViewVars([
@@ -249,6 +254,7 @@ class MembershipMailer extends Mailer
                 'membershipLevelName' => $membershipLevel->name,
                 'expires' => LocalTime::getDate($membership->expires)
             ])
+            ->viewBuilder()
             ->setTemplate('membership_added_by_admin');
     }
 
@@ -260,7 +266,7 @@ class MembershipMailer extends Mailer
      * @param string $recipientEmail Recipient email address
      * @param string $adminUserName Admin user entity name
      * @param Membership $membership Membership entity
-     * @return Email
+     * @return void
      */
     public function membershipAddedByAdminToAdmin($recipientEmail, $adminUserName, Membership $membership)
     {
@@ -269,7 +275,7 @@ class MembershipMailer extends Mailer
         $membershipLevelTable = TableRegistry::getTableLocator()->get('MembershipLevels');
         $membershipLevel = $membershipLevelTable->get($membership->membership_level_id);
 
-        return $this
+        $this
             ->setTo($recipientEmail)
             ->setSubject('MACC - New Member: ' . $member->name)
             ->setViewVars([
@@ -285,6 +291,7 @@ class MembershipMailer extends Mailer
                     $member->slug
                 ], true)
             ])
+            ->viewBuilder()
             ->setTemplate('membership_added_by_admin_to_admin');
     }
 }
