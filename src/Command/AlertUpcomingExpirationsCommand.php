@@ -8,7 +8,7 @@ use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Http\Exception\SocketException;
+use Cake\Network\Exception\SocketException;
 use Cake\I18n\Time;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Mailer\MailerAwareTrait;
