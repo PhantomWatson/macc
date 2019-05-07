@@ -4,13 +4,15 @@ namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\Fixture\UsersFixture;
 use Cake\Routing\Router;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\Admin\MembershipLevelsController Test Case
  */
-class MembershipLevelsControllerTest extends IntegrationTestCase
+class MembershipLevelsControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * Fixtures

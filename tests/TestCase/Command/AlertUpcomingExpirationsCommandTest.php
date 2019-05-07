@@ -1,13 +1,16 @@
 <?php
 namespace App\Test\TestCase\Command;
 
-use Cake\TestSuite\ConsoleIntegrationTestCase;
+use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Command\AlertUpcomingExpirationsCommand Test Case
  */
-class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
+class AlertUpcomingExpirationsCommandTest extends TestCase
 {
+    use ConsoleIntegrationTestTrait;
+
     public $fixtures = [
         'app.MembershipLevels',
         'app.Memberships',

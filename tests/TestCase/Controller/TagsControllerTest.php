@@ -1,13 +1,15 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\TagsController Test Case
  */
-class TagsControllerTest extends IntegrationTestCase
+class TagsControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * Fixtures

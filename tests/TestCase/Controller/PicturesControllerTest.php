@@ -1,13 +1,15 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\PicturesController Test Case
  */
-class PicturesControllerTest extends IntegrationTestCase
+class PicturesControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * Fixtures

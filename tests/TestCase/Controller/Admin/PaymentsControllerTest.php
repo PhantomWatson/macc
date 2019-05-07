@@ -3,13 +3,15 @@ namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\Fixture\UsersFixture;
 use Cake\Routing\Router;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\Admin\PaymentsController Test Case
  */
-class PaymentsControllerTest extends IntegrationTestCase
+class PaymentsControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
 
     /**
      * Fixtures

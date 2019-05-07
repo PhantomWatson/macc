@@ -14,13 +14,16 @@
  */
 namespace Cake\Test\TestCase\Controller;
 
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * DonationsControllerTest class
  */
-class DonationsControllerTest extends IntegrationTestCase
+class DonationsControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
+
     public $fixtures = [
         'app.Logos',
         'app.MembershipLevels',
