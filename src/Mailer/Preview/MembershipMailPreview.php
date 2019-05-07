@@ -12,7 +12,7 @@ class MembershipMailPreview extends MailPreview
     /**
      * Previews the 'expiring membership' email for a user with auto-renew on
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function expiringMembershipAutoRenew()
     {
@@ -21,14 +21,15 @@ class MembershipMailPreview extends MailPreview
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
+        $mailer->expiringMembership($membership);
 
-        return $mailer->expiringMembership($membership);
+        return $mailer;
     }
 
     /**
      * Previews the 'expiring membership' email for a user with auto-renew off
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function expiringMembershipManualRenew()
     {
@@ -37,14 +38,15 @@ class MembershipMailPreview extends MailPreview
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
+        $mailer->expiringMembership($membership);
 
-        return $mailer->expiringMembership($membership);
+        return $mailer;
     }
 
     /**
      * Previews the 'your card was declined' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function autoRenewFailedCardDeclined()
     {
@@ -52,14 +54,15 @@ class MembershipMailPreview extends MailPreview
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
+        $mailer->autoRenewFailedCardDeclined($membership);
 
-        return $mailer->autoRenewFailedCardDeclined($membership);
+        return $mailer;
     }
 
     /**
      * Previews the 'a membership could not be automatically renewed' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function errorRenewingMembership()
     {
@@ -67,14 +70,15 @@ class MembershipMailPreview extends MailPreview
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
+        $mailer->errorRenewingMembership($membership, 'Error details go here');
 
-        return $mailer->errorRenewingMembership($membership, 'Error details go here');
+        return $mailer;
     }
 
     /**
      * Previews the 'your membership was automatically renewed' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function membershipAutoRenewed()
     {
@@ -82,8 +86,9 @@ class MembershipMailPreview extends MailPreview
 
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
+        $mailer->membershipAutoRenewed($membership);
 
-        return $mailer->membershipAutoRenewed($membership);
+        return $mailer;
     }
 
     /**
@@ -105,7 +110,7 @@ class MembershipMailPreview extends MailPreview
     /**
      * Previews the 'an account was created for you by an admin' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function accountAddedByAdmin()
     {
@@ -114,28 +119,30 @@ class MembershipMailPreview extends MailPreview
         /** @var User $user */
         $user = TableRegistry::getTableLocator()->get('Users')->find()->first();
         $password = 'randomlyGeneratedPassword';
+        $mailer->accountAddedByAdmin($user, $password);
 
-        return $mailer->accountAddedByAdmin($user, $password);
+        return $mailer;
     }
 
     /**
      * Previews the 'a membership was created for you by an admin' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function membershipAddedByAdmin()
     {
         /** @var MembershipMailer $mailer */
         $mailer = $this->getMailer('Membership');
         $membership = $this->getArbitraryMembership();
+        $mailer->membershipAddedByAdmin($membership);
 
-        return $mailer->membershipAddedByAdmin($membership);
+        return $mailer;
     }
 
     /**
      * Previews the 'hey there admin, some admin added a membership' email
      *
-     * @return \Cake\Mailer\Email
+     * @return MembershipMailer
      */
     public function membershipAddedByAdminToAdmin()
     {
@@ -145,7 +152,8 @@ class MembershipMailPreview extends MailPreview
         /** @var User $adminUser */
         $adminUser = TableRegistry::getTableLocator()->get('Users')->find()->first();
         $recipientEmail = 'recipient@example.com';
+        $mailer->membershipAddedByAdminToAdmin($recipientEmail, $adminUser->name, $membership);
 
-        return $mailer->membershipAddedByAdminToAdmin($recipientEmail, $adminUser->name, $membership);
+        return $mailer;
     }
 }
