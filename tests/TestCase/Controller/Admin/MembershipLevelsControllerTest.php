@@ -18,10 +18,10 @@ class MembershipLevelsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.logos',
-        'app.membership_levels',
-        'app.memberships',
-        'app.users'
+        'app.Logos',
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Users'
     ];
 
     private $indexUrl = [

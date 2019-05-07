@@ -17,9 +17,9 @@ class PaymentsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.membership_levels',
-        'app.payments',
-        'app.users'
+        'app.MembershipLevels',
+        'app.Payments',
+        'app.Users'
     ];
 
     private $indexUrl = [

@@ -14,7 +14,7 @@ class ProgramsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.programs'
+        'app.Programs'
     ];
 
     /**

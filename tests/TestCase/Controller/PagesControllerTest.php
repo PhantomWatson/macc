@@ -22,10 +22,10 @@ use Cake\TestSuite\IntegrationTestCase;
 class PagesControllerTest extends IntegrationTestCase
 {
     public $fixtures = [
-        'app.logos',
-        'app.membership_levels',
-        'app.memberships',
-        'app.users'
+        'app.Logos',
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Users'
     ];
 
     /**

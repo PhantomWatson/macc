@@ -9,9 +9,9 @@ use Cake\TestSuite\ConsoleIntegrationTestCase;
 class AlertUpcomingExpirationsCommandTest extends ConsoleIntegrationTestCase
 {
     public $fixtures = [
-        'app.membership_levels',
-        'app.memberships',
-        'app.users'
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Users'
     ];
 
     /**

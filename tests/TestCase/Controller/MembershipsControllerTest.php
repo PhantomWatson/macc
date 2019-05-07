@@ -18,10 +18,10 @@ class MembershipsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.membership_levels',
-        'app.memberships',
-        'app.payments',
-        'app.users',
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Payments',
+        'app.Users',
     ];
 
     /**
