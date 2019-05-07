@@ -52,17 +52,15 @@ class MembershipLevelsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->allowEmptyString('name', false);
 
         $validator
             ->add('cost', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('cost', 'create')
-            ->notEmpty('cost');
+            ->requirePresence('cost', 'create');
 
         return $validator;
     }

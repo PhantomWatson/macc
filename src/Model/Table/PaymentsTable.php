@@ -57,20 +57,17 @@ class PaymentsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->add('user_id', 'valid', ['rule' => 'numeric'])
             ->requirePresence('user_id', 'create');
 
         $validator
-            ->add('admin_adder_id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('admin_adder_id', 'create');
+            ->add('admin_adder_id', 'valid', ['rule' => 'numeric']);
 
         $validator
-            ->add('refunder_id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('refunder_id', 'create');
+            ->add('refunder_id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->add('membership_level_id', 'valid', ['rule' => 'numeric'])

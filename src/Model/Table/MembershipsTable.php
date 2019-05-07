@@ -65,8 +65,7 @@ class MembershipsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->add('user_id', 'valid', ['rule' => 'numeric'])
@@ -82,17 +81,14 @@ class MembershipsTable extends Table
 
         $validator
             ->add('auto_renew', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('auto_renew', 'create')
-            ->notEmpty('auto_renew');
+            ->requirePresence('auto_renew', 'create');
 
         $validator
             ->add('expires', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('expires', 'create')
-            ->notEmpty('expires');
+            ->requirePresence('expires', 'create');
 
         $validator
-            ->add('canceled', 'valid', ['rule' => 'datetime'])
-            ->allowEmpty('canceled');
+            ->add('canceled', 'valid', ['rule' => 'datetime']);
 
         return $validator;
     }

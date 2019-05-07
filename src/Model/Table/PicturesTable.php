@@ -58,17 +58,15 @@ class PicturesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->add('is_primary', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('is_primary', 'create')
-            ->notEmpty('is_primary');
+            ->requirePresence('is_primary', 'create');
 
         $validator
             ->requirePresence('filename', 'create')
-            ->notEmpty('filename');
+            ->allowEmptyString('filename', false);
 
         $validator->setProvider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
         $validator

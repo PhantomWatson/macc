@@ -78,8 +78,7 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
             ->requirePresence('name', 'create')
@@ -99,7 +98,7 @@ class UsersTable extends Table
                 'message' => 'Sorry, another account has already been created with that email address.'
             ])
             ->requirePresence('email', 'create')
-            ->notEmpty('email');
+            ->allowEmptyString('email', false);
 
         $validator
             ->requirePresence('password', 'create')
@@ -110,7 +109,7 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('role', 'create')
-            ->notEmpty('role')
+            ->allowEmptyString('role', false)
             ->add('role', 'valid', [
                 'rule' => function ($data) {
                     if (in_array($data, ['admin', 'user'])) {
@@ -121,35 +120,33 @@ class UsersTable extends Table
             ]);
 
         $validator
-            ->notEmpty('new_password', 'A password is required', 'create')
-            ->allowEmpty('new_password', 'update')
+            ->allowEmptyString('new_password', 'update', 'A password is required')
             ->add('new_password', 'validNewPassword1', [
                 'rule' => ['compareWith', 'confirm_password'],
                 'message' => 'Sorry, those passwords did not match.'
             ]);
 
         $validator
-            ->notEmpty('confirm_password', 'A password is required', 'create')
-            ->allowEmpty('confirm_password', 'update');
+            ->allowEmptyString('confirm_password', 'update', 'A password is required');
 
         $validator
             ->maxLength('address', 255)
-            ->allowEmpty('address');
+            ->allowEmptyString('address');
 
         $validator
             ->maxLength('city', 50)
-            ->allowEmpty('city');
+            ->allowEmptyString('city');
 
         $validator
             ->maxLength('state', 2)
-            ->allowEmpty('state');
+            ->allowEmptyString('state');
 
         $validator
             ->maxLength('zipcode', 15)
-            ->allowEmpty('zipcode');
+            ->allowEmptyString('zipcode');
 
         $validator
-            ->allowEmpty('current_password')
+            ->allowEmptyString('current_password')
             ->add('current_password', 'custom', [
                 'rule' =>
                     function ($value, $context) {

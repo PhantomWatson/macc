@@ -63,12 +63,11 @@ class LogosTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->integer('id');
 
         $validator
             ->requirePresence('filename', 'create')
-            ->notEmpty('filename');
+            ->allowEmptyString('filename', false);
 
         $validator->setProvider('upload', \Josegonzalez\Upload\Validation\DefaultValidation::class);
         $validator

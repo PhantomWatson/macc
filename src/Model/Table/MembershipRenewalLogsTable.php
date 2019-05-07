@@ -37,17 +37,14 @@ class MembershipRenewalLogsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->integer('id');
 
         $validator
-            ->requirePresence('message', 'create')
-            ->notEmpty('message');
+            ->requirePresence('message', 'create');
 
         $validator
             ->boolean('error')
-            ->requirePresence('error', 'create')
-            ->notEmpty('error');
+            ->requirePresence('error', 'create');
 
         return $validator;
     }

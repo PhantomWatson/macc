@@ -62,29 +62,24 @@ class TagsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric']);
 
         $validator
-            ->add('lft', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('lft');
+            ->add('lft', 'valid', ['rule' => 'numeric']);
 
         $validator
-            ->add('rght', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('rght');
+            ->add('rght', 'valid', ['rule' => 'numeric']);
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         $validator
             ->add('listed', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('listed', 'create')
-            ->notEmpty('listed');
+            ->requirePresence('listed', 'create');
 
         $validator
             ->add('selectable', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('selectable', 'create')
-            ->notEmpty('selectable');
+            ->requirePresence('selectable', 'create');
 
         return $validator;
     }
