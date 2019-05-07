@@ -23,7 +23,7 @@ class MembershipRenewalLogsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.membership_renewal_log'
+        'app.MembershipRenewalLog'
     ];
 
     /**

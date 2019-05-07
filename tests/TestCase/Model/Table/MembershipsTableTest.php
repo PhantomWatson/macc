@@ -23,12 +23,12 @@ class MembershipsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.memberships',
-        'app.users',
-        'app.payments',
-        'app.membership_levels',
-        'app.tags',
-        'app.tags_users'
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Payments',
+        'app.Tags',
+        'app.TagsUsers',
+        'app.Users'
     ];
 
     /**

@@ -23,13 +23,13 @@ class PicturesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.pictures',
-        'app.users',
-        'app.payments',
-        'app.membership_levels',
-        'app.memberships',
-        'app.tags',
-        'app.tags_users'
+        'app.MembershipLevels',
+        'app.Memberships',
+        'app.Payments',
+        'app.Pictures',
+        'app.Tags',
+        'app.TagsUsers',
+        'app.Users'
     ];
 
     /**

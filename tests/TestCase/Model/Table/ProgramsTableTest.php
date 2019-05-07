@@ -24,7 +24,7 @@ class ProgramsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.programs'
+        'app.Programs'
     ];
 
     /**
