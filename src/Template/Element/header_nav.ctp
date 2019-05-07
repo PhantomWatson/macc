@@ -1,15 +1,18 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var AppView $this
  */
+
+use App\View\AppView;
 use Cake\Routing\Router;
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
 if (! function_exists('navLink')) {
     /**
      * @param string $label Link label
      * @param array $url Link URL
-     * @param \App\View\AppView $view
+     * @param AppView $view
      * @return mixed
      */
     function navLink($label, $url, $view) {
@@ -19,7 +22,7 @@ if (! function_exists('navLink')) {
             unset($urlForComparison['_ssl']);
         }
 
-        $here = $view->request->getAttribute('here');
+        $here = $view->getRequest()->getAttribute('here');
         $class =  $here == Router::url($urlForComparison) ? 'current' : '';
         return $view->Html->link(
             $label,
@@ -28,10 +31,17 @@ if (! function_exists('navLink')) {
         );
     }
 
+    /**
+     * @param string $label Group label
+     * @param array $links Array of links
+     * @param AppView $view AppView object
+     * @param array $relatedUrls Array of related URLs
+     * @return null
+     */
     function navLinkGroup($label, $links, $view, $relatedUrls = []) {
         $isCurrent = false;
-        $here = $view->request->getAttribute('here');
-        $urls = \Cake\Utility\Hash::extract($links, '{n}.url');
+        $here = $view->getRequest()->getAttribute('here');
+        $urls = Hash::extract($links, '{n}.url');
         $urls = array_merge($urls, $relatedUrls);
         foreach ($urls as $url) {
             // Ignore SSL option for the purposes of comparing this URL to the one the user is currently viewing
