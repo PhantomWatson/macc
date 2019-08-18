@@ -6,34 +6,18 @@
         <?php
             echo $this->Form->control(
                 'name',
-                [
-                    'class' => 'form-control',
-                    'placeholder' => 'Name',
-                    'div' => [
-                        'class' => 'form-group'
-                    ]
-                ]
+                ['placeholder' => 'Your full name']
             );
             echo $this->Form->control(
                 'email',
-                [
-                    'class' => 'form-control',
-                    'placeholder' => 'Email address',
-                    'div' => [
-                        'class' => 'form-group'
-                    ]
-                ]
+                ['placeholder' => 'Email address']
             );
             echo $this->Form->control(
                 'new_password',
                 [
                     'label' => 'Password',
                     'type' => 'password',
-                    'class' => 'form-control',
                     'placeholder' => 'Password',
-                    'div' => [
-                        'class' => 'form-group'
-                    ],
                     'value' => ''
                 ]
             );
@@ -41,18 +25,13 @@
                 'confirm_password',
                 [
                     'type' => 'password',
-                    'class' => 'form-control',
-                    'placeholder' => 'Confirm your password',
-                    'div' => [
-                        'class' => 'form-group'
-                    ],
+                    'placeholder' => 'Enter your password again',
                     'value' => ''
                 ]
             );
             echo $this->Form->control(
                 'referrer',
                 [
-                    'class' => 'form-control',
                     'label' => '(Optional) How did you find out about how to become a member of MACC?',
                     'placeholder' => 'Examples: The name of someone who referred you, the URL of a website, etc.'
                 ]
