@@ -11,19 +11,22 @@ use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\ORM\Association\BelongsToMany;
+use Cake\ORM\Association\HasMany;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Exception;
 use Stripe\Customer;
 use Stripe\Stripe;
 
 /**
  * Users Model
  *
- * @property \Cake\ORM\Association\HasMany $Payments
- * @property \Cake\ORM\Association\BelongsToMany $MembershipLevels
+ * @property HasMany $Payments
+ * @property BelongsToMany $MembershipLevels
  */
 class UsersTable extends Table
 {
@@ -72,8 +75,8 @@ class UsersTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -150,6 +153,7 @@ class UsersTable extends Table
             ->add('current_password', 'custom', [
                 'rule' =>
                     function ($value, $context) {
+                        /** @var User $user */
                         $user = $this->find()
                             ->select(['password'])
                             ->where(['id' => $context['data']['id']])
@@ -171,8 +175,8 @@ class UsersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
@@ -360,7 +364,7 @@ class UsersTable extends Table
      * @param EntityInterface $user User entity
      * @param ArrayObject $options Options array
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function afterSave(Event $event, EntityInterface $user, ArrayObject $options)
     {
@@ -414,7 +418,7 @@ class UsersTable extends Table
      * Updates a user's MailChimp subscription information
      *
      * @param User $user User entity
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateMailChimp($user)
     {
