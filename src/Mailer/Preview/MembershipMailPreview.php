@@ -4,6 +4,7 @@ namespace App\Mailer\Preview;
 use App\Mailer\MembershipMailer;
 use App\Model\Entity\Membership;
 use App\Model\Entity\User;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use DebugKit\Mailer\MailPreview;
 
@@ -94,7 +95,7 @@ class MembershipMailPreview extends MailPreview
     /**
      * Returns an arbitrarily chosen membership record for email-previewing
      *
-     * @return Membership
+     * @return Membership|EntityInterface
      */
     private function getArbitraryMembership()
     {
