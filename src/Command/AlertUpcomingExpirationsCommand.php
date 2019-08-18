@@ -3,6 +3,7 @@ namespace App\Command;
 
 use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
+use BadMethodCallException;
 use Cake\Console\Arguments;
 use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
@@ -13,6 +14,9 @@ use Cake\I18n\Time;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 /**
  * Class AlertUpcomingExpirationsCommand
@@ -39,7 +43,7 @@ class AlertUpcomingExpirationsCommand extends Command
      * @param Arguments $args Arguments
      * @param ConsoleIo $io Console IO object
      * @return int|null|void
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
@@ -76,7 +80,7 @@ class AlertUpcomingExpirationsCommand extends Command
             } catch (MissingActionException $exception) {
                 $io->error('   MissingActionException: ' . $exception->getMessage());
                 continue;
-            } catch (\BadMethodCallException $exception) {
+            } catch (BadMethodCallException $exception) {
                 $io->error('   BadMethodCallException: ' . $exception->getMessage());
                 continue;
             }
@@ -91,6 +95,7 @@ class AlertUpcomingExpirationsCommand extends Command
      * Returns an array of memberships that will expire in one month, one week, or one day
      *
      * @return Membership[]
+     * @throws Exception
      */
     private function getExpiringMemberships()
     {
@@ -125,11 +130,12 @@ class AlertUpcomingExpirationsCommand extends Command
      * Returns the number of seconds between the current UTC time and the current local (Muncie) time
      *
      * @return int
+     * @throws Exception
      */
     private function getOffsetFromUtc()
     {
-        $localTimezone = new \DateTimeZone(Configure::read('localTimezone'));
-        $utcTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        $localTimezone = new DateTimeZone(Configure::read('localTimezone'));
+        $utcTime = new DateTime('now', new DateTimeZone('UTC'));
 
         return $localTimezone->getOffset($utcTime);
     }
@@ -142,6 +148,7 @@ class AlertUpcomingExpirationsCommand extends Command
      * complications of storing dates in UTC time
      *
      * @return array
+     * @throws Exception
      */
     private function getExpirationDateTriggers()
     {
@@ -176,11 +183,11 @@ class AlertUpcomingExpirationsCommand extends Command
         $expirationDateTriggers[] = [
             'start' => $todayStart
                 ->copy()
-                ->addDays(7)
+                ->addWeek()
                 ->subSeconds($offset),
             'end' => $todayEnd
                 ->copy()
-                ->addDays(7)
+                ->addWeek()
                 ->subSeconds($offset)
         ];
 
