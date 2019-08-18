@@ -160,6 +160,10 @@ class UsersTable extends Table
                 'message' => 'Current password is incorrect'
             ]);
 
+        $validator
+            ->maxLength('referrer', 255)
+            ->allowEmptyString('referrer');
+
         return $validator;
     }
 

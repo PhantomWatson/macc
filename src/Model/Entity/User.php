@@ -16,6 +16,7 @@ use Cake\ORM\Entity;
  * @property string $city
  * @property string $state
  * @property string $zipcode
+ * @property string $referrer
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Payment[] $payments
