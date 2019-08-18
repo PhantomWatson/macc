@@ -88,7 +88,7 @@ class AlertUpcomingExpirationsCommand extends Command
     }
 
     /**
-     * Returns an array of memberships that will expire in one week or one day
+     * Returns an array of memberships that will expire in one month, one week, or one day
      *
      * @return Membership[]
      */
@@ -159,6 +159,18 @@ class AlertUpcomingExpirationsCommand extends Command
             ->second(59);
 
         $expirationDateTriggers = [];
+
+        // Boundaries for the day one month from today
+        $expirationDateTriggers[] = [
+            'start' => $todayStart
+                ->copy()
+                ->addMonth()
+                ->subSeconds($offset),
+            'end' => $todayEnd
+                ->copy()
+                ->addMonth()
+                ->subSeconds($offset)
+        ];
 
         // Boundaries for the day one week from today
         $expirationDateTriggers[] = [
