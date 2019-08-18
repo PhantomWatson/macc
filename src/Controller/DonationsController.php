@@ -67,6 +67,8 @@ class DonationsController extends AppController
         $metadata['Donor email'] = $this->request->getData('email');
         $recipientProgram = $this->request->getData('recipientProgram');
         $metadata['Recipient program'] = $recipientProgram ? $recipientProgram : '(none specified)';
+        $mailingAddress = $this->request->getData('mailingAddress');
+        $metadata['Mailing address'] = $mailingAddress ? $mailingAddress : '(none provided)';
 
         // Create the charge on Stripe's servers - this will charge the user's card
         $apiKey = Configure::read('Stripe.Secret');

@@ -57,6 +57,14 @@
         </section>
     <?php endif; ?>
 
+    <div class="form-group">
+        <label for="mailing-address">
+            Optional: Enter your name and mailing address to receive a hard-copy donation receipt and no more than two MACC
+            mailings per year
+        </label>
+        <textarea class="form-control" id="mailing-address" rows="4"></textarea>
+    </div>
+
     <button type="submit" class="btn btn-primary" id="donation-button">
         Enter payment information
     </button>
