@@ -29,4 +29,7 @@
     <li>
         <strong>Profile:</strong> <a href="<?= $profileUrl ?>"><?= $profileUrl ?></a>
     </li>
+    <li>
+        <strong>Referrer:</strong> <?= $member->referrer ? $member->referrer : '(none)' ?>
+    </li>
 </ul>

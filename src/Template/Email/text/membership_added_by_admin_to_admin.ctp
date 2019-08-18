@@ -20,3 +20,5 @@ Email: <?= $member->email ?>
 Level: <?= $membershipLevel->name ?>
 
 Profile: <?= $profileUrl ?>
+
+Referrer: <?= $member->referrer ? $member->referrer : '(none)' ?>
