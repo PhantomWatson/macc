@@ -22,7 +22,7 @@
                                     <br />
                                     <strong>
                                         <img src="<?= $this->Url->image(
-                                                'macc-logo-email-signature.jpg',
+                                                'macc-logo-horizontal-email.png',
                                                 ['fullBase' => true]
                                         ) ?>" alt="Muncie Arts and Culture Council" />
                                     </strong>
