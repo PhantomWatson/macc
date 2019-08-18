@@ -31,4 +31,7 @@
     <li>
         <strong>Profile:</strong> <a href="<?= $profileUrl ?>"><?= $profileUrl ?></a>
     </li>
+    <li>
+        <strong>Referrer:</strong> <?= $user->referrer ? $user->referrer : '(none)' ?>
+    </li>
 </ul>

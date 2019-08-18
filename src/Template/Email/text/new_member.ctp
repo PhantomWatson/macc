@@ -21,3 +21,5 @@ Paid: $<?= $membershipLevel->cost ?>
 Auto-renew? <?= $membership->auto_renew ? 'Yes' : 'No' ?>
 
 Profile: <?= $profileUrl ?>
+
+Referrer: <?= $user->referrer ? $user->referrer : '(none)' ?>
