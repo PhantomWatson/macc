@@ -26,7 +26,7 @@
 
         <div id="logo">
             <a href="/">
-                <img src="/img/macc-logo-200px.jpg" alt="Muncie Arts & Culture" />
+                <img src="/img/macc-logo-horizontal-200h.png" alt="Muncie Arts & Culture" />
             </a>
         </div>
 
