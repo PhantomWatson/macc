@@ -157,4 +157,20 @@ class MembershipMailPreview extends MailPreview
 
         return $mailer;
     }
+
+    /**
+     * Previews the 'someone just purchased a new membership' email
+     *
+     * @return MembershipMailer
+     */
+    public function newMember()
+    {
+        /** @var MembershipMailer $mailer */
+        $mailer = $this->getMailer('Membership');
+        $membership = $this->getArbitraryMembership();
+        $recipientEmail = 'recipient@example.com';
+        $mailer->newMember($recipientEmail, $membership);
+
+        return $mailer;
+    }
 }
