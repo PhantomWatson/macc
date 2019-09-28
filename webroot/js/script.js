@@ -53,7 +53,7 @@ var commonmarkPreviewer = {
 
             var parsed = reader.parse(profileCommonmark);
             var htmlResult = writer.render(parsed);
-            
+
             // Strip out any tags created by parser but not approved
             var sanitizer = new Sanitize({
                 elements: [
@@ -65,49 +65,57 @@ var commonmarkPreviewer = {
                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                     'blockquote'
                 ],
-                attributes: { 
+                attributes: {
                     a: ['href']
                 }
             });
             var dummyInputNode = document.createElement('div');
             dummyInputNode.innerHTML = htmlResult;
             htmlResult = sanitizer.clean_node(dummyInputNode);
-            
+
             $('#'+output).html(htmlResult);
         });
     }
 };
 
 var userPictureEditor = {
+    isAdmin: false,
     limit: null,
     mainPictureId: null,
+    userId: null,
 
     init: function (params) {
+        this.isAdmin = params.hasOwnProperty('admin') && params.admin === true;
         this.limit = params.limit;
         this.mainPictureId = params.mainPictureId;
-        
+        this.userId = params.userId;
+
         this.checkLimitReached(false);
-        
+
         $('#pictures a').magnificPopup(defaultMagnificConfig);
-        
+
         $('#pictures button.remove').click(function (event) {
             event.preventDefault();
             userPictureEditor.deletePicture($(this));
         });
-        
+        const url = (this.isAdmin ? '/admin' : '') + '/pictures/add.json';
+        let formData = {
+          'timestamp': params.timestamp,
+          'token': params.token
+        };
+        if (this.isAdmin) {
+          formData.user_id = this.userId;
+        }
+
         $('#picture-upload').uploadifive({
-            'uploadScript': '/pictures/add.json',
+            'uploadScript': url,
             'checkScript': false,
             'onCheck': false,
             'fileSizeLimit': params.filesizeLimit,
             'buttonText': 'Click to select an image to upload',
             'width': 300,
             'fileType': '.jpg,.jpeg,.png,.gif',
-            'formData': {
-                'timestamp': params.timestamp,
-                'token': params.token,
-                'user_id': params.userId
-            },
+            'formData': formData,
             'onUploadComplete': function(file, data) {
                 try {
                     data = JSON.parse(data);
@@ -128,7 +136,7 @@ var userPictureEditor = {
                 var link = $('<a href="'+fullPath+'" title="Click for full-size"></a>').append(img);
                 link.magnificPopup(defaultMagnificConfig);
                 var pictureCell = $('<td></td>').append(link);
-                
+
                 var isMainIndicator = $('<span class="glyphicon glyphicon-star is-main" title="Main picture"></span>').hide();
                 var makeMainButtonContainer = $('<div class="make-main-container"></div>').show();
                 var makeMainButton = $('<button class="btn btn-link make-main" title="Make main picture"></button>');
@@ -139,26 +147,26 @@ var userPictureEditor = {
                 });
                 makeMainButton.append('<span class="glyphicon glyphicon-star-empty"></span>');
                 makeMainButtonContainer.append(makeMainButton);
-                
+
                 var removeButton = $('<button class="btn btn-link remove" title="Remove"></button>');
                 removeButton.html('<span class="glyphicon glyphicon-remove text-danger"></span>');
                 removeButton.click(function (event) {
                     event.preventDefault();
                     userPictureEditor.deletePicture($(this));
                 });
-                
+
                 var actionsCell = $('<td></td>');
                 actionsCell.append(isMainIndicator);
                 actionsCell.append(makeMainButtonContainer);
                 actionsCell.append(removeButton);
                 var row = $('<tr data-picture-id="'+data.pictureId+'"></tr>').append(actionsCell).append(pictureCell);
                 $('#pictures tbody').append(row);
-                
+
                 $('#upload-status')
                     .attr('class', 'alert alert-success')
                     .html('Picture added')
                     .show();
-                
+
                 /* If this is the only picture, it's automatically set (in the back end)
                  * as the user's main picture. Update page to reflect that. */
                 var pictures = $('#pictures tbody tr').not('.deleting');
@@ -166,7 +174,7 @@ var userPictureEditor = {
                     userPictureEditor.mainPictureId = pictures.first().data('picture-id');
                     userPictureEditor.toggleMainPicButtons();
                 }
-                
+
                 userPictureEditor.checkLimitReached(true);
             },
             'onError': function(errorType, files) {
@@ -180,20 +188,25 @@ var userPictureEditor = {
                 this.uploadifive('clearQueue');
             }
         });
-            
+
         this.toggleMainPicButtons();
-        
+
         $('#pictures .make-main').click(function (event) {
             event.preventDefault();
             var button = $(this);
             userPictureEditor.makeMain(button);
         });
     },
-    
+
     makeMain: function (button) {
         var pictureId = button.closest('tr').data('picture-id');
+        const url = this.isAdmin
+          ? '/admin/pictures/make-main/' + this.userId + '/' + pictureId + '.json'
+          : '/pictures/make-main/' + pictureId + '.json';
+        const isAdmin = this.isAdmin;
+
         $.ajax({
-            url: '/pictures/make-main/'+pictureId+'.json',
+            url: url,
             beforeSend: function () {
                 button.find('.glyphicon').hide();
                 button.append('<img src="/img/loading_small.gif" alt="..." title="Loading..." />');
@@ -213,13 +226,13 @@ var userPictureEditor = {
                     var response = JSON.parse(jqXHR.responseText);
                     message = response.message;
                 } catch(error) {
-                    message = 'There was an error making that your main picture.';
+                    message = 'There was an error making that ' + (isAdmin ? 'the user\'s' : 'your') + ' main picture.';
                 }
                 alert(message);
             }
         });
     },
-    
+
     toggleMainPicButtons: function () {
         $('#pictures tr').each(function () {
             var row = $(this);
@@ -233,15 +246,16 @@ var userPictureEditor = {
             }
         });
     },
-    
+
     deletePicture: function (button) {
         if (! confirm('Are you sure you want to remove this picture?')) {
             return;
         }
         var pictureId = button.closest('tr').data('picture-id');
+        const url = (this.isAdmin ? '/admin' : '') + '/pictures/delete/' + pictureId;
         $.ajax({
             type: 'DELETE',
-            url: '/pictures/delete/'+pictureId,
+            url: url,
             dataType: 'json',
             beforeSend: function (jqXHR, settings) {
                 button.find('.glyphicon').hide();
@@ -260,7 +274,7 @@ var userPictureEditor = {
                         $(this).remove();
                     });
                 }, 3000);
-                
+
                 userPictureEditor.checkLimitReached(true);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -278,13 +292,13 @@ var userPictureEditor = {
             }
         });
     },
-    
+
     getThumbnailFilename: function (fullsizeFilename) {
         var filenameParts = fullsizeFilename.split('.');
         var extension = filenameParts.pop();
         return filenameParts.join('.') + '.thumb.' + extension;
     },
-    
+
     checkLimitReached: function (animate) {
         var picCount = $('#pictures tbody tr').not('.deleted').length;
         var alert = $('#limit-reached');

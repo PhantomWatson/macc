@@ -88,5 +88,6 @@ Router::scope('/', function (RouteBuilder $routes) {
 });
 
 Router::prefix('admin', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
     $routes->fallbacks(DashedRoute::class);
 });

@@ -173,6 +173,7 @@ $this->Html->script('jquery.dirty.js', ['block' => 'script']);
 
         <?php $this->append('buffered'); ?>
             userPictureEditor.init(<?= json_encode([
+                'admin' => true,
                 'filesizeLimit' => $manualFilesizeLimit.'B',
                 'limit' => $picLimit,
                 'mainPictureId' => $user['main_picture_id'],
