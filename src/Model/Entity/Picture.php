@@ -39,4 +39,29 @@ class Picture extends Entity
         $filenameParts[] = $extension;
         return implode('.', $filenameParts);
     }
+
+    /**
+     * Returns a string to explain why an image failed to upload that includes an HTML list of error messages
+     *
+     * @return string|null
+     */
+    public function getUploadErrorList()
+    {
+        $errors = $this->getErrors();
+
+        if (empty($errors)) {
+            return null;
+        }
+
+        $exceptionMsg = 'There was an error uploading that picture. Please try again.';
+        $exceptionMsg .= '<ul>';
+        foreach ($errors as $field => $fieldErrors) {
+            foreach ($fieldErrors as $label => $message) {
+                $exceptionMsg .= "<li>$message</li>";
+            }
+        }
+        $exceptionMsg .= '</ul>';
+
+        return $exceptionMsg;
+    }
 }

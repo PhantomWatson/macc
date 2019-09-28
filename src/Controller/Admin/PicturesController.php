@@ -63,15 +63,7 @@ class PicturesController extends AppController
             $data['user_id'] = $userId;
             $picture = $this->Pictures->patchEntity($picture, $data);
             if ($picture->getErrors()) {
-                $exceptionMsg = 'There was an error uploading that picture. Please try again.';
-                $exceptionMsg .= '<ul>';
-                foreach ($picture->getErrors() as $field => $errors) {
-                    foreach ($errors as $label => $message) {
-                        $exceptionMsg .= '<li>'.$message.'</li>';
-                    }
-                }
-                $exceptionMsg .= '</ul>';
-                throw new BadRequestException($exceptionMsg);
+                throw new BadRequestException($picture->getUploadErrorList());
             } else {
                 $picture = $this->Pictures->save($picture);
                 if ($picture) {
