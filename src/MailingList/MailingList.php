@@ -79,7 +79,7 @@ class MailingList
         $MailChimp = MailingList::getMailChimpObject();
         $listId = Configure::read('mailChimpListId');
         $subscriberHash = $MailChimp->subscriberHash($oldEmail);
-        $response = $MailChimp->post(
+        $response = $MailChimp->patch(
             "lists/$listId/members/$subscriberHash",
             ['email_address' => $newEmail]
         );
