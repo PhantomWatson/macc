@@ -252,7 +252,12 @@ class MembershipMailer extends Mailer
                     '?' => ['flow' => 1]
                 ], true),
                 'membershipLevelName' => $membershipLevel->name,
-                'expires' => LocalTime::getDate($membership->expires)
+                'expires' => LocalTime::getDate($membership->expires),
+                'forgotPasswordUrl' => Router::url([
+                    'prefix' => false,
+                    'controller' => 'Users',
+                    'action' => 'forgotPassword'
+                ], true),
             ])
             ->viewBuilder()
             ->setTemplate('membership_added_by_admin');
