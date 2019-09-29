@@ -65,6 +65,7 @@
 
     <?php $this->append('buffered'); ?>
         userPictureEditor.init(<?= json_encode([
+            'admin' => $this->request->getParam('prefix') === 'admin',
             'filesizeLimit' => $manualFilesizeLimit.'B',
             'limit' => $picLimit,
             'mainPictureId' => $user['main_picture_id'],
