@@ -10,6 +10,8 @@ use App\Model\Table\TagsTable;
 use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Filesystem\File;
+use Cake\Filesystem\Folder;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Http\Exception\MethodNotAllowedException;
@@ -530,5 +532,24 @@ class UsersController extends AppController
         } else {
             throw new BadRequestException('No picture was uploaded');
         }
+    }
+
+    /**
+     * Deletes all logos for the specified user and redirects to referrer
+     *
+     * @param int $userId User ID
+     * @return Response
+     */
+    public function removeLogo($userId)
+    {
+        $this->loadModel('Logos');
+        $this->Logos->deleteAll(['user_id' => $userId]);
+        $dir = new Folder(WWW_ROOT . 'img' . DS . 'logos' . DS . $userId);
+        foreach ($dir->find() as $file) {
+            (new File($dir->pwd() . DS . $file))->delete();
+        }
+        $dir->delete();
+
+        return $this->redirect($this->referer());
     }
 }

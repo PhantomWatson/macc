@@ -56,7 +56,7 @@ use Cake\Core\Configure;
                 <?= $this->Form->postLink(
                     'Remove logo',
                     [
-                        'prefix' => false,
+                        'prefix' => $this->request->getParam('prefix') === 'admin' ? 'admin' : false,
                         'action' => 'removeLogo'
                     ],
                     [
