@@ -2,12 +2,15 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Entity\Logo;
+use App\Model\Table\LogosTable;
 use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\PicturesTable;
 use App\Model\Table\TagsTable;
 use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\Mailer\MailerAwareTrait;
@@ -19,9 +22,10 @@ use Exception;
 /**
  * Users Controller
  *
- * @property UsersTable $Users
- * @property TagsTable $Tags
+ * @property LogosTable $Logos
  * @property MembershipLevelsTable $MembershipLevels
+ * @property TagsTable $Tags
+ * @property UsersTable $Users
  */
 class UsersController extends AppController
 {
@@ -486,5 +490,45 @@ class UsersController extends AppController
             'user' => $user
         ]);
         $this->setUploadFilesizeLimit();
+    }
+
+    /**
+     * Uploads a logo
+     *
+     * @return void
+     */
+    public function uploadLogo()
+    {
+        $this->set('_serialize', ['message', 'filepath']);
+
+        if ($this->request->is('post')) {
+            $this->loadModel('Logos');
+
+            // Create new logo record
+            /** @var Logo $logo */
+            $logo = $this->Logos->newEntity([
+                'user_id' => $this->request->getData('user_id'),
+                'filename' => $this->request->getData('Filedata')
+            ]);
+
+            if ($this->Logos->save($logo)) {
+                $logo->deleteOtherLogos();
+                $this->set([
+                    'message' => 'Logo uploaded',
+                    'filepath' => $logo->filepath
+                ]);
+
+                return;
+            }
+
+            // Error
+            $errorDetails = print_r(array_values($logo->getErrors()), true);
+            $this->set([
+                'message' => 'Error uploading logo. Details: ' . $errorDetails
+            ]);
+            $this->response = $this->response->withStatus(500);
+        } else {
+            throw new BadRequestException('No picture was uploaded');
+        }
     }
 }

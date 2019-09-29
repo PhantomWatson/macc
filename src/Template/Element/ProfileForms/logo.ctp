@@ -1,14 +1,18 @@
 <?php
 /**
- * @var \App\Model\Entity\Picture $picture
- * @var \App\Model\Entity\User $user
- * @var \App\View\AppView $this
+ * @var AppView $this
+ * @var bool $qualifiesForLogo
+ * @var int $manualFilesizeLimit
+ * @var Picture $picture
  * @var string $memberLevelName
  * @var string|null $logoPath
- * @var bool $qualifiesForLogo
+ * @var User $user
  */
 
 use App\Model\Entity\Membership;
+use App\Model\Entity\Picture;
+use App\Model\Entity\User;
+use App\View\AppView;
 use Cake\Core\Configure;
 ?>
 
@@ -82,12 +86,18 @@ use Cake\Core\Configure;
         $this->Html->css('/uploadifive/uploadifive.css', ['block' => 'css']);
     ?>
     <?php $this->append('buffered'); ?>
-        logoUploader.init(<?= json_encode([
-            'filesizeLimit' => $manualFilesizeLimit . 'B',
-            'timestamp' => time(),
-            'token' => md5(Configure::read('upload_verify_token') . time()),
-            'userId' => $user['id']
-        ]) ?>);
+        <?php
+            $params = [
+                'filesizeLimit' => $manualFilesizeLimit . 'B',
+                'timestamp' => time(),
+                'token' => md5(Configure::read('upload_verify_token') . time()),
+                'userId' => $user['id']
+            ];
+            if ($this->request->getParam('prefix') === 'admin') {
+                $params['admin'] = true;
+            }
+        ?>
+        logoUploader.init(<?= json_encode($params) ?>);
     <?php $this->end(); ?>
 <?php else: ?>
     <p class="alert alert-warning">

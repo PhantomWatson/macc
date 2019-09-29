@@ -1,7 +1,10 @@
 let logoUploader = {
     init: function (params) {
+        const isAdmin = params.hasOwnProperty('admin') && params.admin;
+        const url = (isAdmin ? '/admin' : '') + '/users/upload-logo.json';
+
         $('#picture-upload').uploadifive({
-            'uploadScript': '/users/upload-logo.json',
+            'uploadScript': url,
             'checkScript': false,
             'onCheck': false,
             'fileSizeLimit': params.filesizeLimit,

@@ -663,39 +663,19 @@ class UsersController extends AppController
         $this->set('_serialize', ['message', 'filepath']);
 
         if ($this->request->is('post')) {
-            $userId = $this->Auth->user('id');
-            $filename = $this->request->getData('Filedata');
             $this->loadModel('Logos');
 
             // Create new logo record
             $logo = $this->Logos->newEntity([
-                'user_id' => $userId,
-                'filename' => $filename
+                'user_id' => $this->Auth->user('id'),
+                'filename' => $this->request->getData('Filedata')
             ]);
 
             if ($this->Logos->save($logo)) {
-                // Delete any previous logo files
-                $dir = new Folder(WWW_ROOT . 'img' . DS . 'logos' . DS . $userId);
-                $files = $dir->find();
-                foreach ($files as $file) {
-                    if ($file != $logo->filename) {
-                        (new File($dir->pwd() . DS . $file))->delete();
-                    }
-                }
-
-                // Delete any previous records
-                $this->Logos->deleteAll([
-                    'user_id' => $userId,
-                    'id !=' => $logo->id
-                ]);
-
+                $logo->deleteOtherLogos();
                 $this->set([
                     'message' => 'Logo uploaded',
-                    'filepath' => sprintf(
-                        '/img/logos/%s/%s',
-                        $userId,
-                        $logo->filename
-                    )
+                    'filepath' => $logo->filepath
                 ]);
 
                 return;
