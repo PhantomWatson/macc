@@ -48,8 +48,8 @@ class MailingList
         $response = $MailChimp->post("lists/$listId/members", [
             'email_address' => $user->email,
             'merge_fields' => [
-                'FNAME' => $firstName,
-                'LNAME' => $lastName
+                'FNAME' => $firstName === '' ? '(no first name)' : $firstName,
+                'LNAME' => $lastName === '' ? '(no last name)' : $lastName
             ],
             'status' => 'subscribed'
         ]);
