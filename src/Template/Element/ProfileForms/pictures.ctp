@@ -64,15 +64,20 @@
     </table>
 
     <?php $this->append('buffered'); ?>
-        userPictureEditor.init(<?= json_encode([
-            'admin' => $this->request->getParam('prefix') === 'admin',
-            'filesizeLimit' => $manualFilesizeLimit.'B',
-            'limit' => $picLimit,
-            'mainPictureId' => $user['main_picture_id'],
-            'timestamp' => time(),
-            'token' => md5(Configure::read('upload_verify_token').time()),
-            'userId' => $user['id']
-        ]) ?>);
+        <?php
+            $params = [
+                'filesizeLimit' => $manualFilesizeLimit.'B',
+                'limit' => $picLimit,
+                'mainPictureId' => $user['main_picture_id'],
+                'timestamp' => time(),
+                'token' => md5(Configure::read('upload_verify_token').time()),
+                'userId' => $user['id']
+            ];
+            if ($this->request->getParam('prefix') === 'admin') {
+                $params['admin'] = true;
+            }
+        ?>
+        userPictureEditor.init(<?= json_encode($params) ?>);
     <?php $this->end(); ?>
 
     <?php
