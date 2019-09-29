@@ -14,6 +14,7 @@ use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 
 /**
  * Users Controller
@@ -366,5 +367,179 @@ class UsersController extends AppController
         $characters = str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
 
         return substr($characters, 0, 6);
+    }
+
+    /**
+     * Form for updating user profile blurb
+     *
+     * @return void
+     */
+    public function updateBio($userId)
+    {
+        $user = $this->Users->get($userId);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'fields' => ['name', 'profile'],
+            ]);
+            $errors = $user->getErrors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Profile updated');
+                } else {
+                    $this->Flash->error('There was an error updating that profile');
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s) before proceeding');
+            }
+        }
+        $this->set([
+            'pageTitle' => "Update $user->name's Bio",
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Form for updating user tags
+     *
+     * @return void
+     */
+    public function updateTags($userId)
+    {
+        $user = $this->Users->get($userId, [
+            'contain' => ['Tags']
+        ]);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'fields' => ['tags'],
+                'associated' => ['Tags'],
+                'onlyIds' => true
+            ]);
+            $errors = $user->getErrors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('Tags updated');
+                } else {
+                    $this->Flash->error('There was an error saving your tags');
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s) before proceeding');
+            }
+        }
+        $this->loadModel('Tags');
+        $this->set([
+            'pageTitle' => "Update $user->name's Tags",
+            'tags' => $this->Tags->getThreaded(),
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Form for updating user pictures
+     *
+     * @param int $userId
+     * @return void
+     */
+    public function updatePictures($userId)
+    {
+        $user = $this->Users->get($userId, [
+            'contain' => ['Pictures']
+        ]);
+        /** @var PicturesTable $picturesTable */
+        $picturesTable = TableRegistry::getTableLocator()->get('Pictures');
+        $user->pictures = $picturesTable->moveMainToFront($user->pictures, $user->main_picture_id);
+        $this->set([
+            'pageTitle' => "Update $user->name's Pictures",
+            'picLimit' => Configure::read('maxPicturesPerUser'),
+            'user' => $user
+        ]);
+        $this->setUploadFilesizeLimit();
+    }
+
+    /**
+     * Page for updating one's own contact info
+     *
+     * @param int $userId User ID
+     * @return void
+     * @throws Exception
+     */
+    public function updateContact($userId)
+    {
+        $user = $this->Users->get($userId);
+        if ($this->request->is('put')) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'fields' => [
+                    'email',
+                    'address',
+                    'city',
+                    'state',
+                    'zipcode'
+                ]
+            ]);
+            $errors = $user->getErrors();
+            if (empty($errors)) {
+                if ($this->Users->save($user)) {
+                    // If user logs in via cookie, update cookie login credentials
+                    if ($this->Cookie->read('CookieAuth')) {
+                        $this->Cookie->write('CookieAuth.email', $this->request->getData('email'));
+                    }
+
+                    $this->Flash->success('Contact info updated');
+                }
+            }
+        }
+
+        $this->request = $this->request->withData('current_password', null);
+
+        $this->set([
+            'pageTitle' => "Update $user->name's Contact Info",
+            'user' => $user,
+            'showPasswordField' => (bool)$user->getError('current_password')
+        ]);
+
+        return null;
+    }
+
+    /**
+     * Page for updating a user's logo
+     *
+     * @param int $userId User ID
+     * @return void
+     */
+    public function updateLogo($userId)
+    {
+        // Users can see this page if their most recent membership (expired or not) is at a high enough level
+        $qualifies = UsersTable::qualifiesForLogo($userId);
+
+        $user = $this->Users->get($userId, [
+            'contain' => []
+        ]);
+
+        $this->loadModel('Logos');
+        $logo = $this->Logos
+            ->find()
+            ->where(['user_id' => $userId])
+            ->first();
+        $logoPath = $logo
+            ? sprintf(
+                '/img/logos/%s/%s',
+                $logo->user_id,
+                $logo->filename
+            )
+            : null;
+
+        // Get name of most recently purchased member level
+        $membership = TableRegistry::getTableLocator()
+            ->get('Memberships')
+            ->getCurrentMembership($userId);
+        $memberLevelName = $membership ? $membership->membership_level->name : null;
+
+        $this->set([
+            'logoPath' => $logoPath,
+            'memberLevelName' => $memberLevelName,
+            'pageTitle' => "Update $user->name's Logo",
+            'qualifiesForLogo' => $qualifies,
+            'user' => $user
+        ]);
+        $this->setUploadFilesizeLimit();
     }
 }

@@ -431,4 +431,28 @@ class UsersTable extends Table
             MailingList::updateEmailAddress($oldEmail, $newEmail);
         }
     }
+
+    /**
+     * Returns a boolean indicating if the specified user qualifies for having their logo displayed
+     *
+     * @param int $userId User ID
+     * @return bool
+     */
+    public static function qualifiesForLogo($userId)
+    {
+        if (!$userId) {
+            return false;
+        }
+
+        /** @var Membership $membership */
+        $membership = TableRegistry::getTableLocator()
+            ->get('Memberships')
+            ->getCurrentMembership($userId);
+
+        if (!$membership) {
+            return false;
+        }
+
+        return Membership::qualifiesForLogo($membership->membership_level_id);
+    }
 }

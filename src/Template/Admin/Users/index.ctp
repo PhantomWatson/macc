@@ -3,6 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
+
+use App\LocalTime\LocalTime;
 ?>
 <div id="admin-users-index">
     <p>
@@ -49,7 +51,7 @@
                         <?= ucwords($user['role']) ?>
                     </td>
                     <td>
-                        <?= \App\LocalTime\LocalTime::getDate($user->created) ?>
+                        <?= LocalTime::getDate($user->created) ?>
                     </td>
                     <td class="actions btn-group">
                         <div class="btn-group">
@@ -82,7 +84,7 @@
                                         'Edit profile',
                                         [
                                             'prefix' => 'admin',
-                                            'action' => 'editProfile',
+                                            'action' => 'updateBio',
                                             $user['id']
                                         ]
                                     ) ?>

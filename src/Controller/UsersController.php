@@ -2,10 +2,10 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
-use App\Model\Entity\Membership;
 use App\Model\Entity\User;
 use App\Model\Table\LogosTable;
 use App\Model\Table\PicturesTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -640,20 +640,7 @@ class UsersController extends AppController
     {
         $userId = $this->Auth->user('id');
 
-        if (!$userId) {
-            return false;
-        }
-
-        /** @var Membership $membership */
-        $membership = TableRegistry::getTableLocator()
-            ->get('Memberships')
-            ->getCurrentMembership($userId);
-
-        if (!$membership) {
-            return false;
-        }
-
-        return Membership::qualifiesForLogo($membership->membership_level_id);
+        return UsersTable::qualifiesForLogo($userId);
     }
 
     /**
@@ -742,18 +729,5 @@ class UsersController extends AppController
         $dir->delete();
 
         return $this->redirect($this->referer());
-    }
-
-    /**
-     * Sets the $manualFilesizeLimit view variable
-     *
-     * @return void
-     */
-    private function setUploadFilesizeLimit()
-    {
-        $uploadMax = ini_get('upload_max_filesize');
-        $postMax = ini_get('post_max_size');
-        $serverFilesizeLimit = min($uploadMax, $postMax);
-        $this->set('manualFilesizeLimit', min('10M', $serverFilesizeLimit));
     }
 }

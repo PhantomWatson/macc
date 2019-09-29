@@ -340,4 +340,17 @@ class AppController extends Controller
 
         return implode('; ', $retval);
     }
+
+    /**
+     * Sets the $manualFilesizeLimit view variable
+     *
+     * @return void
+     */
+    protected function setUploadFilesizeLimit()
+    {
+        $uploadMax = ini_get('upload_max_filesize');
+        $postMax = ini_get('post_max_size');
+        $serverFilesizeLimit = min($uploadMax, $postMax);
+        $this->set('manualFilesizeLimit', min('10M', $serverFilesizeLimit));
+    }
 }
