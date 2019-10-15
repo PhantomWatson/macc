@@ -218,8 +218,10 @@ class UsersTable extends Table
                         return $exp->isNull('canceled');
                     }
                 ])
-                ->matching('Payments', function (QueryExpression $exp) {
-                    $exp->isNull('refunded_date');
+                ->matching('Payments', function (Query $query) {
+                    return $query->where(function (QueryExpression $exp) {
+                        return $exp->isNull('refunded_date');
+                    });
                 });
         })->distinct(['Users.id']);
     }
