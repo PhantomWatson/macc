@@ -251,7 +251,7 @@ class UsersTable extends Table
     }
 
     /**
-     * Returns true if the user has a non-expired, non-canceled membership
+     * Returns true if the user has a non-expired, non-canceled membership associated with a non-refunded payment
      *
      * @param int $userId
      * @return boolean
@@ -267,6 +267,11 @@ class UsersTable extends Table
                     return $exp->isNull('canceled');
                 }
             ])
+            ->matching('Payments', function (Query $query) {
+                return $query->where(function (QueryExpression $exp) {
+                    return $exp->isNull('refunded_date');
+                });
+            })
             ->count();
         return $count > 0;
     }
