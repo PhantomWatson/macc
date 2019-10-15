@@ -253,13 +253,10 @@ class MembershipsTable extends Table
             ->select(['user_id'])
             ->where([
                 function (QueryExpression $exp) {
-                    return $exp->gte('expires', date('Y-m-d H:i:s'));
-                },
-                function (QueryExpression $exp) {
-                    return $exp->isNull('canceled');
-                },
-                function (QueryExpression $exp) {
-                    return $exp->isNull('renewed');
+                    return $exp
+                        ->gte('expires', date('Y-m-d H:i:s'))
+                        ->isNull('canceled')
+                        ->isNull('renewed');
                 },
             ])
             ->distinct(['user_id'])
