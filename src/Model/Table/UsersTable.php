@@ -284,6 +284,9 @@ class UsersTable extends Table
      */
     public function hasExpiredMembership($userId)
     {
+        if ($this->isCurrentMember($userId)) {
+            return false;
+        }
         $membershipsTable = TableRegistry::getTableLocator()->get('Memberships');
         $count = $membershipsTable->find('all')
             ->where([
