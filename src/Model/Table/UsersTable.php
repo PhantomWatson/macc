@@ -201,7 +201,7 @@ class UsersTable extends Table
     }
 
     /**
-     * Finds all users with memberships that have not expired or been canceled
+     * Finds users with non-expired, non-canceled memberships that are associated with non-refunded payments
      *
      * @param Query $query
      * @return Query
@@ -211,11 +211,16 @@ class UsersTable extends Table
         return $query->matching('Memberships', function ($q) {
             /** @var Query $q */
 
-            return $q->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])->where([
-                function (QueryExpression $exp) {
-                    return $exp->isNull('canceled');
-                }
-            ]);
+            return $q
+                ->where(['Memberships.expires >=' => date('Y-m-d H:i:s')])
+                ->where([
+                    function (QueryExpression $exp) {
+                        return $exp->isNull('canceled');
+                    }
+                ])
+                ->matching('Payments', function (QueryExpression $exp) {
+                    $exp->isNull('refunded_date');
+                });
         })->distinct(['Users.id']);
     }
 
