@@ -259,6 +259,11 @@ class MembershipsTable extends Table
                         ->isNull('renewed');
                 },
             ])
+            ->matching('Payments', function (Query $query) {
+                return $query->where(function (QueryExpression $exp) {
+                    return $exp->isNull('refunded_date');
+                });
+            })
             ->distinct(['user_id'])
             ->enableHydration(false)
             ->toArray();
