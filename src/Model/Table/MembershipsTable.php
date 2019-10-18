@@ -264,7 +264,7 @@ class MembershipsTable extends Table
                     return $exp->isNull('refunded_date');
                 });
             })
-            ->distinct(['user_id'])
+            ->distinct(['Memberships.user_id'])
             ->enableHydration(false)
             ->toArray();
         $usersWithCurrentMemberships = Hash::extract($usersWithCurrentMemberships, '{n}.user_id');
