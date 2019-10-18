@@ -159,12 +159,15 @@ class MembershipsTable extends Table
      */
     public function getCurrentMembership($userId)
     {
-        return $this->find('all')
+        /** @var Membership $membership */
+        $membership = $this->find('all')
             ->where(['user_id' => $userId])
             ->contain(['MembershipLevels'])
             ->limit(1)
             ->order(['Memberships.created' => 'DESC'])
             ->first();
+
+        return $membership
     }
 
     /**
