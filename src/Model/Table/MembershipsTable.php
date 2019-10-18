@@ -8,6 +8,7 @@ use ArrayObject;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -18,9 +19,9 @@ use Cake\Validation\Validator;
 /**
  * Memberships Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $MembershipLevels
- * @property \Cake\ORM\Association\BelongsTo $Payments
+ * @property BelongsTo $Users
+ * @property BelongsTo $MembershipLevels
+ * @property BelongsTo $Payments
  */
 class MembershipsTable extends Table
 {
@@ -59,8 +60,8 @@ class MembershipsTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -97,8 +98,8 @@ class MembershipsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
