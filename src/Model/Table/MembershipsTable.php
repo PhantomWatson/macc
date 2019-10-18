@@ -168,7 +168,7 @@ class MembershipsTable extends Table
             ->order(['Memberships.created' => 'DESC'])
             ->first();
 
-        return $membership
+        return $membership;
     }
 
     /**
