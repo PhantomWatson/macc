@@ -1,0 +1,7 @@
+MAILTO="graham@phantomwatson.com"
+
+# Send emails about upcoming expirations and auto-renewals every day at 8:05am
+5 13 * * * cd /home/munciearts/members.munciearts.org && php bin/cake.php alert-upcoming-expirations >/dev/null 2>&1
+
+# Process auto-renewals every day at 8:10am
+10 13 * * * /usr/bin/wget -O /dev/null https://members.munciearts.org/memberships/process-recurring --no-check-certificate >/dev/null 2>&1
