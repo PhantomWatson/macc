@@ -6,9 +6,13 @@ use App\LocalTime\LocalTime;
 use App\Model\Entity\Membership;
 use App\Model\Entity\Payment;
 use App\Model\Entity\User;
+use App\Model\Table\MembershipLevelsTable;
 use App\Model\Table\MembershipRenewalLogsTable;
 use App\Model\Table\MembershipsTable;
+use App\Model\Table\PaymentsTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
@@ -21,14 +25,24 @@ use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
+use DateTime;
+use Exception;
+use Stripe\Charge;
+use Stripe\Error\ApiConnection;
+use Stripe\Error\Authentication;
+use Stripe\Error\Base;
+use Stripe\Error\Card;
+use Stripe\Error\InvalidRequest;
+use Stripe\Error\RateLimit;
+use Stripe\Stripe;
 
 /**
  * Memberships Controller
  *
- * @property \App\Model\Table\MembershipsTable $Memberships
- * @property \App\Model\Table\PaymentsTable $Payments
- * @property \App\Model\Table\MembershipLevelsTable $MembershipLevels
- * @property \App\Model\Table\UsersTable $Users
+ * @property MembershipsTable $Memberships
+ * @property PaymentsTable $Payments
+ * @property MembershipLevelsTable $MembershipLevels
+ * @property UsersTable $Users
  */
 class MembershipsController extends AppController
 {
@@ -38,7 +52,7 @@ class MembershipsController extends AppController
      * Initialize method
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function initialize()
     {
@@ -119,7 +133,7 @@ class MembershipsController extends AppController
      *
      * @param null|int $value Either 1 or 0 for toggling on or off
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function toggleAutoRenewal($value = null)
     {
@@ -155,7 +169,7 @@ class MembershipsController extends AppController
         $msg = 'Membership auto-renewal turned ' . ($value ? 'on' : 'off') . '.';
         if ($value) {
             $timestamp = $membership->expires->format('U') - (60 * 60 * 24);
-            $dateTime = new \DateTime($timestamp);
+            $dateTime = new DateTime($timestamp);
             $msg .= sprintf(
                 ' Your membership will be automatically renewed on %s.',
                 LocalTime::getDate($dateTime)
@@ -181,7 +195,7 @@ class MembershipsController extends AppController
         try {
             /** @var User $user */
             $user = $this->Users->get($userId);
-        } catch (\Cake\Datasource\Exception\InvalidPrimaryKeyException $e) {
+        } catch (InvalidPrimaryKeyException $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => "Error: No valid user ID"
@@ -216,7 +230,7 @@ class MembershipsController extends AppController
 
         // Create Stripe customer
         $apiKey = Configure::read('Stripe.Secret');
-        \Stripe\Stripe::setApiKey($apiKey);
+        Stripe::setApiKey($apiKey);
         $token = $this->request->getData('stripeToken');
         $customer = $this->Users->createStripeCustomer($userId, $token);
         $user = $this->Users->patchEntity($user, [
@@ -226,7 +240,7 @@ class MembershipsController extends AppController
 
         // Charge customer
         try {
-            $charge = \Stripe\Charge::create([
+            $charge = Charge::create([
                 'amount' => $membershipLevel->cost.'00', // in cents
                 'currency' => 'usd',
                 'customer' => $customer->id,
@@ -236,7 +250,7 @@ class MembershipsController extends AppController
                     'membership_level_id' => $membershipLevelId
                 ]
             ]);
-        } catch (\Stripe\Error\Card $e) {
+        } catch (Card $e) {
             $this->set('retval', [
                 'success' => false,
                 'message' => 'Credit card was declined.'
@@ -318,7 +332,7 @@ class MembershipsController extends AppController
         /** @var MembershipRenewalLogsTable $logsTable */
         $logsTable = TableRegistry::getTableLocator()->get('MembershipRenewalLogs');
         $apiKey = Configure::read('Stripe.Secret');
-        \Stripe\Stripe::setApiKey($apiKey);
+        Stripe::setApiKey($apiKey);
 
         $this->loadModel('Memberships');
         $memberships = $this->Memberships->find('toAutoRenew');
@@ -345,7 +359,7 @@ class MembershipsController extends AppController
                 $charge = $this->createStripeCharge($chargeParams);
 
             // User's card was declined
-            } catch (\Stripe\Error\Card $e) {
+            } catch (Card $e) {
                 // Email user
                 $this->getMailer('Membership')
                     ->send('autoRenewFailedCardDeclined', [$membership]);
@@ -355,7 +369,7 @@ class MembershipsController extends AppController
                 $this->Memberships->save($membership);
 
                 $errorMsg = $this->getCardDeclinedErrorMsg($membership);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
 
             if (!isset($charge) || !$charge->paid) {
@@ -432,7 +446,7 @@ class MembershipsController extends AppController
      * Returns an error message indicating that a charge failed
      *
      * @param Membership $membership Membership entity
-     * @param null|\Exception $exception Optional exception
+     * @param null|Exception $exception Optional exception
      * @return string
      */
     private function getChargeErrorMsg($membership, $exception = null)
@@ -452,26 +466,26 @@ class MembershipsController extends AppController
      * Creates a Stripe charge object (charges the user) and handles various exceptions other than 'card declined'
      *
      * @param array $params Passed to \Stripe\Charge::create()
-     * @return \Stripe\Charge
+     * @return Charge
      * @throws InternalErrorException
      */
     private function createStripeCharge($params)
     {
         try {
-            $charge = \Stripe\Charge::create($params);
-        } catch (\Stripe\Error\RateLimit $e) {
+            $charge = Charge::create($params);
+        } catch (RateLimit $e) {
             // Too many requests made to the API too quickly
             $this->throwStripeException($e);
-        } catch (\Stripe\Error\InvalidRequest $e) {
+        } catch (InvalidRequest $e) {
             // Invalid parameters were supplied to Stripe's API
             $this->throwStripeException($e);
-        } catch (\Stripe\Error\Authentication $e) {
+        } catch (Authentication $e) {
             // Authentication with Stripe's API failed
             $this->throwStripeException($e);
-        } catch (\Stripe\Error\ApiConnection $e) {
+        } catch (ApiConnection $e) {
             // Network communication with Stripe failed
             $this->throwStripeException($e);
-        } catch (\Stripe\Error\Base $e) {
+        } catch (Base $e) {
             // Display a very generic error to the user
             $this->throwStripeException($e);
         }
@@ -490,7 +504,7 @@ class MembershipsController extends AppController
      * simplify createStripeCharge(), which might be modified in
      * the future to handle different Stripe exceptions differently.
      *
-     * @param \Stripe\Error\Base $e
+     * @param Base $e
      * @throws InternalErrorException
      * @return void
      */
@@ -561,7 +575,7 @@ class MembershipsController extends AppController
      *
      * @param null $membershipLevelId
      * @return Response|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function level($membershipLevelId)
     {
