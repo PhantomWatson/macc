@@ -356,9 +356,6 @@ class MembershipsController extends AppController
 
                 $errorMsg = $this->getCardDeclinedErrorMsg($membership);
             } catch (\Exception $e) {
-                $errorMsg = $this->getChargeErrorMsg($membership, $e);
-                $this->getMailer('Membership')
-                    ->send('errorRenewingMembership', [$membership, $errorMsg]);
             }
 
             if (!isset($charge) || !$charge->paid) {
