@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Entity;
 
+use Cake\I18n\Time;
 use Cake\ORM\Entity;
 
 /**
@@ -8,16 +9,16 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $user_id
- * @property \App\Model\Entity\User $user
+ * @property User $user
  * @property int $membership_level_id
- * @property \App\Model\Entity\MembershipLevel $membership_level
+ * @property MembershipLevel $membership_level
  * @property int $payment_id
- * @property \App\Model\Entity\Payment $payment
+ * @property Payment $payment
  * @property bool $auto_renew
- * @property \Cake\I18n\Time $created
- * @property \Cake\I18n\Time $modified
- * @property \Cake\I18n\Time $expires
- * @property \Cake\I18n\Time $canceled
+ * @property Time $created
+ * @property Time $modified
+ * @property Time $expires
+ * @property Time $canceled
  */
 class Membership extends Entity
 {

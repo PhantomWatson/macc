@@ -146,6 +146,7 @@ class MembershipsController extends AppController
         }
 
         $userId = $this->Auth->user('id');
+        /** @var Membership $membership */
         $membership = $this->Memberships->getCurrentMembership($userId);
 
         if ($membership && $membership->payment_id) {
