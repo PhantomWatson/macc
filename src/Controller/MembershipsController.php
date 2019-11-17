@@ -400,7 +400,7 @@ class MembershipsController extends AppController
             $membership = $this->Memberships->patchEntity($membership, ['auto_renew' => 0]);
             $errors = $membership->getErrors();
             if (!empty($errors)) {
-                $errorMsg = $this->getMembershipSavingErrorMsg($membership);
+                $errorMsg = $this->getMembershipSavingErrorMsg($membership, $charge->id);
                 $this->getMailer('Membership')
                     ->send('errorRenewingMembership', [$membership, $errorMsg]);
                 $logsTable->logAutoRenewal($errorMsg, true);
@@ -413,7 +413,7 @@ class MembershipsController extends AppController
             $newMembership = $this->createAutoRenewMembership($membership, $payment);
             $errors = $newMembership->getErrors();
             if (!empty($errors)) {
-                $errorMsg = $this->getMembershipSavingErrorMsg($membership);
+                $errorMsg = $this->getMembershipSavingErrorMsg($membership, $charge->id);
                 $this->getMailer('Membership')
                     ->send('errorRenewingMembership', [$membership, $errorMsg]);
                 $logsTable->logAutoRenewal($errorMsg, true);
@@ -794,9 +794,10 @@ class MembershipsController extends AppController
      * Returns a 'could not save/update membership record' error message
      *
      * @param Membership $membership Membership entity
+     * @param string $chargeId Stripe charge ID
      * @return string
      */
-    private function getMembershipSavingErrorMsg(Membership $membership)
+    private function getMembershipSavingErrorMsg(Membership $membership, $chargeId)
     {
         return sprintf(
             'Error saving membership record when attempting to automatically renew %s\'s %s membership: ' .
@@ -805,7 +806,8 @@ class MembershipsController extends AppController
             $membership->membership_level['name'],
             json_encode($membership->getErrors()),
             $membership->user_id,
-            $membership->user['email']
+            $membership->user['email'],
+            $chargeId
         );
     }
 
