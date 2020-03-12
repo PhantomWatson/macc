@@ -111,46 +111,35 @@ class MembershipsTable extends Table
     }
 
     /**
-     * Finds all memberships that expire today, are marked
-     * for automatic renewal, and have not been renewed or canceled.
+     * Finds all memberships that expire today, are marked for auto renewal, and have not been renewed nor canceled
      *
-     * @param Query $query
-     * @return Query
+     * @param \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query
      */
     public function findToAutoRenew(Query $query)
     {
         return $query
             ->contain([
-                'Users' => function ($q) {
-                    /** @var Query $q */
-
+                'Users' => function (Query $q) {
                     return $q->select(['id', 'name', 'email', 'stripe_customer_id']);
                 },
-                'MembershipLevels' => function ($q) {
-                    /** @var Query $q */
-
+                'MembershipLevels' => function (Query $q) {
                     return $q->select(['id', 'name', 'cost']);
                 }
             ])
-            ->where(function ($exp) {
-                /** @var QueryExpression $exp */
-
-                return $exp->isNull('canceled');
-            })
-            ->where(function ($exp) {
-                /** @var QueryExpression $exp */
-
-                return $exp->gte('expires', date('Y-m-d') . ' 00:00:00');
-            })
-            ->where(function ($exp) {
-                /** @var QueryExpression $exp */
-
-                return $exp->lte('expires', date('Y-m-d') . ' 23:59:59');
-            })
             ->where([
+                function (QueryExpression $exp) {
+                    return $exp->isNull('canceled');
+                },
+                function (QueryExpression $exp) {
+                    return $exp->gte('expires', date('Y-m-d') . ' 00:00:00');
+                },
+                function (QueryExpression$exp) {
+                    return $exp->lte('expires', date('Y-m-d') . ' 23:59:59');
+                },
                 'auto_renew' => 1,
             ])
-            ->order(['expires' => 'ASC']);
+            ->orderAsc('expires');
     }
 
     /**
