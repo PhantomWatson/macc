@@ -8,6 +8,7 @@ use ArrayObject;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -187,6 +188,32 @@ class MembershipsTable extends Table
             ]);
         foreach ($memberships as $membership) {
             $membership = $this->patchEntity($membership, ['auto_renew' => 0]);
+            $this->save($membership);
+        }
+    }
+
+    /**
+     * Checks for a current membership that should be marked as having been renewed by the purchase of a new membership
+     *
+     * @param int $userId User ID
+     * @param int $newMembershipId ID of a membership that has just been purchased
+     */
+    public function markCurrentMembershipRenewed($userId, $newMembershipId)
+    {
+        $memberships = $this->find('all')
+            ->where([
+                'id !=' => $newMembershipId,
+                'user_id' => $userId,
+                'Memberships.expires >=' => date('Y-m-d H:i:s'),
+                function (QueryExpression $exp) {
+                    return $exp->isNull('canceled');
+                },
+                function (QueryExpression $exp) {
+                    return $exp->isNull('renewed');
+                }
+            ]);
+        foreach ($memberships as $membership) {
+            $membership = $this->patchEntity($membership, ['renewed' => new Time()]);
             $this->save($membership);
         }
     }

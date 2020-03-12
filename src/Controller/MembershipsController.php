@@ -294,6 +294,9 @@ class MembershipsController extends AppController
                 // Turn off any previous membership's auto_renew flag
                 $this->Memberships->disablePreviousAutoRenewal($userId, $membership->id);
 
+                // Mark existing membership as having been renewed
+                $this->Memberships->markCurrentMembershipRenewed($userId, $membership->id);
+
                 // Dispatch event
                 if (!$hadPreviousMembership) {
                     $eventName = 'Model.Membership.afterFirstPurchase';
