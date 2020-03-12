@@ -13,8 +13,6 @@ var phpunit = require('gulp-phpunit');
 var _ = require('lodash');
 var runSequence = require('run-sequence');
 
-gulp.task('default', ['less', 'js', 'php', 'watch']);
-
 
 
 /**************
@@ -45,7 +43,7 @@ gulp.task('php_unit', function() {
 /**************
  * Javascript *
  **************/
-var srcJsFiles = [ 
+var srcJsFiles = [
     'webroot/js/script.js'
 ];
 
@@ -102,10 +100,10 @@ gulp.task('watch', function() {
 	// PHP
 	gulp.watch('src/**/*.php', ['php_cs', 'php_unit']);
 	gulp.watch('src/**/*.ctp', ['php_unit']);
-	
+
 	// JavaScript
     gulp.watch(srcJsFiles, ['js']);
-	
+
     // Vendor files
     var vendorFiles = [
         'vendor/twbs/bootstrap/dist/fonts/*',
