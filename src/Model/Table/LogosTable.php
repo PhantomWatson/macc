@@ -127,9 +127,4 @@ class LogosTable extends Table
 
         return $rules;
     }
-
-    public function deleteAllForUser($userId)
-    {
-
-    }
 }
