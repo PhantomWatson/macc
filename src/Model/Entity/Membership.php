@@ -19,6 +19,7 @@ use Cake\ORM\Entity;
  * @property Time $modified
  * @property Time $expires
  * @property Time $canceled
+ * @property Time $renewed
  */
 class Membership extends Entity
 {
