@@ -132,6 +132,9 @@ class MembershipsTable extends Table
                     return $exp->isNull('canceled');
                 },
                 function (QueryExpression $exp) {
+                    return $exp->isNull('renewed');
+                },
+                function (QueryExpression $exp) {
                     return $exp->gte('expires', date('Y-m-d') . ' 00:00:00');
                 },
                 function (QueryExpression$exp) {
