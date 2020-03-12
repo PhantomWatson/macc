@@ -23,6 +23,7 @@ class MembershipLevelsControllerTest extends TestCase
         'app.Logos',
         'app.MembershipLevels',
         'app.Memberships',
+        'app.Payments',
         'app.Users'
     ];
 

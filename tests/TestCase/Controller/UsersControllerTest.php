@@ -23,7 +23,11 @@ class UsersControllerTest extends TestCase
         'app.Logos',
         'app.MembershipLevels',
         'app.Memberships',
-        'app.Users'
+        'app.Payments',
+        'app.Pictures',
+        'app.Tags',
+        'app.TagsUsers',
+        'app.Users',
     ];
 
     /**
